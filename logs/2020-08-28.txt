@@ -1,0 +1,30 @@
+[28-Aug-2020 00:44:12 Europe/Berlin] Uncaught exception: 'PDOException' with message 'SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)'
+Stack trace: #0 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Model.php(27): PDO->__construct('mysql:host=loca...', 'root', 'secret')
+#1 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/App/Models/Post.php(23): Core\Model::getDB()
+#2 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/App/Controllers/Posts.php(23): App\Models\Post::getAll()
+#3 [internal function]: App\Controllers\Posts->indexAction()
+#4 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Controller.php(48): call_user_func_array(Array, Array)
+#5 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Router.php(121): Core\Controller->__call('index', Array)
+#6 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/public/index.php(33): Core\Router->dispatch('posts/index')
+#7 {main}
+Thrown in '/Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Model.php' on line 27
+[28-Aug-2020 00:44:12 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/public/index.php(33): Core\Router->dispatch('posts/js/bootst...')
+#1 {main}
+Thrown in '/Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Router.php' on line 130
+[28-Aug-2020 00:44:12 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/public/index.php(33): Core\Router->dispatch('css/img/handmad...')
+#1 {main}
+Thrown in '/Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Router.php' on line 130
+[28-Aug-2020 00:44:12 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/public/index.php(33): Core\Router->dispatch('font/money.woff...')
+#1 {main}
+Thrown in '/Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Router.php' on line 130
+[28-Aug-2020 00:44:12 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/public/index.php(33): Core\Router->dispatch('font/money.woff')
+#1 {main}
+Thrown in '/Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Router.php' on line 130
+[28-Aug-2020 00:44:12 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/public/index.php(33): Core\Router->dispatch('font/money.ttf')
+#1 {main}
+Thrown in '/Applications/XAMPP/xamppfiles/htdocs/personal-budget-MVC/Core/Router.php' on line 130
