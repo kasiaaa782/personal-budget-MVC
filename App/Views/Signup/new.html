@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Budżet osobisty - załóż darmowe konto{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="../css/money.css" type="text/css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+
+{% block footer %}
+
+
+    <script>
+        /**
+         * Add jQuery Validation plugin method for a valid password
+         *
+         * Valid passwords contain at least one letter and one number.
+         */
+        $.validator.addMethod('validPassword',
+            function(value, element, param) {
+                if (value != '') {
+                    if (value.match(/.*[a-z]+.*/i) == null) {
+                        return false;
+                    }
+                    if (value.match(/.*\d+.*/) == null) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            'Must contain at least one letter and one number'
+        );
+
+        $(document).ready(function() {
+            /**
+             * Validate the form
+             */
+            $('#formSignup').validate({
+                rules: {
+                    name: 'required',
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: '/account/validate-email'
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        validPassword: true
+                    },
+                    password_confirmation: {
+                        equalTo: '#inputPassword'
+                    }
+                },
+                messages: {
+                    email: {
+                        remote: 'email already taken'
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+    <section id="content" >
+        <div class="row text-center justify-content-center">
+            <h2>Rejestracja</h2>
+
+            <hr class="line mt-3 mb-2">
+
+            <div class="sentence mt-2 mb-2">
+                Zarejestruj się, aby móc utworzyć swój osobisty budżet!
+            </div>
+            <form method="post" action="/signup/create" id="formSignup">
+                <div>	
+                    <label><input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}" title="Wpisz poprawne imię!"></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div>								
+                    <label><input type="email" name="email" placeholder="E-mail" value="{{ user.email }}"></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[1] }}</div>
+                    {% endif %}
+                </div>
+                <div>	
+                    <label><input type="password" name="password" placeholder="Hasło" ></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[2] }}</div>
+                    {% endif %}
+                </div>
+                <div>	
+                    <label><input type="password" name="password_confirmation" placeholder="Powtórz hasło"></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[3] }}</div>
+                    {% endif %}
+                </div>
+                <div class="text-center mr-2 mt-2">	
+                    <label><input type="checkbox" name="rules" class="mr-2" {% if rules %} checked=checked {% endif %} required>Akceptuję regulamin</label>
+                    {% if e_rules is not empty %}
+                        <div class='error'>{{ e_rules }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="g-recaptcha mt-2 mb-2" data-sitekey="6LcG4MUZAAAAAHtaBZHQSHkGNE88Wo1w-7b0Y5um"></div>
+                     {% if e_bot is not empty %}
+                        <div class='error'>{{ e_bot }}</div>
+                    {% endif %}
+
+                <div class="mt-3 mb-2">
+                    <button id="submit_log" type="submit" >Zarejestruj się</button>
+                </div>
+            </form>
+            <div class="attention">
+                <a href="#">Jeżeli posiadasz konto, kliknij tutaj aby się zalogować <i class="icon-ok"></i></a>
+            </div>
+        </div> 				
+    </section>
+
+{% endblock %}
