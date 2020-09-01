@@ -36,13 +36,12 @@ class Signup extends \Core\Controller
         $everything_OK = true;
         $e_rules = "";
         $e_bot = "";
+        $rules = isset($_POST['rules']);
 
         //Czy zaakceptowano regulamin?
-        if(!isset($_POST['rules'])){
-            $everything_OK = false;
+        if (!$rules){
             $e_rules = "Potwierdź akceptację regulaminu!"; 
-        } else {
-            $rules = $_POST['rules'];
+            $everything_OK = false;
         }
         
         //sprawdzenie reCAPTCHA
@@ -55,7 +54,7 @@ class Signup extends \Core\Controller
             $e_bot = "Potwierdź, że nie jesteś botem!"; 
         }
 
-        if ($user->save() && $everything_OK = true) {
+        if (($everything_OK == true) && $user->save()) {
 
             //View::renderTemplate('Signup/success.html');
             header('Location: http://' . $_SERVER['HTTP_HOST'] . '/signup/success', true, 303);

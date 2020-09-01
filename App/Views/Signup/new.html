@@ -29,20 +29,31 @@
 
                 return true;
             },
-            'Must contain at least one letter and one number'
+            'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.'
+            //'Must contain at least one letter and one number'
         );
+
+        $.validator.addMethod("letters", 
+            function(value, element) {
+                return this.optional(element) || value == value.match(/^[A-ZŁŚ]{1}+[a-ząęółśżźćń\s]+$/);
+        });
 
         $(document).ready(function() {
             /**
              * Validate the form
              */
+
             $('#formSignup').validate({
                 rules: {
-                    name: 'required',
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        letters: true
+                    },
                     email: {
                         required: true,
-                        email: true,
-                        remote: '/account/validate-email'
+                        email: true
+                        //remote: '/account/validate-email'
                     },
                     password: {
                         required: true,
@@ -50,12 +61,19 @@
                         validPassword: true
                     },
                     password_confirmation: {
-                        equalTo: '#inputPassword'
+                       equalTo: '#inputPassword'
                     }
                 },
                 messages: {
+                    name: "Zacznij wielką literą, dł. min. 3 litery, bez znaków specjalnych i cyfr.",
                     email: {
-                        remote: 'email already taken'
+                        required : "Podaj poprawny adres email.",
+                        email: "Podaj poprawny adres email."
+                       // remote: 'email already taken'
+                    },
+                    password: 'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.',
+                    password_confirmation: {
+                        equalTo: 'Hasła muszą być takie same.'
                     }
                 }
             });
@@ -77,7 +95,7 @@
             </div>
             <form method="post" action="/signup/create" id="formSignup">
                 <div>	
-                    <label><input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}" title="Wpisz poprawne imię!"></label>
+                    <label><input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}" minlength="3" title="Wpisz swoje imię!"></label>
                     {% if user.errors is not empty %}
                         <div class='error'>{{ user.errors[0] }}</div>
                     {% endif %}
@@ -89,7 +107,7 @@
                     {% endif %}
                 </div>
                 <div>	
-                    <label><input type="password" name="password" placeholder="Hasło" ></label>
+                    <label><input type="password" id="inputPassword" name="password" placeholder="Hasło" ></label>
                     {% if user.errors is not empty %}
                         <div class='error'>{{ user.errors[2] }}</div>
                     {% endif %}
@@ -101,7 +119,7 @@
                     {% endif %}
                 </div>
                 <div class="text-center mr-2 mt-2">	
-                    <label><input type="checkbox" name="rules" class="mr-2" {% if rules %} checked=checked {% endif %} required>Akceptuję regulamin</label>
+                    <label><input type="checkbox" name="rules" class="mr-2" {% if rules %} checked=checked {% endif %} >Akceptuję regulamin</label>
                     {% if e_rules is not empty %}
                         <div class='error'>{{ e_rules }}</div>
                     {% endif %}

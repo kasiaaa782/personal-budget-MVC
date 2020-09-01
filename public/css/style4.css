@@ -81,7 +81,7 @@ h2{
 #name,
 input[type=email],
 input[type=password]{
-		width: 100%;
+		width: 20em;
 		background-color: #efefef;
 		color: #003F7F;
 		border: 2px solid #BCCAE8;
@@ -92,6 +92,7 @@ input[type=password]{
 		outline: none;
 		margin-bottom: -3px;
 		font-family: 'Roboto Slab', serif;
+		text-align: left;
 }
 
 #name:focus, #name:hover,
