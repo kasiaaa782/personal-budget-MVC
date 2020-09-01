@@ -8,7 +8,7 @@ use \App\Models\User;
 /**
  * Signup controller
  *
- * PHP version 7.0
+ * PHP version 7.2
  */
 class Signup extends \Core\Controller
 {

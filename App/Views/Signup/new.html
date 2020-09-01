@@ -52,8 +52,8 @@
                     },
                     email: {
                         required: true,
-                        email: true
-                        //remote: '/account/validate-email'
+                        email: true,
+                        remote: '/account/validate-email'
                     },
                     password: {
                         required: true,
@@ -68,8 +68,8 @@
                     name: "Zacznij wielką literą, dł. min. 3 litery, bez znaków specjalnych i cyfr.",
                     email: {
                         required : "Podaj poprawny adres email.",
-                        email: "Podaj poprawny adres email."
-                       // remote: 'email already taken'
+                        email: "Podaj poprawny adres email.",
+                        remote: 'Konto o takim adresie istnieje, wprowadź inny.'
                     },
                     password: 'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.',
                     password_confirmation: {

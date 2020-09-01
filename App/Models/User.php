@@ -10,7 +10,7 @@ use \Core\View;
 /**
  * User model
  *
- * PHP version 7.0
+ * PHP version 7.2
  */
 class User extends \Core\Model
 {
