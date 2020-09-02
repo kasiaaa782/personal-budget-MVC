@@ -3,12 +3,15 @@
 {% block title %}Budżet osobisty - załóż darmowe konto{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="../css/money.css" type="text/css" />
+    <link rel="stylesheet" href="../css/money.css" type="text/css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-{% endblock %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    {% endblock %}
 
 {% block footer %}
-
+    <script src="/js/hideShowPassword.min.js"></script>
 
     <script>
         /**
@@ -59,10 +62,12 @@
                         required: true,
                         minlength: 6,
                         validPassword: true
-                    },
+                    }
+                    /*
                     password_confirmation: {
                        equalTo: '#inputPassword'
                     }
+                    */
                 },
                 messages: {
                     name: "Zacznij wielką literą, dł. min. 3 litery, bez znaków specjalnych i cyfr.",
@@ -72,12 +77,16 @@
                         remote: 'Konto o takim adresie istnieje, wprowadź inny.'
                     },
                     password: 'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.',
+                    rules: " "
+                    
+                    /*
                     password_confirmation: {
                         equalTo: 'Hasła muszą być takie same.'
-                    },
-                    rules: " "
+                    }
+                    */
                 }
             });
+
         });
 
         function myCheckFunction() {
@@ -95,7 +104,21 @@
             }
         }   
 
-        
+        var state = false;
+        function toggle(){
+
+            if(state){
+                document.getElementById("inputPassword").setAttribute("type","password");
+                document.getElementById("eye").className = "fa fa-eye-slash";
+                state = false;
+            }
+            else{
+                document.getElementById("inputPassword").setAttribute("type","text");
+                document.getElementById("eye").className = "fa fa-eye";
+                state = true;
+            }
+            
+        }
 
     </script>
 
@@ -112,7 +135,7 @@
             <div class="sentence mt-2 mb-2">
                 Zarejestruj się, aby móc utworzyć swój osobisty budżet!
             </div>
-            <form method="post" action="/signup/create" id="formSignup">
+            <form method="post" action="/signup/create" id="formSignup"  style="width: 20em;">
                 <div>	
                     <label><input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}" minlength="3" title="Wpisz swoje imię!"></label>
                     {% if user.errors is not empty %}
@@ -126,17 +149,23 @@
                     {% endif %}
                 </div>
                 <div>	
-                    <label><input type="password" id="inputPassword" name="password" placeholder="Hasło" ></label>
+                    <label>
+                        <input type="password" id="inputPassword" name="password" placeholder="Hasło" >
+                    </label>
+                        <i class="fa fa-eye-slash" aria-hidden="true" id="eye" onclick="toggle()"></i>
+                        
                     {% if user.errors is not empty %}
-                        <div class='error'>{{ user.errors[2] }}</div>
+                        <div class='error' style="width: 100%;">{{ user.errors[2] }}</div>
                     {% endif %}
                 </div>
+            <!-- 
                 <div>	
                     <label><input type="password" name="password_confirmation" placeholder="Powtórz hasło"></label>
                     {% if user.errors is not empty %}
                         <div class='error'>{{ user.errors[3] }}</div>
                     {% endif %}
                 </div>
+            -->
                 <div class="text-center mr-2 mt-2">	
                     <label><input type="checkbox" name="rules" id='rules' class="mr-2" {% if rules %} checked=checked {% endif %}  >Akceptuję regulamin</label>
                     <p class="error" id="infoCheckbox"></p>

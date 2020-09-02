@@ -91,10 +91,13 @@ class User extends \Core\Model
         }
 
         // Password
+        
+        /*
         if ($this->password != $this->password_confirmation) {
             $this->errors[3] = 'Hasła muszą być takie same!';
             //'Password must match confirmation'
         }
+        */
 
         if ((strlen($this->password) < 6)) {
             $this->errors[2] = 'Wpisz co najmniej 6 znaków, jedną literę i jedną cyfrę!' ; 
@@ -120,7 +123,18 @@ class User extends \Core\Model
      */
     public static function emailExists($email)
     {
-        return static::findByEmail($email) !== false;
+        $sql = 'SELECT * FROM users WHERE email = :email';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+
+        //$stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetch() !== false;
+        //return static::findByEmail($email) !== false;
     }
 
     /**
