@@ -9,7 +9,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	
     <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/style2.css" type="text/css" />
+    <link rel="stylesheet" href="../css/style3.css" type="text/css" />
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700&display=swap" rel="stylesheet">	
     {% block head %}{% endblock %}
 
@@ -22,13 +22,13 @@
 					<h1>Budżet osobisty</h1>
 					<h4>Zapanuj nad swoimi finansami</h4>
 				</div>
-			</div>
+            </div>
+            {% block navigation %} 
+            {% endblock %}
         </header>
         <main>
-			<div class="container">
-                {% block body %}
-                {% endblock %}
-            </div>	
+            {% block body %}
+            {% endblock %}
         </main>
 		<footer id="footer">
 			2020 &copy; Wszelkie prawa zastrzeżone 

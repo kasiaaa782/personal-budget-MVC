@@ -10,7 +10,7 @@ use \App\Flash;
 /**
  * Login controller
  *
- * PHP version 7.0
+ * PHP version 7.2
  */
 class Login extends \Core\Controller
 {
@@ -32,30 +32,48 @@ class Login extends \Core\Controller
      */
     public function createAction()
     {
-        $user = User::findByEmail($_POST['email']);
-
-        var_dump($user);
-
-        /*$user = User::authenticate($_POST['email'], $_POST['password']);
+        $user = User::authenticate($_POST['email'], $_POST['password']);
         
-        $remember_me = isset($_POST['remember_me']);
-
         if ($user) {
 
-            Auth::login($user, $remember_me);
+            session_regenerate_id(true);
+            
+            $_SESSION['user_id'] = $user->id;
 
-            Flash::addMessage('Login successful');
-
-            $this->redirect(Auth::getReturnToPage());
+            $this->redirect('/posts/index');
 
         } else {
 
-            Flash::addMessage('Login unsuccessful, please try again', Flash::WARNING);
-
             View::renderTemplate('Login/new.html', [
                 'email' => $_POST['email'],
-                'remember_me' => $remember_me
+                //'remember_me' => $remember_me
             ]);
+        }
+
+       /* //$remember_me = isset($_POST['remember_me']);
+
+        if ($user) {
+
+           // Auth::login($user, $remember_me);
+
+            //Flash::addMessage('Login successful');
+
+            //$this->redirect(Auth::getReturnToPage());
+
+            header('Location: http://' .$_SERVER['HTTP_HOST'].'/', true, 303);
+            exit();
+
+        } else {
+
+            //Flash::addMessage('Login unsuccessful, please try again', Flash::WARNING);
+
+            View::renderTemplate('Login/new.html');
+
+            //, [
+                //'email' => $_POST['email']
+                //'remember_me' => $remember_me
+           // ]
+             
         }*/
     }
 
@@ -66,9 +84,33 @@ class Login extends \Core\Controller
      */
     public function destroyAction()
     {
-        Auth::logout();
+        // Unset all of the session variables.
+        $_SESSION = array();
 
-        $this->redirect('/login/show-logout-message');
+        // If it's desired to kill the session, also delete the session cookie.
+        // Note: This will destroy the session, and not just the session data!
+        if (ini_get("session.use_cookies")) {
+            
+            $params = session_get_cookie_params();
+            
+            setcookie(session_name(),
+             '', 
+             time() - 42000,
+                $params["path"], 
+                $params["domain"],
+                $params["secure"], 
+                $params["httponly"]
+            );
+        }
+
+        // Finally, destroy the session.
+        session_destroy();
+
+        $this->redirect('/');
+        
+        //Auth::logout();
+
+        //$this->redirect('/login/show-logout-message');
     }
 
     /**

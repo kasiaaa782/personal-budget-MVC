@@ -19,11 +19,11 @@ class Posts extends \Core\Controller
      * @return void
      */
     public function indexAction()
-    {
-        $posts = Post::getAll();
+    {   
+        $user_data = Post::getAll();
 
         View::renderTemplate('Posts/index.html', [
-            'posts' => $posts
+            'user_data' => $user_data,
         ]);
     }
 

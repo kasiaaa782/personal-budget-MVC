@@ -1,8 +1,36 @@
-{% extends "base.html" %}
+{% extends "base_nav.html" %}
 
-{% block title %}Posts{% endblock %}
+{% block title %}Budżet osobisty - Strona główna{% endblock %}
 
 {% block body %}
+
+    <div id="content_expense">
+        <div class="container mt-3 mb-3">
+            <div id="title"> 
+                Witaj {{ user_data.name }} !
+            </div>
+            <hr class="line mt-3 mb-4" style="width: 20em">
+            <div class="sentence_expense mb-2 mt-2">
+                Znajdujesz się na stronie swojego budżetu osobistego! 
+            </div>
+            <div class="mb-4" >
+                <img class="img-fluid mt-3" src="/img/finanse.jpg" width="60%" alt="Finanse">
+            </div>
+            <div class="sentence_expense mb-2 mt-2 " >
+                Korzystaj z dostępnych opcji, aby móc jak najlepiej kontrolować swoje finanse!
+            </div>
+        </div>
+    </div>
+        
+
+    <!--
+    {% if session.user_id %}
+        User with ID {{ session.user_id }} is logged in.
+        <a href="/logout">Log out</a>
+        {% else %}
+        <a href="/signup/new" class="button_link">Rejestracja</a>
+        <a href="/login" class="button_link">Logowanie</a>
+        {% endif %}
 
     <h1>Posts</h1>
 
@@ -12,5 +40,6 @@
             <p>{{ post.content }}</p>
         {% endfor %}
     </ul>
+    -->
 
 {% endblock %}
