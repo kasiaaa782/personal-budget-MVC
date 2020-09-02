@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Budżet osobisty - załóż darmowe konto{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="../css/money.css" type="text/css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    {% endblock %}
+
+{% block footer %}
+    <script src="/js/hideShowPassword.min.js"></script>
+
+    <script>
+        /**
+         * Add jQuery Validation plugin method for a valid password
+         *
+         * Valid passwords contain at least one letter and one number.
+         */
+        $.validator.addMethod('validPassword',
+            function(value, element, param) {
+                if (value != '') {
+                    if (value.match(/.*[a-z]+.*/i) == null) {
+                        return false;
+                    }
+                    if (value.match(/.*\d+.*/) == null) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.'
+            //'Must contain at least one letter and one number'
+        );
+
+        $.validator.addMethod("letters", 
+            function(value, element) {
+                return this.optional(element) || value == value.match(/^[A-ZŁŚ]{1}+[a-ząęółśżźćń\s]+$/);
+        });
+
+        $(document).ready(function() {
+            /**
+             * Validate the form
+             */
+
+            $('#formSignup').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3,
+                        letters: true
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: '/account/validate-email'
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        validPassword: true
+                    }
+                    /*
+                    password_confirmation: {
+                       equalTo: '#inputPassword'
+                    }
+                    */
+                },
+                messages: {
+                    name: "Zacznij wielką literą, dł. min. 3 litery, bez znaków specjalnych i cyfr.",
+                    email: {
+                        required : "Podaj poprawny adres email.",
+                        email: "Podaj poprawny adres email.",
+                        remote: 'Konto o takim adresie istnieje, wprowadź inny.'
+                    },
+                    password: 'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.',
+                    rules: " "
+                    
+                    /*
+                    password_confirmation: {
+                        equalTo: 'Hasła muszą być takie same.'
+                    }
+                    */
+                }
+            });
+
+        });
+
+        function myCheckFunction() {
+            document.getElementById("rules").required = true;
+            if(document.getElementById("rules").checked != true){
+                document.getElementById("infoCheckbox").innerHTML = "Zaakceptuj regulamin.";
+            } else {
+                document.getElementById("infoCheckbox").innerHTML = "";
+            }
+
+            if (grecaptcha.getResponse().length === 0){
+                document.getElementById("infoRecaptcha").innerHTML="Potwierdź, że nie jesteś robotem.";
+            } else {
+                document.getElementById("infoRecaptcha").innerHTML="";
+            }
+        }   
+
+        var state = false;
+        function toggle(){
+
+            if(state){
+                document.getElementById("inputPassword").setAttribute("type","password");
+                document.getElementById("eye").className = "fa fa-eye-slash";
+                state = false;
+            }
+            else{
+                document.getElementById("inputPassword").setAttribute("type","text");
+                document.getElementById("eye").className = "fa fa-eye";
+                state = true;
+            }
+            
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+    <section id="content" >
+        <div class="row text-center justify-content-center">
+            <h2>Rejestracja</h2>
+
+            <hr class="line mt-3 mb-2">
+
+            <div class="sentence mt-2 mb-2">
+                Zarejestruj się, aby móc utworzyć swój osobisty budżet!
+            </div>
+            <form method="post" action="/signup/create" id="formSignup"  style="width: 20em;">
+                <div>	
+                    <label><input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}" minlength="3" title="Wpisz swoje imię!"></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div>								
+                    <label><input type="email" name="email" placeholder="E-mail" value="{{ user.email }}"></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[1] }}</div>
+                    {% endif %}
+                </div>
+                <div>	
+                    <label>
+                        <input type="password" id="inputPassword" name="password" placeholder="Hasło" >
+                    </label>
+                        <i class="fa fa-eye-slash" aria-hidden="true" id="eye" onclick="toggle()"></i>
+                        
+                    {% if user.errors is not empty %}
+                        <div class='error' style="width: 100%;">{{ user.errors[2] }}</div>
+                    {% endif %}
+                </div>
+            <!-- 
+                <div>	
+                    <label><input type="password" name="password_confirmation" placeholder="Powtórz hasło"></label>
+                    {% if user.errors is not empty %}
+                        <div class='error'>{{ user.errors[3] }}</div>
+                    {% endif %}
+                </div>
+            -->
+                <div class="text-center mr-2 mt-2">	
+                    <label><input type="checkbox" name="rules" id='rules' class="mr-2" {% if rules %} checked=checked {% endif %}  >Akceptuję regulamin</label>
+                    <p class="error" id="infoCheckbox"></p>
+                    {% if e_rules is not empty %}
+                        <div class='error'>{{ e_rules }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="g-recaptcha mt-2 mb-2" data-sitekey="6LcG4MUZAAAAAHtaBZHQSHkGNE88Wo1w-7b0Y5um"></div>
+                    <p class="error" id="infoRecaptcha"></p> 
+                    {% if e_bot is not empty %}
+                        <div class='error'>{{ e_bot }}</div>
+                    {% endif %}
+
+                <div class="mt-3 mb-2">
+                    <button onclick="myCheckFunction()" id="submit_log" type="submit" >Zarejestruj się</button>
+                </div>
+            </form>
+            <div class="attention">
+                <a href="#">Jeżeli posiadasz konto, kliknij tutaj aby się zalogować <i class="icon-ok"></i></a>
+            </div>
+        </div> 				
+    </section>
+
+{% endblock %}

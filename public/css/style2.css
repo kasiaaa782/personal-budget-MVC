@@ -5,7 +5,7 @@ html{
 
 body{
 	/* Background pattern from Toptal Subtle Patterns */
-	background-image: url("img/handmadepaper.png");
+	background-image: url("../img/handmadepaper.png");
 	font-family: 'Roboto Slab', serif;
 	color: #f9f9f9;
 	padding:0;
@@ -21,7 +21,6 @@ body{
 		justify-content: space-between;
 		height: 100%;
 }
-
 
 h1{
 	margin: 10px;
@@ -46,9 +45,10 @@ h4{
 }
 
 h2{
-	margin: 0;
+	margin: 10, 0, 0, 0;
 	letter-spacing: 1px;
 	font-size: 40px;
+	font-style: italic;
 }
 
 .sentence{
@@ -79,9 +79,10 @@ h2{
 }
 
 #name,
+input[type=text],
 input[type=email],
 input[type=password]{
-		width: 100%;
+		width: 20em;
 		background-color: #efefef;
 		color: #003F7F;
 		border: 2px solid #BCCAE8;
@@ -92,9 +93,11 @@ input[type=password]{
 		outline: none;
 		margin-bottom: -3px;
 		font-family: 'Roboto Slab', serif;
+		text-align: left;
 }
 
 #name:focus, #name:hover,
+input[type=text]:focus, input[type=text]:focus,
 input[type=email]:focus, input[type=email]:hover,
 input[type=password]:focus, input[type=password]:hover{
 		-webkit-box-shadow: 0px 0px 10px 2px rgba(204,204,204,0.9);
@@ -144,7 +147,7 @@ a:visited, a:hover{
 	color: #FFFFFF;
 }
 
-#attention:hover{
+.attention:hover{
 		font-weight: bold;
 }
 
@@ -483,11 +486,9 @@ table{
 
 .error{
 	color: #d80303c0;
-	width: 350px;
 	font-size: 12px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 3px;
 	margin-bottom: 5px;
 	text-align: center;
 	text-shadow: none;
@@ -566,4 +567,19 @@ table{
 	width: 80%;
 	background: rgb(120, 159, 218);
 	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#success_registration{
+	margin-top: 20px;
+	margin-bottom: 20px;
+	font-size: 22px;
+}
+
+.fa {
+	position: absolute !important;
+    font-size: 20px !important;
+	color: #7a797e;
+	margin: 12px 0 0 -40px !important;
+	cursor: pointer;
+	text-shadow: none;
 }
