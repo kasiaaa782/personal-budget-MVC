@@ -74,10 +74,29 @@
                     password: 'Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.',
                     password_confirmation: {
                         equalTo: 'Hasła muszą być takie same.'
-                    }
+                    },
+                    rules: " "
                 }
             });
         });
+
+        function myCheckFunction() {
+            document.getElementById("rules").required = true;
+            if(document.getElementById("rules").checked != true){
+                document.getElementById("infoCheckbox").innerHTML = "Zaakceptuj regulamin.";
+            } else {
+                document.getElementById("infoCheckbox").innerHTML = "";
+            }
+
+            if (grecaptcha.getResponse().length === 0){
+                document.getElementById("infoRecaptcha").innerHTML="Potwierdź, że nie jesteś robotem.";
+            } else {
+                document.getElementById("infoRecaptcha").innerHTML="";
+            }
+        }   
+
+        
+
     </script>
 
 {% endblock %}
@@ -119,19 +138,21 @@
                     {% endif %}
                 </div>
                 <div class="text-center mr-2 mt-2">	
-                    <label><input type="checkbox" name="rules" class="mr-2" {% if rules %} checked=checked {% endif %} >Akceptuję regulamin</label>
+                    <label><input type="checkbox" name="rules" id='rules' class="mr-2" {% if rules %} checked=checked {% endif %}  >Akceptuję regulamin</label>
+                    <p class="error" id="infoCheckbox"></p>
                     {% if e_rules is not empty %}
                         <div class='error'>{{ e_rules }}</div>
                     {% endif %}
                 </div>
                 
                 <div class="g-recaptcha mt-2 mb-2" data-sitekey="6LcG4MUZAAAAAHtaBZHQSHkGNE88Wo1w-7b0Y5um"></div>
-                     {% if e_bot is not empty %}
+                    <p class="error" id="infoRecaptcha"></p> 
+                    {% if e_bot is not empty %}
                         <div class='error'>{{ e_bot }}</div>
                     {% endif %}
 
                 <div class="mt-3 mb-2">
-                    <button id="submit_log" type="submit" >Zarejestruj się</button>
+                    <button onclick="myCheckFunction()" id="submit_log" type="submit" >Zarejestruj się</button>
                 </div>
             </form>
             <div class="attention">
