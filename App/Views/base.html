@@ -27,6 +27,13 @@
             {% endblock %}
         </header>
         <main>
+
+            {% for message in flash_messages %}
+                <div class="alert alert-{{ message.type }} text-center small " role="alert">
+                    {{ message.body }}
+                </div>
+            {% endfor %}
+
             {% block body %}
             {% endblock %}
         </main>

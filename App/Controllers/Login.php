@@ -5,7 +5,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\User;
 use \App\Auth;
-//use \App\Flash;
+use \App\Flash;
 
 /**
  * Login controller
@@ -38,9 +38,13 @@ class Login extends \Core\Controller
 
             Auth::login($user);
 
+            Flash::addMessage('Udało się zalogować!');
+
             $this->redirect(Auth::getReturnToPage());
 
         } else {
+
+            Flash::addMessage('Logowanie nie powiodło się, spróbuj jeszcze raz.', Flash::WARNING);
 
             View::renderTemplate('Login/new.html', [
                 'email' => $_POST['email'],
@@ -58,9 +62,7 @@ class Login extends \Core\Controller
     {        
         Auth::logout();
 
-        $this->redirect('/');
-
-        //$this->redirect('/login/show-logout-message');
+        $this->redirect('/login/show-logout-message');
     }
 
     /**
@@ -70,12 +72,10 @@ class Login extends \Core\Controller
      *
      * @return void
      */
-    /*
      public function showLogoutMessageAction()
     {
-        Flash::addMessage('Logout successful');
+        Flash::addMessage('Wylogowałeś się');
 
         $this->redirect('/');
     }
-    */
 }
