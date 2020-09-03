@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Budżet osobisty - Zaloguj się!{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="../css/money.css" type="text/css">
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <section id="content" >
+            <div class="row text-center justify-content-center">
+                <h2>Logowanie</h2>
+
+                <hr class="line mt-3 mb-2">    
+                <div class="sentence mt-2 mb-2" >
+                    Zaloguj się, aby móc skontrolować swoje finanse!
+                </div>	
+                <form action="/login/create" method="post">
+                    <div>								
+                        <label><input type="email" id="inputEmail" name="email" placeholder="E-mail" autofocus value="{{ email }}" ></label>
+                    </div>
+                    <div>	
+                        <label><input type="password" id="inputPassword" name="password" placeholder="Hasło"></label>
+                    </div>
+                    <div class="mt-2 mb-2">
+                        <input id="submit_log" type="submit" value="Zaloguj się">
+                    </div>
+                </form>
+                <div class="attention">
+                    <a href="/signup/new">Jeżeli nie posiadasz konta, kliknij tutaj aby się zarejestrować <i class="icon-ok"></i></a>
+                </div>
+            </div>			
+        </section>
+    </div>
+
+
+{% endblock %}

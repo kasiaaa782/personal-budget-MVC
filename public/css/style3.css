@@ -202,7 +202,7 @@ ol > li:hover{
 }
 
 /* expense/income */
-#sentence_expense{
+.sentence_expense{
 		font-size: 20px;
 		text-shadow: 0.3px 0.3px #0072E3;
 		margin: 8px;
