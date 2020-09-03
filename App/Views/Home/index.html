@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Budżet Osobisty{% endblock %}
 
 {% block body %}
 
@@ -12,17 +12,20 @@
                     Już dziś zacznij korzystać ze swojego budżetu!
                 </div>
                 <hr class="line">
+                {% if current_user %}
+                Hello {{ current_user.name }}
+                     <a href="/logout">Log out</a>
+                {% else %}
                 <div id="button_container">
                     <a href="/signup/new" class="button_link">Rejestracja</a>
                     <a href="/login" class="button_link">Logowanie</a>
                 </div>
+                {% endif %}
             </div>			
         </section>
     </div>
   
-  
-  
-  
+
     <!-- 
     <p>Hello from a Twig template, {{ name }}!</p>
 

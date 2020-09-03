@@ -3,49 +3,61 @@
 namespace App\Controllers;
 
 use \Core\View;
-use App\Models\Post;
+use \App\Models\Post;
 
 /**
  * Posts controller
  *
  * PHP Version 7.2
  */
-class Posts extends \Core\Controller
-{
-
+class Posts extends Authenticated
+{   
     /**
-     * Show the index page
+     * Posts index
      *
      * @return void
      */
     public function indexAction()
-    {   
+    {    
         $user_data = Post::getAll();
 
         View::renderTemplate('Posts/index.html', [
             'user_data' => $user_data,
-        ]);
+        ]
+    );
     }
 
     /**
-     * Show the add new page
+     * Add a new post
      *
      * @return void
      */
-    public function addNewAction()
+    public function newAction()
     {
-        echo 'Hello from the addNew action in the Posts controller!';
+        echo "new action";
     }
-    
+
+    /**
+     * Show an post
+     *
+     * @return void
+     */
+    public function showAction()
+    {
+        echo "show action";
+    }
+ 
     /**
      * Show the edit page
      *
      * @return void
      */
+    /*
     public function editAction()
     {
         echo 'Hello from the edit action in the Posts controller!';
         echo '<p>Route parameters: <pre>' .
              htmlspecialchars(print_r($this->route_params, true)) . '</pre></p>';
     }
+    */
 }

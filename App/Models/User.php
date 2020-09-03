@@ -176,7 +176,7 @@ class User extends \Core\Model
      *
      * @return mixed User object if found, false otherwise
      */
-    public static function findByID($id)
+     public static function findByID($id)
     {
         $sql = 'SELECT * FROM users WHERE id = :id';
 
@@ -197,6 +197,7 @@ class User extends \Core\Model
      *
      * @return boolean  True if the login was remembered successfully, false otherwise
      */
+    /*
     public function rememberLogin()
     {
         $token = new Token();
@@ -217,7 +218,7 @@ class User extends \Core\Model
 
         return $stmt->execute();
     }
-
+    */
     /**
      * Send password reset instructions to the user specified
      *
@@ -225,6 +226,7 @@ class User extends \Core\Model
      *
      * @return void
      */
+    /*
     public static function sendPasswordReset($email)
     {
         $user = static::findByEmail($email);
@@ -238,12 +240,13 @@ class User extends \Core\Model
             }
         }
     }
-
+    */
     /**
      * Start the password reset process by generating a new token and expiry
      *
      * @return void
      */
+    /*
     protected function startPasswordReset()
     {
         $token = new Token();
@@ -266,12 +269,13 @@ class User extends \Core\Model
 
         return $stmt->execute();
     }
-
+    */
     /**
      * Send password reset instructions in an email to the user
      *
      * @return void
      */
+    /*
     protected function sendPasswordResetEmail()
     {
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_token;
@@ -281,4 +285,5 @@ class User extends \Core\Model
 
         Mail::send($this->email, 'Password reset', $text, $html);
     }
+    */
 }
