@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Models\User;
-//use App\Models\RememberedLogin;
+use App\Models\RememberedLogin;
 
 /**
  * Authentication
@@ -20,20 +20,20 @@ class Auth
      *
      * @return void
      */
-    public static function login($user)
+    public static function login($user, $remember_me)
     {
         session_regenerate_id(true);
 
         $_SESSION['user_id'] = $user->id;
 
-       /* if ($remember_me) {
+        if ($remember_me) {
 
-            if ($user->rememberLogin()) {
+            if ($user->rememberLogin()){
 
                 setcookie('remember_me', $user->remember_token, $user->expiry_timestamp, '/');
 
             }
-        }*/
+        }
     }
 
     /**
@@ -64,7 +64,7 @@ class Auth
         // Finally destroy the session
         session_destroy();
 
-       // static::forgetLogin();        
+       static::forgetLogin();        
     }
 
     /**
@@ -98,10 +98,10 @@ class Auth
 
             return User::findByID($_SESSION['user_id']);
 
-        } /*else {
+        } else {
 
             return static::loginFromRememberCookie();
-        }*/
+        }
     }
     
     /**
@@ -109,7 +109,6 @@ class Auth
      *
      * @return mixed The user model if login cookie found; null otherwise
      */
-    /*
     protected static function loginFromRememberCookie()
     {
         $cookie = $_COOKIE['remember_me'] ?? false;
@@ -128,13 +127,12 @@ class Auth
             }
         }
     }
-    */
+    
     /**
      * Forget the remembered login, if present
      *
      * @return void
      */
-    /*
      protected static function forgetLogin()
     {
         $cookie = $_COOKIE['remember_me'] ?? false;
@@ -146,11 +144,9 @@ class Auth
             if ($remembered_login) {
 
                 $remembered_login->delete();
-
             }
 
             setcookie('remember_me', '', time() - 3600);  // set to expire in the past
         }
     }
-    */
 }

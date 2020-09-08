@@ -197,7 +197,6 @@ class User extends \Core\Model
      *
      * @return boolean  True if the login was remembered successfully, false otherwise
      */
-    /*
     public function rememberLogin()
     {
         $token = new Token();
@@ -218,7 +217,7 @@ class User extends \Core\Model
 
         return $stmt->execute();
     }
-    */
+    
     /**
      * Send password reset instructions to the user specified
      *

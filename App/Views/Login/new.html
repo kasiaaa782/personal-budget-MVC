@@ -24,6 +24,9 @@
                     <div>	
                         <label><input type="password" id="inputPassword" name="password" placeholder="Hasło"></label>
                     </div>
+                    <div class="text-left mt-2 ml-1">	
+                        <label><input type="checkbox" name="remember_me" class="mr-2" {% if remember_me %} checked=checked {% endif %}  >Zapamiętaj mnie</label>
+                    </div>
                     <div class="mt-2 mb-2">
                         <input id="submit_log" type="submit" value="Zaloguj się">
                     </div>
