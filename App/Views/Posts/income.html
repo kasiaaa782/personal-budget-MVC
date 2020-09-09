@@ -20,28 +20,11 @@
         </nav>
 {% endblock %}
 
-{% block footer%}
-
-    <script>
-        function myCheckFunction() {
-            document.getElementById("category").required = true;
-            if(document.getElementById("category").checked != true){
-                document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
-            } else {
-                document.getElementById("infoCategory").innerHTML = "";
-            }
-        } 
-    </script>
-
-{% endblock %}
-
 {% block body %}
 
     <div id="content_expense">
         <div class="container mt-1 mb-1">
-            <div id="title"> 
-                Dodawanie przychodu
-            </div>
+            <div id="title">Dodawanie przychodu</div>
             <hr class="line mt-3 mb-4" style="width: 20em">
             <div class="sentence_expense mb-2 mt-2">
                 Uzupełnij poniższe dane dotyczące nowego przychodu
@@ -76,7 +59,7 @@
                     <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)" onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
                 </div>
                 <div class="row justify-content-center mt-3">
-                        <input id="expense_submit" type="submit" value="Dodaj przychód" onclick="myCheckFunction()" class="mr-5"> 
+                        <input id="expense_submit" type="submit" value="Dodaj przychód" class="mr-5"> 
                         <input id="expense_button" type="reset" value="Anuluj"> 
                 </div>	
             </form>
