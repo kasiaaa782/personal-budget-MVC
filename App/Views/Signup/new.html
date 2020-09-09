@@ -152,7 +152,6 @@
                             <input type="password" id="inputPassword" name="password" placeholder="Hasło" >
                         </label>
                             <i class="fa fa-eye-slash" aria-hidden="true" id="eye" onclick="toggle()"></i>
-                            
                         {% if user.errors is not empty %}
                             <div class='error' style="width: 100%;">{{ user.errors[2] }}</div>
                         {% endif %}
@@ -165,7 +164,7 @@
                         {% endif %}
                     </div>
                 -->
-                    <div class="text-center mr-2 mt-2">	
+                    <div class="text-center mr-2 mt-1">	
                         <label><input type="checkbox" name="rules" id='rules' class="mr-2" {% if rules %} checked=checked {% endif %}  >Akceptuję regulamin</label>
                         <p class="error" id="infoCheckbox"></p>
                         {% if e_rules is not empty %}

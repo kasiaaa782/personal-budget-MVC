@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Models\Post;
+use \App\Models\Income;
+use \App\Auth;
+use \App\Flash;
 
 /**
  * Posts controller
@@ -19,34 +21,53 @@ class Posts extends Authenticated
      */
     public function indexAction()
     {    
-        $user_data = Post::getAll();
-
-        View::renderTemplate('Posts/index.html', [
-            'user_data' => $user_data,
-        ]
-    );
+        View::renderTemplate('Posts/index.html');
     }
 
     /**
-     * Add a new post
+     * Add a show an income form
      *
      * @return void
      */
-    public function newAction()
+    public function incomeAction()
     {
-        echo "new action";
+        View::renderTemplate('Posts/income.html');
     }
 
     /**
-     * Show an post
+     * Create an income
      *
      * @return void
      */
-    public function showAction()
+    public function createIncomeAction()
     {
-        echo "show action";
+        $user = Auth::getUser();
+        $income = new Income($_POST);
+        
+        if ($income->save($user->id)) {
+
+            $this->redirect('/posts/success');
+
+        } else {
+            Flash::addMessage('Nie udało się zarejestrować przychodu.', Flash::WARNING);
+
+            View::renderTemplate('Posts/income.html', [
+                'income' => $income
+            ]);
+        }
     }
- 
+
+    /**
+     * Show the income success page
+     *
+     * @return void
+     */
+
+    public function successAction()
+    {
+        View::renderTemplate('Posts/s_income.html');
+    }
+
     /**
      * Show the edit page
      *
