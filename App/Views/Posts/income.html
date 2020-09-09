@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Budżet osobisty - Strona główna{% endblock %}
+
+{% block navigation %} 
+        <nav class="navbar navbar-dark navbar-expand-lg">
+            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainmenu" >
+                <ol class="navbar-nav mx-auto">
+                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link active" href="income">Dodaj przychód</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="#">Dodaj wydatek</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="#">Przeglądaj bilans</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+                </ol>
+            </div>
+        </nav>
+{% endblock %}
+
+{% block body %}
+
+    <div id="content_expense">
+        <div class="container mt-3 mb-3">
+            <div id="title"> 
+                Dodawanie przychodu
+            </div>
+            <hr class="line mt-3 mb-4" style="width: 20em">
+            <div class="sentence_expense mb-2 mt-2">
+                Uzupełnij poniższe dane dotyczące nowego przychodu
+            </div>
+            <form method="post" action="/posts/create-income">
+                <div class="row justify-content-center mt-4">
+                    <div class="block">
+                        <label>Kwota : <input type="number" step="0.01" name="amount" min="0.01" id="amount" value =""></label>
+                    </div>
+                    <div class="block">
+                        <label>Data : <input type="date" name="date" id="date1" value=""></label>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-2">
+                    <div class="col-12 mb-2">Kategoria :</div>
+                    <div class="categories">
+                        <div><label><input type="radio" value="1" name="category" class="mr-2">Wynagrodzenie</label></div>
+                        <div><label><input type="radio" value="2" name="category" class="mr-2">Odsetki bankowe</label></div>
+                        <div><label><input type="radio" value="3" name="category" class="mr-2">Sprzedaż na allegro</label></div>
+                        <div><label><input type="radio" value="4" name="category" class="mr-2">Inne</label></div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)" onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
+                </div>
+                <div class="row justify-content-center mt-4 mb-2">
+                        <input id="expense_submit" type="submit" value="Dodaj przychód" class="mr-5"> 
+                        <input id="expense_button" type="reset" value="Anuluj"> 
+                </div>	
+                <!--<div class="row justify-content-center mt-1">
+                    <?php
+                        if(isset($_SESSION['successful_income'])){
+                            echo '<div class="success mt-4 mb-3">'.$_SESSION['successful_income']."</div>";
+                            unset($_SESSION['successful_income']);
+                        }
+                    ?>
+                </div>	-->			
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
