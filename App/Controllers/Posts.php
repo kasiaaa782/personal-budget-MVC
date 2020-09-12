@@ -46,6 +46,16 @@ class Posts extends Authenticated
     }
 
     /**
+     * Add a show an balance page
+     *
+     * @return void
+     */
+    public function balanceAction()
+    {
+        View::renderTemplate('Posts/balance.html');
+    }
+
+    /**
      * Create an income
      *
      * @return void
