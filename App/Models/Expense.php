@@ -9,7 +9,7 @@ use PDO;
  *
  * PHP version 7.2
  */
-class Income extends \Core\Model
+class Expense extends \Core\Model
 {
 
     /**
@@ -34,9 +34,9 @@ class Income extends \Core\Model
     }
 
     /**
-     * Save the income model with the current property values
+     * Save the expense model with the current property values
      *
-     * @return boolean  True if the income was saved, false otherwise
+     * @return boolean  True if the expense was saved, false otherwise
      */
     public function save($user_id)
     {
@@ -44,20 +44,22 @@ class Income extends \Core\Model
     
         if (empty($this->errors)) {
 
-            $sql = 'INSERT INTO incomes VALUES (NULL,
+            $sql = 'INSERT INTO expenses VALUES (NULL,
                         :user_id, 
-                        :income_category_assigned_to_user_id, 
+                        :expense_category_assigned_to_user_id, 
+                        :payment_method_assigned_to_user_id,
                         :amount, 
-                        :date_of_income, 
-                        :income_comment)';
+                        :date_of_expense, 
+                        :expense_comment)';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindValue(':income_category_assigned_to_user_id', $this->category, PDO::PARAM_INT);
             $stmt->bindValue(':amount', $this->amount, PDO::PARAM_STR);
-            $stmt->bindValue(':date_of_income', $this->date, PDO::PARAM_STR);
-            $stmt->bindValue(':income_comment', $this->comment, PDO::PARAM_STR);
+            $stmt->bindValue(':date_of_expense', $this->date, PDO::PARAM_STR);
+            $stmt->bindValue(':payment_method_assigned_to_user_id', $this->payment, PDO::PARAM_INT);
+            $stmt->bindValue(':expense_category_assigned_to_user_id', $this->category, PDO::PARAM_INT);
+            $stmt->bindValue(':expense_comment', $this->comment, PDO::PARAM_STR);
             
             return $stmt->execute();
        }
@@ -76,10 +78,15 @@ class Income extends \Core\Model
         if ($this->amount <= 0) {
             $this->errors[0] = 'Wpisz poprawną kwotę!';
         }
-
+        
+        // Payment
+        if (!isset($this->payment)) {
+            $this->errors[1] = 'Wybierz sposób płatności!';
+        }
+        
         // Category
         if (!isset($this->category)) {
-            $this->errors[1] = 'Wybierz kategorię!';
+            $this->errors[2] = 'Wybierz kategorię!';
         }
     }
 }

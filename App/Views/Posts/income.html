@@ -10,8 +10,8 @@
             <div class="collapse navbar-collapse" id="mainmenu" >
                 <ol class="navbar-nav mx-auto">
                     <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link active" href="/income">Dodaj przychód</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="#">Dodaj wydatek</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link active" href="income">Dodaj przychód</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="expense">Dodaj wydatek</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link" href="#">Przeglądaj bilans</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
@@ -19,6 +19,32 @@
             </div>
         </nav>
 {% endblock %}
+
+
+{% block head %}
+    <script>
+        function checkData(){
+            //category
+            var categories = [];
+            var category = 0;
+            for(i=0; i<16; i++){
+                categories[i] = document.getElementById("c"+i);
+                console.log(categories[i]);
+                if(categories[i].checked == true){
+                    category = categories[i].value;
+                }  
+            }
+            console.log(category);
+            if(category == 0){
+                document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
+            } else {
+                document.getElementById("infoCategory").innerHTML = "";
+            }
+        }
+
+</script>
+{% endblock %}
+
 
 {% block body %}
 
