@@ -1,7 +1,6 @@
 window.onload = function() 
 {
 	var title = document.getElementById("title").innerHTML;
-	console.log(title);
 	if(title === "Dodawanie wydatku" || title === "Dodawanie przychodu") setCurrentDate();
 }
 
