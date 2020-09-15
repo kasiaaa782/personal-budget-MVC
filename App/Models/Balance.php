@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use PDO;
+use \Core\View;
 
 /**
  * Post model
@@ -11,7 +12,7 @@ use PDO;
  */
 class Balance extends \Core\Model
 {
-/**
+    /**
      * Error messages
      *
      * @var array
@@ -32,25 +33,85 @@ class Balance extends \Core\Model
         };
     }
 
+     /**
+     * Set a period time on page
+     *
+     * @return string
+     */
+    public function setPeriodTime($firstDate, $secondDate)
+    {   
+        $firstDateFormated = date("d.m.Y", strtotime($firstDate));
+        $secondDateFormated = date("d.m.Y", strtotime($secondDate));
+        return 'Za okres od '.$firstDateFormated.' do '.$secondDateFormated;
+    }
+
+     /**
+     * Select a period time to show balance
+     *
+     * @return array
+     */
+    public function selectPeriodTime($option)
+    {
+        $date = [];
+        switch($option){
+            case 1: 
+                //current month
+                $beginCurMonth = date("Y-m-01");
+                $endCurMonth = date("Y-m-t");				
+                $date[0] = $beginCurMonth;
+                $date[1] = $endCurMonth;	
+                break;
+            case 2: 
+                //previous month
+                $beginPrevMonth = date("Y-m-01", strtotime ("-1 month"));
+                $endPrevMonth = date("Y-m-t", strtotime ("-1 month"));				
+                $date[0] = $beginPrevMonth;
+                $date[1] = $endPrevMonth;	
+                break;
+            case 3: 
+                //current year
+                $beginCurYear = date("Y-01-01");
+                $endCurYear = date("Y-12-t");				
+                $date[0] = $beginCurYear;
+                $date[1] = $endCurYear;	
+                break;
+            case 4: 
+                //nonstandard
+                $beginDate = $this->dateBegin;
+                $endDate = $this->dateEnd;
+                if($beginDate >= $endDate || $endDate < $beginDate){
+                    $errors[0] = 'Błędny przedział czasowy!';
+                    $date[0] = 0;
+                    $date[1] = 0;
+                } else {
+                    $date[0] = $beginDate;
+                    $date[1] = $endDate;
+                }	
+                break;
+        }
+        return $date;
+    }
+
     /**
      * Get all the incomes as an associative array
      *
      * @return array
      */
-    public static function getIncomes($user_id, $date1, $date2, $category)
+    public static function getSumAmountIncome($user_id, $date1, $date2, $category)
     {
-            $sql = 'SELECT SUM(amount) FROM incomes WHERE user_id = :user_id AND income_category_assigned_to_user_id = :category AND date_of_income BETWEEN :date1 AND :date2';
-            $db = static::getDB();
-            $stmt = $db->prepare($sql);
+        $sql = 'SELECT SUM(amount) FROM incomes WHERE user_id = :user_id AND income_category_assigned_to_user_id = :category AND date_of_income BETWEEN :date1 AND :date2';
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-			$stmt->bindValue(':category', $category, PDO::PARAM_INT);
-			$stmt->bindValue(':date1', $date1, PDO::PARAM_STR);
-			$stmt->bindValue(':date2', $date2, PDO::PARAM_STR);
-            $stmt->execute();
-            //dostajemy dane amount w szufladkach tablicy asjocjacyjnej o nazwie tablic takich jak w bazie danych
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':category', $category, PDO::PARAM_INT);
+        $stmt->bindValue(':date1', $date1, PDO::PARAM_STR);
+        $stmt->bindValue(':date2', $date2, PDO::PARAM_STR);
+        $stmt->execute();
+        //dostajemy dane amount w szufladkach tablicy asjocjacyjnej o nazwie tablic takich jak w bazie danych
+        $incomes = $stmt->fetch();
 
-            return $stmt->fetch();
+        return $incomes;
     }
 
     /**
@@ -60,7 +121,7 @@ class Balance extends \Core\Model
      */
     public static function getExpenses($user_id, $date1, $date2, $category)
     {
-            $sql = 'SELECT SUM(amount) FROM expenses WHERE user_id = :user_id AND expense_category_assigned_to_user_id = :category AND date_of_expense BETWEEN :date1 AND :date2';
+            $sql = 'SELECT amount FROM expenses WHERE user_id = :user_id AND expense_category_assigned_to_user_id = :category AND date_of_expense BETWEEN :date1 AND :date2';
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
@@ -70,7 +131,8 @@ class Balance extends \Core\Model
 			$stmt->bindValue(':date2', $date2, PDO::PARAM_STR);
             $stmt->execute();
             //dostajemy dane amount w szufladkach tablicy asjocjacyjnej o nazwie tablic takich jak w bazie danych
-
-            return $stmt->fetch();
+            $expense = $stmt->fetch();
+            
+            return $expense;
     }
 }

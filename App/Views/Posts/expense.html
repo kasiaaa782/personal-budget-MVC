@@ -78,7 +78,7 @@
                         <label>Data : <input type="date" name="date" id="date1" value="{{ expense.date }}"></label>
                     </div>
                 </div>
-                {% if income.errors is not empty %}
+                {% if expense.errors is not empty %}
                     <div class='error'>{{ expense.errors[0] }}</div>
                 {% endif %}
                 <div class="row justify-content-center">

@@ -29,12 +29,10 @@
             var category = 0;
             for(i=0; i<4; i++){
                 categories[i] = document.getElementById("c"+i);
-                console.log(categories[i]);
                 if(categories[i].checked == true){
                     category = categories[i].value;
                 }  
             }
-            console.log(category);
             if(category == 0){
                 document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
             } else {
@@ -55,7 +53,7 @@
             <div class="sentence_expense mb-2 mt-2">
                 Uzupełnij poniższe dane dotyczące nowego przychodu
             </div>
-            <form method="post" action="/posts/create-income" id="formIncome">
+            <form method="post" action="/posts/create-income">
                 <div class="row justify-content-center mt-3">
                     <div class="block">
                         <label>Kwota : <input type="number" step="0.01" min="0.01" name="amount"  id="amount" value="{{ income.amount }}" required></label>
