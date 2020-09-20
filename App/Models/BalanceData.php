@@ -86,18 +86,6 @@ class BalanceData extends \Core\Model
     }
 
     /**
-     * Set a period time on page in better format
-     *
-     * @return string
-     */
-    public static function changeFormatDate($firstDate, $secondDate)
-    {   
-        $firstDateFormated = date("d.m.Y", strtotime($firstDate));
-        $secondDateFormated = date("d.m.Y", strtotime($secondDate));
-        return 'Za okres od '.$firstDateFormated.' do '.$secondDateFormated;
-    }
-
-    /**
      * Get a user id from session
      *     
      * @return string

@@ -22,13 +22,16 @@ class Balance extends Authenticated {
     public function balanceAction() {
 		$balance = new BalanceData($_POST);
 
-		/*$period = isset($_POST['balance']) ? $_POST['balance'] : "another";
-        var_dump($period);
-        exit();*/
-
+        if(!isset($_GET['option'])&&!isset($_POST['dateBegin'])&&!isset($_POST['dateEnd'])){
+			$option = 1;
+        } else if(isset($_GET['option'])){
+			$option = $_GET['option'];
+		} else if(isset($_POST['dateBegin']) || isset($_POST['dateEnd'])){
+			$option = 4;
+        }
         
         if (! empty($balance)) {
-			$date = $balance->setPeriodTime(1);
+			$date = $balance->setPeriodTime($option);
 			$begin = $date[0];
 			$end = $date[1];
 		} else {
@@ -36,6 +39,10 @@ class Balance extends Authenticated {
 			$end = date("Y-m-d");
         }
 
+        $beginDateFormated = date("d.m.Y", strtotime($begin));
+        $endDateFormated = date("d.m.Y", strtotime($end));
+        $sentence = 'Za okres od '.$beginDateFormated.' do '.$endDateFormated;
+           
 		$incomesGenerally = $balance->getIncomesGenerally($begin, $end);
 		$expensesGenerally = $balance->getExpensesGenerally($begin, $end);
 
@@ -53,7 +60,8 @@ class Balance extends Authenticated {
             'incomesGenerally' => $incomesGenerally,
             'incomesSum' => $incomesSum,
             'expensesGenerally' => $expensesGenerally,
-            'expensesSum' => $expensesSum
+            'expensesSum' => $expensesSum,
+            'sentencePeriod' => $sentence
         ]);
     }
     
