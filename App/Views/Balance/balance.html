@@ -10,8 +10,8 @@
             <div class="collapse navbar-collapse" id="mainmenu" >
                 <ol class="navbar-nav mx-auto">
                     <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="income">Dodaj przychód</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="expense">Dodaj wydatek</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link active" href="/balance/balance">Przeglądaj bilans</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="text-center" id="period" > 
-                        {{ sentencePeriod }}
+                        {{ arg }}
                     </div>
                 </div>
                 <div class="text-center mt-2 mb-4" id="select_period_dropdown">
@@ -79,16 +79,16 @@
                     </div>
                 </div>
             </div>
-                {% if incomesGenerally is empty %}
-                <div class="text-center">  
-                    Brak przychodów w wybranym okresie
-                </div>
-                {% endif %}
+            {% if incomesGenerally is empty %}
+            <div class="text-center mb-3">  
+                Brak przychodów w wybranym okresie
+            </div>
+            {% endif %}
             <div class="row justify-content-center">
                 <table>
                     <thead>
                         <tr>
-                            <th class="table_name">PRZYCHODY</th>
+                            <th class="text-center p-2" colspan='3'>PRZYCHODY</th>
                         </tr>
                         <tr>
                             <th scope="col-lg-2">Data</th>
@@ -97,96 +97,59 @@
                         </tr>
                     </thead>
                     {% for income in incomesGenerally %}
-                        {{ income.date_of_income }}	
-                        {{ income.name }}	
-                        {{ income[2] }}
+                        <tr>
+                            <td class="text-left pl-4">{{ income[0] }}</td>	
+                            <td class="text-right pr-3">{{ income[2] }}</td>
+                            <td class="text-right pr-3">{{ income[1] }}</td>
+                        </tr>
                     {% endfor %}
                     <tr class="sum">
                         <td>Suma przychodów</td>
-                        <td id="sumOfIncomes">
-                            {% if sumOfIncomes %} 
-                                {{ sumOfIncomes }} 
+                        <td id="sumOfIncomes" colspan='2'>
+                            {% if incomesSum %} 
+                                {{ incomesSum }} 
+                            {% else %}
+                                0.00
                             {% endif %}
                         </td>
                     </tr>
                 </table> 
             </div>
-            <div class="table_name">WYDATKI</div>
+            {% if expensesGenerally is empty %}
+                <div class="text-center mb-3">  
+                    Brak wydatków w wybranym okresie
+                </div>
+            {% endif %}
             <div class="row justify-content-center">
                     <table>
-                    <tr>
-                        <th>Kategoria</th>
-                        <th>Kwota</th>
-                    </tr>
-                    <tr>
-                        <td>Transport</td>
-                        <td id="transport">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Książki</td>
-                        <td id="books">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Jedzenie</td>
-                        <td id="eat">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Mieszkanie</td>
-                        <td id="accommodation">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Telekomunikacja</td>
-                        <td id="telecommunication">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Opieka zdrowotna</td>
-                        <td id="healthcare">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Ubranie</td>
-                        <td id="clothes">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Higiena</td>
-                        <td id="hygiene">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Dzieci</td>
-                        <td id="kids">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Rozrywka</td>
-                        <td id="entertainment">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Wycieczka</td>
-                        <td id="trip">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Oszczędności</td>
-                        <td id="savings">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Emerytura</td>
-                        <td id="pension">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Spłata długów</td>
-                        <td id="debts">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Darowizna</td>
-                        <td id="donation">0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Inne wydatki</td>
-                        <td id="otherExpenses">0.00</td>
-                    </tr>
-                    <tr class="sum">
-                        <td>Suma</td>
-                        <td id="sumOfExpenses">0.00</td>
-                    </tr>
-                </table> 
+                        <thead>
+                            <tr>
+                                <th class="text-center p-2" colspan='3'>WYDATKI</th>
+                            </tr>
+                            <tr>
+                                <th scope="col-lg-2">Data</th>
+                                <th scope="col-lg-1">Kwota</th>
+                                <th scope="col-lg-1">Kategoria</th>
+                            </tr>
+                        </thead>
+                        {% for expense in expensesGenerally %}
+                        <tr>
+                            <td class="text-left pl-4">{{ expense[0] }}</td>	
+                            <td class="text-right pr-3">{{ expense[2] }}</td>
+                            <td class="text-right pr-3">{{ expense[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="sum">
+                            <td>Suma wydatków</td>
+                            <td id="sumOfExpenses" colspan='2'>
+                                {% if expensesSum %} 
+                                    {{ expensesSum }} 
+                                {% else %}
+                                    0.00
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table> 
             </div>
             <div class="row justify-content-center">
                 <div class="row col-12 justify-content-center">		

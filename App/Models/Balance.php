@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use PDO;
-use \Core\View;
 
 /**
  * Post model
@@ -20,6 +19,20 @@ class Balance extends \Core\Model
     public $errors = [];
 
     /**
+     * Incomes
+     *
+     * @var array
+     */
+    public $incomes = [];
+
+    /**
+     * Expenses
+     *
+     * @var array
+     */
+    public $expenses = [];
+
+    /**
      * Class constructor
      *
      * @param array $data  Initial property values (optional)
@@ -34,11 +47,11 @@ class Balance extends \Core\Model
     }
 
      /**
-     * Set a period time on page
+     * Set a period time on page in better format
      *
      * @return string
      */
-    public function setPeriodTime($firstDate, $secondDate)
+    public static function setPeriodTime($firstDate, $secondDate)
     {   
         $firstDateFormated = date("d.m.Y", strtotime($firstDate));
         $secondDateFormated = date("d.m.Y", strtotime($secondDate));
@@ -92,12 +105,31 @@ class Balance extends \Core\Model
         return $date;
     }
 
+
     /**
-     * Get all the incomes as an associative array
+     * Fill the income table sum of individual income
+     *
+     * @return boolean
+     */
+    public function fillIncomesTable($user_id, $date1, $date2)
+    {
+        if(empty($this->incomes)) {
+            $i = 0;
+            while($i < 4){
+                $this->incomes[$i] = $this->getSumAmountIncome($user_id, $date1, $date2, $i+1);
+                $i++;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get sum of individual income as an associative array
      *
      * @return array
      */
-    public static function getSumAmountIncome($user_id, $date1, $date2, $category)
+    public function getSumAmountIncome($user_id, $date1, $date2, $category)
     {
         $sql = 'SELECT SUM(amount) FROM incomes WHERE user_id = :user_id AND income_category_assigned_to_user_id = :category AND date_of_income BETWEEN :date1 AND :date2';
         $db = static::getDB();
@@ -109,9 +141,7 @@ class Balance extends \Core\Model
         $stmt->bindValue(':date2', $date2, PDO::PARAM_STR);
         $stmt->execute();
         //dostajemy dane amount w szufladkach tablicy asjocjacyjnej o nazwie tablic takich jak w bazie danych
-        $incomes = $stmt->fetch();
-
-        return $incomes;
+        return  $stmt->fetch();
     }
 
     /**
@@ -119,7 +149,7 @@ class Balance extends \Core\Model
      *
      * @return array
      */
-    public static function getExpenses($user_id, $date1, $date2, $category)
+    public function getExpenses($user_id, $date1, $date2, $category)
     {
             $sql = 'SELECT amount FROM expenses WHERE user_id = :user_id AND expense_category_assigned_to_user_id = :category AND date_of_expense BETWEEN :date1 AND :date2';
             $db = static::getDB();

@@ -47,22 +47,6 @@ class Posts extends Authenticated
     }
 
     /**
-     * Add a show a balance page
-     *
-     * @return void
-     */
-    public function balanceAction()
-    {
-        $balance = new Balance($_POST);
-        $beginCurMonth = date("Y-m-01");
-        $endCurMonth = date("Y-m-t");	
-        $sentence = $balance->setPeriodTime($beginCurMonth, $endCurMonth);
-        View::renderTemplate('Posts/balance.html', [
-            'sentencePeriod' => $sentence
-        ]);
-    }
-
-    /**
      * Create an income
      *
      * @return void
@@ -141,55 +125,29 @@ class Posts extends Authenticated
         
         if(!isset($_GET['option'])&&!isset($_POST['dateBegin'])&&!isset($_POST['dateEnd'])){
 			$option = 1;
-        }
-        if(isset($_GET['option'])){
+        } else if(isset($_GET['option'])){
 			$option = $_GET['option'];
-		}
-		if(isset($_POST['dateBegin']) || isset($_POST['dateEnd'])){
+		} else if(isset($_POST['dateBegin']) || isset($_POST['dateEnd'])){
 			$option = 4;
         }
-        
         $date = $balance->selectPeriodTime($option);
-
         $sentence = $balance->setPeriodTime($date[0], $date[1]);
-
         if($date[0] == 0){
             Flash::addMessage('Błędny przedział czasowy.', Flash::WARNING);
             $this->redirect('/posts/balance');
         }
 
-        //$sentence = $balance->setPeriodTime($date[0], $date[1]);
-
         $user = Auth::getUser();
+        
+        if($balance->fillIncomesTable($user->id, $date[0], $date[1])){
 
-        $income_table = [];
-
-        $i = 0;
-        while($i < 4){
-           $income_table[$i] = $balance->getSumAmountIncome($user->id, $date[0], $date[1], $i);
-           $i++;
-        }
-    
-        View::renderTemplate('Posts/balance.html', [
-            'income_table' => $income_table,
-            'sentencePeriod' => $sentence
-
-        ]);
-    }
-
-       /* 
-        if ($balance->getIncomes($user->id, $date1, $date2) && $balance->getExpenses($user->id, $date1, $date2)) {
-
-            $this->redirect('/posts/success-expense');
-
-        } else {
-            Flash::addMessage('Nie udało się zarejestrować wydatku.', Flash::WARNING);
-
-            View::renderTemplate('Posts/expense.html', [
-                'expense' => $expense
+            View::renderTemplate('Posts/balance.html', [
+                'sentencePeriod' => $sentence,
+                'balance' => $balance
             ]);
-        }*/
-    
+        }
+
+    }
 
     /**
      * Show the edit page
