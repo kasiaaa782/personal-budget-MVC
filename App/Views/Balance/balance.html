@@ -157,23 +157,14 @@
                 </div>
                 <div id="balance">
                     <div id="balance1">BILANS</div>
-                    <div>0.00 </div>
+                    {% if balanceScore %} 
+                        {{ balanceScore }} 
+                    {% else %}
+                        0.00
+                    {% endif %}
                     <div id="score">
-                    <!--
-                    <?php
-                    if(isset($_SESSION['balance'])){
-                        if($_SESSION['balance'] > 0){
-                            echo 'Gratulacje! Świetnie zarządzasz finansami!';
-                        } else if ($_SESSION['balance'] == 0) {
-                            echo 'Nie udało Ci się zaoszczędzić.'.'<br/>'.'Wychodzisz na zero!';
-                        } else {
-                            echo 'Uważaj! Wpadasz w długi!';
-                        }
-                        unset($_SESSION['balance']);
-                    }
-                    ?>-->
+                        <div>{{ balanceSentence }}</div>
                     </div>
-                    
                 </div>
             </div>
         </div>

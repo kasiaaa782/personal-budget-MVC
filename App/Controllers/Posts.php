@@ -113,51 +113,5 @@ class Posts extends Authenticated
     {
         View::renderTemplate('Posts/s_expense.html');
     }
-
-    /**
-     * Show the page with expenses and incomes of selected period 
-     *
-     * @return void
-     */
-    public function showBalanceAction()
-    {
-        $balance = new Balance($_POST);
-        
-        if(!isset($_GET['option'])&&!isset($_POST['dateBegin'])&&!isset($_POST['dateEnd'])){
-			$option = 1;
-        } else if(isset($_GET['option'])){
-			$option = $_GET['option'];
-		} else if(isset($_POST['dateBegin']) || isset($_POST['dateEnd'])){
-			$option = 4;
-        }
-        $date = $balance->selectPeriodTime($option);
-        $sentence = $balance->setPeriodTime($date[0], $date[1]);
-        if($date[0] == 0){
-            Flash::addMessage('Błędny przedział czasowy.', Flash::WARNING);
-            $this->redirect('/posts/balance');
-        }
-
-        $user = Auth::getUser();
-        
-        if($balance->fillIncomesTable($user->id, $date[0], $date[1])){
-
-            View::renderTemplate('Posts/balance.html', [
-                'sentencePeriod' => $sentence,
-                'balance' => $balance
-            ]);
-        }
-
-    }
-
-    /**
-     * Show the edit page
-     *
-     * @return void
-     */
-    /*
-    public function editAction()
-    {
-        echo 'Hello from the edit action in the Posts controller!';
-    }
-    */
+    
 }

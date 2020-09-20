@@ -50,34 +50,34 @@ class Balance extends Authenticated {
         foreach($incomesGenerally as $amountIncome){
             $incomesSum += $amountIncome['SUM(i.amount)'];
         } 
+        $incomesSum = number_format($incomesSum, 2, '.' , '');
 
         $expensesSum = 0;
         foreach($expensesGenerally as $expenseIncome){
             $expensesSum += $expenseIncome['SUM(e.amount)'];
         } 
+        $expensesSum = number_format($expensesSum, 2, '.' , '');
+
+        $balanceScore = $incomesSum - $expensesSum;
+        $balanceScore = number_format($balanceScore, 2, '.' , '');
         
+        if($balanceScore > 0){
+            $balanceSentence = 'Gratulacje! Świetnie zarządzasz finansami!';
+        } else if ($balanceScore == 0) {
+            $balanceSentence = 'Nie udało Ci się zaoszczędzić.'.'<br/>'.'Wychodzisz na zero!';
+        } else {
+            $balanceSentence = 'Uważaj! Wpadasz w długi!';
+        }
+
 		View::renderTemplate('Balance/balance.html', [
             'incomesGenerally' => $incomesGenerally,
             'incomesSum' => $incomesSum,
             'expensesGenerally' => $expensesGenerally,
             'expensesSum' => $expensesSum,
-            'sentencePeriod' => $sentence
+            'sentencePeriod' => $sentence,
+            'balanceScore' => $balanceScore,
+            'balanceSentence' => $balanceSentence
         ]);
     }
-    
-    /**
-     * Add a show a balance page
-     *
-     * @return void
-     */
-   /* public function balanceAction()
-    {
-        $beginCurMonth = date("Y-m-01");
-        $endCurMonth = date("Y-m-t");	
-        $sentence = Balance::setPeriodTime($beginCurMonth, $endCurMonth);
-        View::renderTemplate('Posts/balance.html', [
-            'sentencePeriod' => $sentence
-        ]);
-    }*/
 }     
    
