@@ -5,6 +5,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\Income;
 use \App\Models\Expense;
+use \App\Models\Balance;
 use \App\Auth;
 use \App\Flash;
 
@@ -103,7 +104,7 @@ class Posts extends Authenticated
     }
 
     /**
-     * Show the income success page
+     * Show the expense success page
      *
      * @return void
      */
@@ -112,18 +113,5 @@ class Posts extends Authenticated
     {
         View::renderTemplate('Posts/s_expense.html');
     }
-
-    /**
-     * Show the edit page
-     *
-     * @return void
-     */
-    /*
-    public function editAction()
-    {
-        echo 'Hello from the edit action in the Posts controller!';
-        echo '<p>Route parameters: <pre>' .
-             htmlspecialchars(print_r($this->route_params, true)) . '</pre></p>';
-    }
-    */
+    
 }

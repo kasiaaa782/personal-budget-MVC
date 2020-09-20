@@ -10,9 +10,9 @@
             <div class="collapse navbar-collapse" id="mainmenu" >
                 <ol class="navbar-nav mx-auto">
                     <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="income">Dodaj przychód</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link active" href="expense">Dodaj wydatek</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="#">Przeglądaj bilans</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/expense">Dodaj wydatek</a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
                     <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
                 </ol>
@@ -78,7 +78,7 @@
                         <label>Data : <input type="date" name="date" id="date1" value="{{ expense.date }}"></label>
                     </div>
                 </div>
-                {% if income.errors is not empty %}
+                {% if expense.errors is not empty %}
                     <div class='error'>{{ expense.errors[0] }}</div>
                 {% endif %}
                 <div class="row justify-content-center">

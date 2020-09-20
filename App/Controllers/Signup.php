@@ -32,7 +32,6 @@ class Signup extends \Core\Controller
     public function createAction()
     {
         $user = new User($_POST);
-
         
         $everything_OK = true;
         $e_rules = "";
