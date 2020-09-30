@@ -13,7 +13,6 @@ use \App\Flash;
  */
 class Signup extends \Core\Controller
 {
-
     /**
      * Show the signup page
      *
@@ -38,14 +37,13 @@ class Signup extends \Core\Controller
         $e_bot = "";
         $rules = isset($_POST['rules']);
 
-        //Czy zaakceptowano regulamin?
         if (!$rules){
             $e_rules = "Potwierdź akceptację regulaminu!"; 
             $everything_OK = false;
         }
         
-        //sprawdzenie reCAPTCHA
-        $secret = '6LcG4MUZAAAAAD8DfRgomSjP8Qi476SbHabT29w1';
+        //checking reCAPTCHA
+        $secret = '6LfD_7wZAAAAAPmDQvgE9QJjiwT__HkfmsE88in1';
         $check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
         $answer = json_decode($check);
 

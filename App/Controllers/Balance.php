@@ -12,8 +12,6 @@ use \App\Models\BalanceData;
  */
 class Balance extends Authenticated {
     
-    
-    
     /**
      * Add a show a balance page
      *
@@ -64,7 +62,7 @@ class Balance extends Authenticated {
         if($balanceScore > 0){
             $balanceSentence = 'Gratulacje! Świetnie zarządzasz finansami!';
         } else if ($balanceScore == 0) {
-            $balanceSentence = 'Nie udało Ci się zaoszczędzić.'.'<br/>'.'Wychodzisz na zero!';
+            $balanceSentence = 'Nie udało Ci się zaoszczędzić. Wychodzisz na zero!';
         } else {
             $balanceSentence = 'Uważaj! Wpadasz w długi!';
         }
@@ -80,4 +78,5 @@ class Balance extends Authenticated {
         ]);
     }
 }     
+
    

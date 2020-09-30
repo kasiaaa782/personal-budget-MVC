@@ -12,7 +12,6 @@ use \App\Token;
  */
 class RememberedLogin extends \Core\Model
 {
-
     /**
      * Find a remembered login model by the token
      *

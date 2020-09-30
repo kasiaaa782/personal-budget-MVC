@@ -4,8 +4,6 @@ namespace App\Models;
 
 use PDO;
 use \App\Token;
-use \App\Mail;
-use \Core\View;
 
 /**
  * User model
@@ -14,7 +12,6 @@ use \Core\View;
  */
 class User extends \Core\Model
 {
-
     /**
      * Error messages
      *
@@ -49,16 +46,15 @@ class User extends \Core\Model
 
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 
-            $sql = 'INSERT INTO users (name, email, password_hash)
-                    VALUES (:name, :email, :password_hash)';
+            $sql = 'INSERT INTO users (username, password, email)
+                    VALUES (:username, :password, :email)';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindValue(':username', $this->name, PDO::PARAM_STR);
+            $stmt->bindValue(':password', $password_hash, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-
             
             return $stmt->execute();
         }
@@ -73,35 +69,20 @@ class User extends \Core\Model
      */
     public function validate()
     {
-        // Name
         if (preg_match('/^[A-ZŁŚ]{1}+[a-ząęółśżźćń]+$/',$this->name) == 0) {
             $this->errors[0] = 'Wpisz poprawne imię zaczynając wielką literą!';
-            //'Name is required';
         }
 
-        // email address
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[1] = 'Niepoprawny email!';
-            //'Invalid email';
-
         }
+
         if (static::emailExists($this->email)) {
             $this->errors[1] = 'Konto o takim adresie istnieje, wprowadź inny e-mail!';
-            //'email already taken';
         }
-
-        // Password
-        
-        /*
-        if ($this->password != $this->password_confirmation) {
-            $this->errors[3] = 'Hasła muszą być takie same!';
-            //'Password must match confirmation'
-        }
-        */
 
         if ((strlen($this->password) < 6)) {
             $this->errors[2] = 'Wpisz co najmniej 6 znaków, jedną literę i jedną cyfrę!' ; 
-            //'Please enter at least 6 characters for the password';
         }
 
         if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
@@ -161,7 +142,7 @@ class User extends \Core\Model
         $user = static::findByEmail($email);
 
         if ($user) {
-            if (password_verify($password, $user->password_hash)) {
+            if (password_verify($password, $user->password)) {
                 return $user;
             }
         }
@@ -217,72 +198,4 @@ class User extends \Core\Model
 
         return $stmt->execute();
     }
-    
-    /**
-     * Send password reset instructions to the user specified
-     *
-     * @param string $email The email address
-     *
-     * @return void
-     */
-    /*
-    public static function sendPasswordReset($email)
-    {
-        $user = static::findByEmail($email);
-
-        if ($user) {
-
-            if ($user->startPasswordReset()) {
-
-                $user->sendPasswordResetEmail();
-
-            }
-        }
-    }
-    */
-    /**
-     * Start the password reset process by generating a new token and expiry
-     *
-     * @return void
-     */
-    /*
-    protected function startPasswordReset()
-    {
-        $token = new Token();
-        $hashed_token = $token->getHash();
-        $this->password_reset_token = $token->getValue();
-
-        $expiry_timestamp = time() + 60 * 60 * 2;  // 2 hours from now
-
-        $sql = 'UPDATE users
-                SET password_reset_hash = :token_hash,
-                    password_reset_expires_at = :expires_at
-                WHERE id = :id';
-
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
-
-        $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
-        $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $expiry_timestamp), PDO::PARAM_STR);
-        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
-
-        return $stmt->execute();
-    }
-    */
-    /**
-     * Send password reset instructions in an email to the user
-     *
-     * @return void
-     */
-    /*
-    protected function sendPasswordResetEmail()
-    {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_token;
-
-        $text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
-        $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
-
-        Mail::send($this->email, 'Password reset', $text, $html);
-    }
-    */
 }

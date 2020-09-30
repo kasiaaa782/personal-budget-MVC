@@ -61,7 +61,6 @@ class Auth
             );
         }
 
-        // Finally destroy the session
         session_destroy();
 
        static::forgetLogin();        

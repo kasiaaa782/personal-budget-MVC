@@ -25,3 +25,4 @@ class Account extends \Core\Controller
         echo json_encode($is_valid);
     }
 }
+

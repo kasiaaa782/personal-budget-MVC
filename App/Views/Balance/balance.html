@@ -3,6 +3,7 @@
 {% block title %}Budżet osobisty - Bilans finansowy{% endblock %}
 
 {% block navigation %} 
+
         <nav class="navbar navbar-dark navbar-expand-lg">
             <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
                 <span class="navbar-toggler-icon"></span>
@@ -18,19 +19,10 @@
                 </ol>
             </div>
         </nav>
+
 {% endblock %}
 
 {% block body %}
-<!--
-    <h1>Posts</h1>
-
-   <ul>
-        {% for post in posts %}
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
-        {% endfor %}
-    </ul>
-    -->
 
     <div id="content_balance">
         <div class="container">
@@ -59,7 +51,7 @@
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="myModalLabel">Wybierz przedział czasowy</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
+                                        <span aria-hidden="true">×</span>
                                     </button>
                                 </div>
                                 <form method="post" action="/balance/balance" >
@@ -121,35 +113,35 @@
                 </div>
             {% endif %}
             <div class="row justify-content-center">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="text-center p-2" colspan='3'>WYDATKI</th>
-                            </tr>
-                            <tr>
-                                <th scope="col-lg-2">Data</th>
-                                <th scope="col-lg-1">Kwota</th>
-                                <th scope="col-lg-1">Kategoria</th>
-                            </tr>
-                        </thead>
-                        {% for expense in expensesGenerally %}
+                <table>
+                    <thead>
                         <tr>
-                            <td class="text-left pl-4">{{ expense[0] }}</td>	
-                            <td class="text-right pr-3">{{ expense[2] }}</td>
-                            <td class="text-right pr-3">{{ expense[1] }}</td>
+                            <th class="text-center p-2" colspan='3'>WYDATKI</th>
                         </tr>
-                        {% endfor %}
-                        <tr class="sum">
-                            <td>Suma wydatków</td>
-                            <td id="sumOfExpenses" colspan='2'>
-                                {% if expensesSum %} 
-                                    {{ expensesSum }} 
-                                {% else %}
-                                    0.00
-                                {% endif %}
-                            </td>
+                        <tr>
+                            <th scope="col-lg-2">Data</th>
+                            <th scope="col-lg-1">Kwota</th>
+                            <th scope="col-lg-1">Kategoria</th>
                         </tr>
-                    </table> 
+                    </thead>
+                    {% for expense in expensesGenerally %}
+                    <tr>
+                        <td class="text-left pl-4">{{ expense[0] }}</td>	
+                        <td class="text-right pr-3">{{ expense[2] }}</td>
+                        <td class="text-right pr-3">{{ expense[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="sum">
+                        <td>Suma wydatków</td>
+                        <td id="sumOfExpenses" colspan='2'>
+                            {% if expensesSum %} 
+                                {{ expensesSum }} 
+                            {% else %}
+                                0.00
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table> 
             </div>
             <div class="row justify-content-center">
                 <div class="row col-12 justify-content-center">		
@@ -157,11 +149,11 @@
                 </div>
                 <div id="balance">
                     <div id="balance1">BILANS</div>
-                    {% if balanceScore %} 
-                        {{ balanceScore }} 
-                    {% else %}
-                        0.00
-                    {% endif %}
+                        {% if balanceScore %} 
+                            {{ balanceScore }} 
+                        {% else %}
+                            0.00
+                        {% endif %}
                     <div id="score">
                         <div>{{ balanceSentence }}</div>
                     </div>
@@ -169,6 +161,5 @@
             </div>
         </div>
     </div>
-
 
 {% endblock %}
