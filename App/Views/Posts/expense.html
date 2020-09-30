@@ -3,28 +3,28 @@
 {% block title %}Budżet osobisty - Dodawanie wydatku{% endblock %}
 
 {% block navigation %} 
-        <nav class="navbar navbar-dark navbar-expand-lg">
-            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainmenu" >
-                <ol class="navbar-nav mx-auto">
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/expense">Dodaj wydatek</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
-                </ol>
-            </div>
-        </nav>
-{% endblock %}
 
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainmenu" >
+            <ol class="navbar-nav mx-auto">
+                <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+                <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+                <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/expense">Dodaj wydatek</a></li>
+                <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
+                <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
+                <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+            </ol>
+        </div>
+    </nav>
+
+{% endblock %}
 
 {% block head %}
     <script>
         function checkData(){
-            
             //payment
             var payments = [];
             var payment = 0;
@@ -54,9 +54,7 @@
             } else {
                 document.getElementById("infoCategory").innerHTML = "";
             }
-
         }
-
     </script>
 {% endblock %}
 
@@ -83,7 +81,7 @@
                 {% endif %}
                 <div class="row justify-content-center">
                     <div class="col-sm-12 col-md-3 mb-2">Sposób płatności:</div>
-                    <div >
+                    <div>
                         <label class="mr-4"><input type="radio" id="p0" name="payment" value="1" class="mr-2"  >Gotówka</label>
                         <label class="mr-4"><input type="radio" id="p1" name="payment" value="2" class="mr-2" >Karta debetowa</label>
                         <label><input type="radio" name="payment" id="p2" value="3" class="mr-2" >Karta kredytowa</label>
@@ -120,7 +118,6 @@
                             <div><label><input type="radio" id="c14" value="15" name="category" class="mr-2" >Darowizna</label></div>
                             <div><label><input type="radio" id="c15" value="16" name="category" class="mr-2" >Inne wydatki</label></div>
                         </div>
-
                     </div>
                 </div>
                 <p class="error" id="infoCategory"></p>
@@ -131,8 +128,8 @@
                     <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)" onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
                 </div>
                 <div class="row justify-content-center mt-3">
-                        <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj wydatek" class="mr-5"> 
-                        <input id="expense_button" type="reset" value="Anuluj"> 
+                    <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj wydatek" class="mr-5"> 
+                    <input id="expense_button" type="reset" value="Anuluj"> 
                 </div>	
             </form>
         </div>

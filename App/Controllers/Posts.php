@@ -5,7 +5,6 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\Income;
 use \App\Models\Expense;
-use \App\Models\Balance;
 use \App\Auth;
 use \App\Flash;
 
@@ -113,5 +112,4 @@ class Posts extends Authenticated
     {
         View::renderTemplate('Posts/s_expense.html');
     }
-    
 }

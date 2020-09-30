@@ -11,7 +11,6 @@ use PDO;
  */
 class Income extends \Core\Model
 {
-
     /**
      * Error messages
      *
@@ -72,12 +71,10 @@ class Income extends \Core\Model
      */
     public function validate()
     {
-        // Amount
         if ($this->amount <= 0) {
             $this->errors[0] = 'Wpisz poprawną kwotę!';
         }
 
-        // Category
         if (!isset($this->category)) {
             $this->errors[1] = 'Wybierz kategorię!';
         }

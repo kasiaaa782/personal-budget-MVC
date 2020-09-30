@@ -14,7 +14,6 @@ use \App\Flash;
  */
 class Login extends \Core\Controller
 {
-
     /**
      * Show the login page
      *

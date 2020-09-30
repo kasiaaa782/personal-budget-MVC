@@ -11,7 +11,6 @@ use PDO;
  */
 class Expense extends \Core\Model
 {
-
     /**
      * Error messages
      *
@@ -74,17 +73,14 @@ class Expense extends \Core\Model
      */
     public function validate()
     {
-        // Amount
         if ($this->amount <= 0) {
             $this->errors[0] = 'Wpisz poprawną kwotę!';
         }
         
-        // Payment
         if (!isset($this->payment)) {
             $this->errors[1] = 'Wybierz sposób płatności!';
         }
         
-        // Category
         if (!isset($this->category)) {
             $this->errors[2] = 'Wybierz kategorię!';
         }

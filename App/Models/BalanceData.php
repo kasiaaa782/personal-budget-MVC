@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
-
 /**
  * Balance data model
  *
@@ -110,8 +108,7 @@ class BalanceData extends \Core\Model
         $userID = $this->setUserID();
 
 		$sql = "SELECT i.date_of_income, i.income_category_assigned_to_user_id, SUM(i.amount) 
-                FROM 
-                incomes AS i
+                FROM incomes AS i
                 WHERE i.user_id='$userID' 
                 AND i.date_of_income BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
                 GROUP BY income_category_assigned_to_user_id";
@@ -135,8 +132,7 @@ class BalanceData extends \Core\Model
 		$userID = $this->setUserID();
 
 		$sql = "SELECT e.date_of_expense, e.expense_category_assigned_to_user_id, SUM(e.amount) 
-                FROM 
-                expenses AS e
+                FROM expenses AS e
                 WHERE e.user_id='$userID' 
                 AND e.date_of_expense BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
                 GROUP BY expense_category_assigned_to_user_id";
