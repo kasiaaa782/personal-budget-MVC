@@ -577,26 +577,31 @@ table{
 		text-shadow: none;
 }
 
-.block_option{
-	background-color:#2b7bca;
-	width: 70vmin;
-	display: flex;
-	justify-content: space-between;
-}
-
-
-
-
-
-
-.accordion {
-	width: 70% !important;
-}
-
 .card {
 	border: #2b7bca !important;
 	border-radius: 3px 3px 3px 3px;
 }
+
+.card-header {
+	padding: 0; 
+	border-radius: 3px 3px 3px 3px !important;
+}
+
+.accordion {
+	width: 70vh !important;
+}
+
+.block_option{
+	background-color:#2b7bca;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 20px 10px 20px; 
+	border-radius: 3px 3px 3px 3px;
+}
+
+
+
 
 .bg-option-blue{
 	background-color: #2b7bca !important;

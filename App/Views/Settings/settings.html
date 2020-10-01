@@ -4,35 +4,36 @@
 
 {% block head %}
 
-<link rel="stylesheet" href="../css/money.css" type="text/css">
 <link rel="stylesheet" href="../css/fontello.css" type="text/css">
 
 <script>
 
   function changeArrows(up) {
-    if (up.className == "icon-down-open") {
-      up.className = "icon-up-open";
+    if (up.attr('class') == "icon-down-open") {
+      up.attr("class", "icon-up-open");
     } else {
-      up.className = "icon-down-open";
+      up.attr("class", "icon-down-open");
     }
   }
 
   $(document).ready(function () {
-    $("#up1").click(function () {
-      changeArrows(this);
-      $("#up2, #up3, #up4").removeClass('icon-up-open').addClass('icon-down-open');
+    $("#option1").click(function () {
+      changeArrows($("#up1"));
+      $("#up2, #up3, #up4").attr("class", "icon-down-open");
     });
-    $("#up2").click(function () {
-      changeArrows(this);
-      $("#up1, #up3, #up4").removeClass('icon-up-open').addClass('icon-down-open');
+    $("#option2").click(function () {
+      changeArrows($("#up2"));
+      $("#up1, #up3, #up4").attr("class", "icon-down-open");
     });
-    $("#up3").click(function () {
-      changeArrows(this);
-      $("#up1, #up2, #up4").removeClass('icon-up-open').addClass('icon-down-open');
+
+    $("#option3").click(function () {
+      changeArrows($("#up3"));
+      $("#up1, #up2, #up4").attr("class", "icon-down-open");
     });
-    $("#up4").click(function () {
-      changeArrows(this);
-      $("#up1, #up2, #up3").removeClass('icon-up-open').addClass('icon-down-open');
+
+    $("#option4").click(function () {
+      changeArrows($("#up4"));
+      $("#up1, #up2, #up3").attr("class", "icon-down-open");
     });
   });
 
@@ -70,24 +71,26 @@
         Panel użytkownika
       </div>
       <hr class="line mt-3 mb-5">
-      <div id="accordion">
+      <div id="accordion" style="width: 70vmin">
         <div class="card mb-1">
-          <div class="card-header block_option">
-            Kategorie przychodów
-            <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option1" data-toggle="collapse" href="#collapseOne">
+              Kategorie przychodów 
               <i class="icon-down-open" aria-hidden="true" id="up1"></i>
             </a>
           </div>
           <div id="collapseOne" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              Lorem ipsum..
+              <div>Lorem ipsum.. </div>
+              <div>Lorem ipsum.. </div>
+              <div>Lorem ipsum.. </div>
             </div>
           </div>
         </div>
         <div class="card mb-1">
-          <div class="card-header block_option">
-            Kategorie wydatków
-            <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option2" data-toggle="collapse" href="#collapseTwo">
+              Kategorie wydatków
               <i class="icon-down-open" aria-hidden="true" id="up2"></i>
             </a>
           </div>
@@ -98,9 +101,9 @@
           </div>
         </div>
         <div class="card mb-1">
-          <div class="card-header block_option">
-            Sposoby płatności
-            <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option3" data-toggle="collapse" href="#collapseThree">
+              Sposoby płatności
               <i class="icon-down-open" aria-hidden="true" id="up3"></i>
             </a>
           </div>
@@ -111,9 +114,9 @@
           </div>
         </div>
         <div class="card mb-1">
-          <div class="card-header block_option">
-            Użytkownik
-            <a class="collapsed card-link" data-toggle="collapse" href="#collapseFour">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option4" data-toggle="collapse" href="#collapseFour">
+              Użytkownik
               <i class="icon-down-open" aria-hidden="true" id="up4"></i>
             </a>
           </div>
