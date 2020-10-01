@@ -4,45 +4,46 @@
 
 {% block head %}
 
-    <link rel="stylesheet" href="../css/money.css" type="text/css">
+<link rel="stylesheet" href="../css/money.css" type="text/css">
 
 {% endblock %}
 
-{% block navigation %} 
+{% block navigation %}
 
-        <nav class="navbar navbar-dark navbar-expand-lg">
-            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainmenu" >
-                <ol class="navbar-nav mx-auto">
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/income">Dodaj przychód</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
-                </ol>
-            </div>
-        </nav>
+<nav class="navbar navbar-dark navbar-expand-lg">
+    <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
+        aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainmenu">
+        <ol class="navbar-nav mx-auto">
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/income">Dodaj przychód</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+        </ol>
+    </div>
+</nav>
 
 {% endblock %}
 
 {% block body %}
 
-    <div class="container">
-        <section id="content" >
-            <div class="row text-center justify-content-center">
-                <h2 class="mt-3">Dodawanie przychodu</h2>
-                <hr class="line mt-4">
-                <div id="success_registration"> 
-                    Poprawnie zaksięgowano przychód!
-                </div>
-                <div class="attention mt-2 mb-2">
-                    <a href="/posts/income">Kliknij tutaj, aby dodać kolejny<i class="icon-ok"></i></a>
-                </div>
-            </div> 				
-        </section>
-    </div>
+<div class="container">
+    <section id="content">
+        <div class="row text-center justify-content-center">
+            <h2 class="mt-3">Dodawanie przychodu</h2>
+            <hr class="line mt-4">
+            <div id="success_registration">
+                Poprawnie zaksięgowano przychód!
+            </div>
+            <div class="attention mt-2 mb-2">
+                <a href="/posts/income">Kliknij tutaj, aby dodać kolejny<i class="icon-ok"></i></a>
+            </div>
+        </div>
+    </section>
+</div>
 
 {% endblock %}
