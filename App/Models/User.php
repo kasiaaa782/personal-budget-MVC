@@ -142,7 +142,7 @@ class User extends \Core\Model
         $user = static::findByEmail($email);
 
         if ($user) {
-            if (password_verify($password, $user->password)) {
+            if (password_verify($password, $user->password_hash)) {
                 return $user;
             }
         }

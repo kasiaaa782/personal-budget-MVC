@@ -1,18 +1,18 @@
 html{
-	height:100vh;
-	width:100vw;
+		height:100vh;
+		width:100vw;
 }
 
 body{
-	/* Background pattern from Toptal Subtle Patterns */
-	background-image: url("../img/handmadepaper.png");
-	font-family: 'Roboto Slab', serif;
-	color: #f9f9f9;
-	padding:0;
-	margin: 0;
-	height: 100%;
-	font-size: 17px;
-	overflow-x: hidden;
+		/* Background pattern from Toptal Subtle Patterns */
+		background-image: url("../img/handmadepaper.png");
+		font-family: 'Roboto Slab', serif;
+		color: #f9f9f9;
+		padding:0;
+		margin: 0;
+		height: 100%;
+		font-size: 17px;
+		overflow-x: hidden;
 }
 
 #wrapper{
@@ -23,16 +23,16 @@ body{
 }
 
 h1{
-	margin: 10px;
-	font-size: 40px;
-	text-transform: uppercase;	
-	font-weight: 700;
+		margin: 10px;
+		font-size: 40px;
+		text-transform: uppercase;	
+		font-weight: 700;
 }
 
 h4{
-	margin: 10px;
-	font-size: 18px;
-	font-style: italic;
+		margin: 10px;
+		font-size: 18px;
+		font-style: italic;
 }
 
 #logo{
@@ -45,10 +45,10 @@ h4{
 }
 
 h2{
-	margin: 10, 0, 0, 0;
-	letter-spacing: 1px;
-	font-size: 40px;
-	font-style: italic;
+		margin: 10, 0, 0, 0;
+		letter-spacing: 1px;
+		font-size: 40px;
+		font-style: italic;
 }
 
 .sentence{
@@ -139,12 +139,12 @@ input[type=password]:focus, input[type=password]:hover{
 }
 
 a:link{
-	color: #FFFFFF;
-	text-decoration:none;
+		color: #FFFFFF;
+		text-decoration:none;
 }
 
 a:visited, a:hover{
-	color: #FFFFFF;
+		color: #FFFFFF;
 }
 
 .attention:hover{
@@ -154,41 +154,41 @@ a:visited, a:hover{
 
 /*menu*/
 .navbar{
-	min-height: 64px;
-	background-color: #3793eefd;
-	border-top: 1px solid rgb(97, 176, 240);
-	border-bottom: 1px solid rgb(97, 176, 240);
-	text-align: center;
-	padding: 8px;
+		min-height: 64px;
+		background-color: #3793eefd;
+		border-top: 1px solid rgb(97, 176, 240);
+		border-bottom: 1px solid rgb(97, 176, 240);
+		text-align: center;
+		padding: 8px;
 }
 
 ol{
-	padding: 0;
-	margin: 0;
-	list-style-type: none;
-	font-size: 17px;
-	letter-spacing: 0.5px;
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+		font-size: 17px;
+		letter-spacing: 0.5px;
 }
 
 ol a {
-	color: white;
-	text-decoration: none;
-	display: block;
+		color: white;
+		text-decoration: none;
+		display: block;
 }
 
 ol > li{
-	width: 170px;
-	margin-top:3px;
-	margin-bottom:2px;
-	border-right: 1px dashed rgb(97, 176, 240);
+		width: 170px;
+		margin-top:3px;
+		margin-bottom:2px;
+		border-right: 1px dashed rgb(97, 176, 240);
 }
 
 ol > li:first-child{
-	border-left: 1px dashed rgb(97, 176, 240);
+		border-left: 1px dashed rgb(97, 176, 240);
 }
 
 ol > li:hover{
-	background-color: #4CA0F5 ;
+		background-color: #4CA0F5 ;
 }
 
 @media all and (max-width: 991px){
@@ -239,14 +239,14 @@ ol > li:hover{
 }
 
 .block{
-	margin-left:10px;
-	margin-right:10px
+		margin-left:10px;
+		margin-right:10px
 }
 
 .categories{
-	text-align: left;
-	display: block;
-	width: 200px;
+		text-align: left;
+		display: block;
+		width: 200px;
 }
 
 #comment{
@@ -367,7 +367,7 @@ ol > li:hover{
 }
 
 #myModalLabel{
-		 font-style: normal;
+		font-style: normal;
 }
 
 #show{
@@ -414,13 +414,13 @@ ol > li:hover{
 }
 
 table, th, td {
-	border: 1px solid #9EBDDB;
-	border-collapse: collapse;
+		border: 1px solid #9EBDDB;
+		border-collapse: collapse;
 }	
 
 th, td {
-	padding: 6px;
-	padding-left: 15px;
+		padding: 6px;
+		padding-left: 15px;
 }
 
 #salary,#bankInterest,#allegro,#otherIncome,#sumOfIncomes,
@@ -432,9 +432,9 @@ th, td {
 }
 
 table{
-	margin-bottom: 20px;
-	width: 90%;
-	background-color: #3793eefd;
+		margin-bottom: 20px;
+		width: 90%;
+		background-color: #3793eefd;
 }
 
 #balance{
@@ -445,7 +445,7 @@ table{
 		margin-bottom:10px;
 		border: 1px solid #1A78D6;
 		padding: 10px;
- 		text-align: center;
+		text-align: center;
 }
 
 @media all and (min-width: 900px){
@@ -473,65 +473,65 @@ table{
 }
 
 #main_page{
-	color: #1A78D6;
+		color: #1A78D6;
 }
 
 .error{
-	color: #d80303c0;
-	font-size: 12px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 5px;
-	margin-top: 2px;
-	text-align: center;
-	text-shadow: none;
-	letter-spacing: 1px;
+		color: #d80303c0;
+		font-size: 12px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 5px;
+		margin-top: 2px;
+		text-align: center;
+		text-shadow: none;
+		letter-spacing: 1px;
 }
 
 .g-recaptcha{
-	display: table;
-	margin-left: auto;
-	margin-right: auto;
+		display: table;
+		margin-left: auto;
+		margin-right: auto;
 }
 
 .success{
-	font-weight: bold;
-	margin: 10px 0px 15px 0px;
-	font-size: 22px;
-	width: 370px;
-	text-decoration: underline;
+		font-weight: bold;
+		margin: 10px 0px 15px 0px;
+		font-size: 22px;
+		width: 370px;
+		text-decoration: underline;
 }
 
 /* main page index.php */
 
 .sentence1{
-	margin:  30px 0px 30px 0px ;
-	font-size: 28px;
-	letter-spacing: 1px;
-	font-style: italic;
+		margin:  30px 0px 30px 0px ;
+		font-size: 28px;
+		letter-spacing: 1px;
+		font-style: italic;
 }
 
 #button_container{
-	margin:  20px 0px 30px 0px ;
-	perspective: 600px;
-	display: flex; 
-	justify-content: space-around;
+		margin:  20px 0px 30px 0px ;
+		perspective: 600px;
+		display: flex; 
+		justify-content: space-around;
 }
 
 .button_link{
-	border: 1px solid #1c6fc2;
-	margin: 25px;
-    padding: 30px;
-	color: white;
-	font-style: italic;
-	font-size: 25px;
-	letter-spacing: 1px;
-    /*cssmatic.com*/
-	background: linear-gradient(to right, rgba(92,137,204,1) 0%, rgba(68,118,193,1) 0%, rgba(56,113,188,1) 26%, rgba(21,97,172,1) 100%);
-	border-radius: 10px;
-	opacity: 0.9;
-    box-shadow: 3px 3px 0px 0px rgb(68,118,193), 0px 9px 10px rgba(0, 0, 0, 0.7);
-	transition: 0.2s;
+		border: 1px solid #1c6fc2;
+		margin: 25px;
+		padding: 30px;
+		color: white;
+		font-style: italic;
+		font-size: 25px;
+		letter-spacing: 1px;
+		/*cssmatic.com*/
+		background: linear-gradient(to right, rgba(92,137,204,1) 0%, rgba(68,118,193,1) 0%, rgba(56,113,188,1) 26%, rgba(21,97,172,1) 100%);
+		border-radius: 10px;
+		opacity: 0.9;
+		box-shadow: 3px 3px 0px 0px rgb(68,118,193), 0px 9px 10px rgba(0, 0, 0, 0.7);
+		transition: 0.2s;
 }
 
 @media all and (max-width: 991px){
@@ -542,37 +542,61 @@ table{
 
 .button_link:hover
 {
-    opacity: 1;
-    transform: rotateX(5deg);
+		opacity: 1;
+		transform: rotateX(5deg);
 }
 .button_link:active
 {
-    outline: none;
-    position: relative;
-    top: 3px;
-    box-shadow: 3px 3px 0px 0px rgb(68,118,193), 0px 3px 6px rgba(0, 0, 0, 0.9);
+		outline: none;
+		position: relative;
+		top: 3px;
+		box-shadow: 3px 3px 0px 0px rgb(68,118,193), 0px 3px 6px rgba(0, 0, 0, 0.9);
 }
 .button_link:focus{
-    outline: none;
+  	outline: none;
 }
 
 .line{
-	width: 80%;
-	background: rgb(120, 159, 218);
-	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+		width: 80%;
+		background: rgb(120, 159, 218);
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 #success_registration{
-	margin-top: 20px;
-	margin-bottom: 20px;
-	font-size: 22px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-size: 22px;
 }
 
 .fa {
-	position: absolute !important;
-    font-size: 20px !important;
-	color: #7a797e;
-	margin: 12px 0 0 -40px !important;
-	cursor: pointer;
-	text-shadow: none;
+		position: absolute !important;
+		font-size: 20px !important;
+		color: #7a797e;
+		margin: 12px 0 0 -40px !important;
+		cursor: pointer;
+		text-shadow: none;
+}
+
+.card {
+	border: #2b7bca !important;
+	border-radius: 3px 3px 3px 3px;
+	margin-bottom: 8px;
+}
+
+.card-header {
+	padding: 0; 
+	border-radius: 3px 3px 3px 3px !important;
+}
+
+#accordion {
+	width: 70vmin !important;
+}
+
+.block_option{
+	background-color:#2b7bca;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 20px 10px 20px; 
+	border-radius: 3px 3px 3px 3px;
 }
