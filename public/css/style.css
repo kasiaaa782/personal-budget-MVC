@@ -580,6 +580,7 @@ table{
 .card {
 	border: #2b7bca !important;
 	border-radius: 3px 3px 3px 3px;
+	margin-bottom: 8px;
 }
 
 .card-header {
@@ -587,8 +588,8 @@ table{
 	border-radius: 3px 3px 3px 3px !important;
 }
 
-.accordion {
-	width: 70vh !important;
+#accordion {
+	width: 70vmin !important;
 }
 
 .block_option{
@@ -598,26 +599,4 @@ table{
 	justify-content: space-between;
 	padding: 10px 20px 10px 20px; 
 	border-radius: 3px 3px 3px 3px;
-}
-
-
-
-
-.bg-option-blue{
-	background-color: #2b7bca !important;
-}
-
-.panel-group{
-	background-color: #2b7bca;
-	font-size: 15px;
-	color: white;
-	padding: 12px 12px;
-	border: none;
-	border-radius: 3px 3px 3px 3px;
-	cursor: pointer;
-	letter-spacing: 1px;
-	outline: none;
-	height: 40px;
-	font-family: 'Roboto Slab', serif;
-	width: 70vw;
 }
