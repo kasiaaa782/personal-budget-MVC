@@ -7,32 +7,28 @@
 <link rel="stylesheet" href="../css/fontello.css" type="text/css">
 
 <script>
-
-  function changeArrows(up) {
-    if (up.attr('class') == "icon-down-open") {
-      up.attr("class", "icon-up-open");
-    } else {
-      up.attr("class", "icon-down-open");
-    }
-  }
-
+  
   $(document).ready(function () {
     $("#option1").click(function () {
-      changeArrows($("#up1"));
+      up = $("#up1");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up2, #up3, #up4").attr("class", "icon-down-open");
     });
     $("#option2").click(function () {
-      changeArrows($("#up2"));
+      up = $("#up2");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up1, #up3, #up4").attr("class", "icon-down-open");
     });
 
     $("#option3").click(function () {
-      changeArrows($("#up3"));
+      up = $("#up3");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up1, #up2, #up4").attr("class", "icon-down-open");
     });
 
     $("#option4").click(function () {
-      changeArrows($("#up4"));
+      up = $("#up4");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up1, #up2, #up3").attr("class", "icon-down-open");
     });
   });
@@ -70,7 +66,7 @@
       <div id="title" class="mt-3">
         Panel użytkownika
       </div>
-      <hr class="line mt-3 mb-5">
+      <hr class="line mt-4 mb-5">
       <div id="accordion" style="width: 70vmin">
         <div class="card mb-1">
           <div class="card-header">
