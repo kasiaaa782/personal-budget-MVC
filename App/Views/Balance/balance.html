@@ -2,164 +2,292 @@
 
 {% block title %}Budżet osobisty - Bilans finansowy{% endblock %}
 
-{% block navigation %} 
+{% block navigation %}
 
-        <nav class="navbar navbar-dark navbar-expand-lg">
-            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainmenu" >
-                <ol class="navbar-nav mx-auto">
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link active" href="/balance/balance">Przeglądaj bilans</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
-                    <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
-                </ol>
-            </div>
-        </nav>
+<nav class="navbar navbar-dark navbar-expand-lg">
+    <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
+        aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainmenu">
+        <ol class="navbar-nav mx-auto">
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link active" href="/balance/balance">Przeglądaj bilans</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+        </ol>
+    </div>
+</nav>
+
+{% endblock %}
+
+
+{% block head %}
+
+<link rel="stylesheet" href="../css/money.css" type="text/css">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+    
+    //chart
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChartIncomes);
+    google.charts.setOnLoadCallback(drawChartExpenses);
+    
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawBalanceChart);
+
+
+    function drawBalanceChart() {
+        var expenses = JSON.parse('{{ expensesGenerally | json_encode | raw }}');
+        var incomes = JSON.parse('{{ incomesGenerally | json_encode | raw }}');
+
+        var sumExpenses = 0;
+        expenses.forEach(element => {
+            sumExpenses += parseFloat(element['SUM(e.amount)']);
+        });
+
+        var sumIncomes = 0;
+        incomes.forEach(element => {
+            sumIncomes += parseFloat(element['SUM(i.amount)']);
+        });
+
+        
+        var data = google.visualization.arrayToDataTable([
+            ['Opcja', 'Suma', { role: 'style' } ],
+            ['Przychody', sumIncomes, 'color: gray'],
+            ['Wydatki', sumExpenses, 'color: #76A7FA'],
+        ]);
+
+        var options = {
+            width: 300,
+            height: 200,
+            legend: {position: "none"}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chartBalance'));
+
+        chart.draw(data, options);
+        
+    }
+
+    function drawChartIncomes() {
+        var incomes = JSON.parse('{{ incomesGenerally | json_encode | raw }}');
+
+        var sum = 0;
+        incomes.forEach(element => {
+            sum += parseFloat(element['SUM(i.amount)']);
+        });
+
+        var userIncomes = [];
+        for (var i = 0; i < incomes.length; i++) {
+            userIncomes.push([incomes[i]['name'], parseFloat(incomes[i]['SUM(i.amount)'])]);
+        }
+        userIncomes.unshift(['Kategoria', 'Kwota']);
+
+
+        if(sum !== 0){
+            var data = google.visualization.arrayToDataTable(userIncomes);
+
+            var options = {
+                title:'Wykres finansowy przychodów',
+                width: 400,
+                height: 300,
+                is3D : true
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechartIncomes'));
+
+            chart.draw(data, options);
+        }
+    }
+
+    function drawChartExpenses() {
+        var expenses = JSON.parse('{{ expensesGenerally | json_encode | raw }}');
+
+        var sum = 0;
+        expenses.forEach(element => {
+            sum += parseFloat(element['SUM(e.amount)']);
+        });
+
+        var userExpenses = [];
+        for (var i = 0; i < expenses.length; i++) {
+            userExpenses.push([expenses[i]['name'], parseFloat(expenses[i]['SUM(e.amount)'])]);
+        }
+        userExpenses.unshift(['Kategoria', 'Kwota']);
+
+
+        if(sum !== 0){
+            var data = google.visualization.arrayToDataTable(userExpenses);
+
+            var options = {
+                title:'Wykres finansowy wydatków',
+                width: 400,
+                height: 300,
+                is3D : true
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechartExpenses'));
+
+            chart.draw(data, options);
+        }
+    }
+
+</script>
 
 {% endblock %}
 
 {% block body %}
 
-    <div id="content_balance">
-        <div class="container">
-            <div class="justify-content-center mt-2">
-                <div class="text-center" id="title">Bilans finansowy</div>
-                <div>
-                    <hr class="line mt-4 mb-3" style="width: 20em">
+<div id="content_balance">
+    <div class="container">
+        <div class="justify-content-center mt-2">
+            <div class="text-center" id="title">Bilans finansowy</div>
+            <div>
+                <hr class="line mt-4 mb-3" style="width: 20em">
+            </div>
+            <div class="row justify-content-center">
+                <div class="text-center" id="period">
+                    {{ sentencePeriod }}
                 </div>
-                <div class="row justify-content-center">
-                    <div class="text-center" id="period" > 
-                        {{ sentencePeriod }}
-                    </div>
+            </div>
+            <div class="text-center mt-2 mb-4" id="select_period_dropdown">
+                <button id="dropbutton">Wybierz okres</button>
+                <div id="dropdown-content">
+                    <a href="/balance/balance?option=1">Bieżący miesiąc</a>
+                    <a href="/balance/balance?option=2">Poprzedni miesiąc</a>
+                    <a href="/balance/balance?option=3">Bieżący rok</a>
+                    <a href="#myModal" data-toggle="modal">Niestandardowy</a>
                 </div>
-                <div class="text-center mt-2 mb-4" id="select_period_dropdown">
-                    <button id="dropbutton">Wybierz okres</button>
-                    <div id="dropdown-content">
-                        <a href="/balance/balance?option=1">Bieżący miesiąc</a>
-                        <a href="/balance/balance?option=2">Poprzedni miesiąc</a>
-                        <a href="/balance/balance?option=3">Bieżący rok</a>
-                        <a href="#myModal" data-toggle="modal" >Niestandardowy</a>
-                    </div>
-                    <!--Modal-->
-                    <div class="modal fade text-body" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel">Wybierz przedział czasowy</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <form method="post" action="/balance/balance" >
-                                    <div class="modal-body text-center mt-3 mb-3">
-                                        <div id="selectPeriod">	
-                                            od <input type="date" name="dateBegin" id="dateBegin">
-                                            do <input type="date" name="dateEnd" id="dateEnd">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
-                                        <button type="submit" class="btn btn-primary" >Pokaż</button>
-                                    </div>
-                                </form>
+                <!--Modal-->
+                <div class="modal fade text-body" id="myModal" tabindex="-1" role="dialog"
+                    aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Wybierz przedział czasowy</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
                             </div>
+                            <form method="post" action="/balance/balance">
+                                <div class="modal-body text-center mt-3 mb-3">
+                                    <div id="selectPeriod">
+                                        od <input type="date" name="dateBegin" id="dateBegin">
+                                        do <input type="date" name="dateEnd" id="dateEnd">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+                                    <button type="submit" class="btn btn-primary">Pokaż</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            {% if incomesGenerally is empty %}
-            <div class="text-center mb-3">  
-                Brak przychodów w wybranym okresie
-            </div>
-            {% endif %}
-            <div class="row justify-content-center">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="text-center p-2" colspan='3'>PRZYCHODY</th>
-                        </tr>
-                        <tr>
-                            <th scope="col-lg-2">Data</th>
-                            <th scope="col-lg-1">Kwota</th>
-                            <th scope="col-lg-1">Kategoria</th>
-                        </tr>
-                    </thead>
-                    {% for income in incomesGenerally %}
-                        <tr>
-                            <td class="text-left pl-4">{{ income[0] }}</td>	
-                            <td class="text-right pr-3">{{ income[2] }}</td>
-                            <td class="text-right pr-3">{{ income[1] }}</td>
-                        </tr>
-                    {% endfor %}
-                    <tr class="sum">
-                        <td>Suma przychodów</td>
-                        <td id="sumOfIncomes" colspan='2'>
-                            {% if incomesSum %} 
-                                {{ incomesSum }} 
-                            {% else %}
-                                0.00
-                            {% endif %}
-                        </td>
-                    </tr>
-                </table> 
-            </div>
-            {% if expensesGenerally is empty %}
-                <div class="text-center mb-3">  
-                    Brak wydatków w wybranym okresie
+        </div>
+        <div class="row justify-content-center mt-3">
+            <div id="balance">
+                <div id="balance1">BILANS</div>
+                <div class="row justify-content-center">
+                    <div id="chartBalance"></div>
                 </div>
-            {% endif %}
-            <div class="row justify-content-center">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="text-center p-2" colspan='3'>WYDATKI</th>
-                        </tr>
-                        <tr>
-                            <th scope="col-lg-2">Data</th>
-                            <th scope="col-lg-1">Kwota</th>
-                            <th scope="col-lg-1">Kategoria</th>
-                        </tr>
-                    </thead>
-                    {% for expense in expensesGenerally %}
-                    <tr>
-                        <td class="text-left pl-4">{{ expense[0] }}</td>	
-                        <td class="text-right pr-3">{{ expense[2] }}</td>
-                        <td class="text-right pr-3">{{ expense[1] }}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr class="sum">
-                        <td>Suma wydatków</td>
-                        <td id="sumOfExpenses" colspan='2'>
-                            {% if expensesSum %} 
-                                {{ expensesSum }} 
-                            {% else %}
-                                0.00
-                            {% endif %}
-                        </td>
-                    </tr>
-                </table> 
-            </div>
-            <div class="row justify-content-center">
-                <div class="row col-12 justify-content-center">		
-                    <div id="piechart"></div>
-                </div>
-                <div id="balance">
-                    <div id="balance1">BILANS</div>
-                        {% if balanceScore %} 
-                            {{ balanceScore }} 
-                        {% else %}
-                            0.00
-                        {% endif %}
-                    <div id="score">
-                        <div>{{ balanceSentence }}</div>
-                    </div>
+                {% if balanceScore %}
+                {{ balanceScore }}
+                {% else %}
+                0.00
+                {% endif %}
+                <div id="score">
+                    <div>{{ balanceSentence }}</div>
                 </div>
             </div>
         </div>
+        {% if incomesGenerally is empty %}
+        <div class="text-center m-4">
+            <h4><b><u>Brak przychodów w wybranym okresie</u></b></h4>
+        </div>
+        {% else %}
+        <div class="text-center m-4">
+            <h4><b><u>Przychody w wybranym okresie</u></b></h4>
+        </div>
+        <div class="row justify-content-center block_piechart m-4">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="text-center p-2" colspan='3'>PRZYCHODY</th>
+                    </tr>
+                    <tr>
+                        <th scope="col-lg-2">Data</th>
+                        <th scope="col-lg-1">Kwota</th>
+                        <th scope="col-lg-1">Kategoria</th>
+                    </tr>
+                </thead>
+                {% for income in incomesGenerally %}
+                <tr>
+                    <td class="text-left pl-4">{{ income[0] }}</td>
+                    <td class="text-right pr-3">{{ income[2] }}</td>
+                    <td class="text-left pl-4">{{ income[1] }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="sum">
+                    <td>Suma przychodów</td>
+                    <td id="sumOfIncomes" class="pr-3" colspan='2'>
+                        {% if incomesSum %}
+                        {{ incomesSum }}
+                        {% else %}
+                        0.00
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            <div id="piechartIncomes" class="piechart mt-2" ></div>
+        </div>
+        {% endif %}
+        {% if expensesGenerally is empty %}
+        <div class="text-center m-4">
+            <h4><b><u>Brak wydatków w wybranym okresie</u></b></h4>
+        </div>
+        {% else %}
+        <div class="text-center m-4">
+            <h4><b><u>Wydatki w wybranym okresie</u></b></h4>
+        </div>
+        <div class="row justify-content-center block_piechart">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="text-center p-2" colspan='3'>WYDATKI</th>
+                    </tr>
+                    <tr>
+                        <th scope="col-lg-2">Data</th>
+                        <th scope="col-lg-1">Kwota</th>
+                        <th scope="col-lg-1">Kategoria</th>
+                    </tr>
+                </thead>
+                {% for expense in expensesGenerally %}
+                <tr>
+                    <td class="text-left pl-4">{{ expense[0] }}</td>
+                    <td class="text-right pr-3">{{ expense[2] }}</td>
+                    <td class="text-left pl-4">{{ expense[1] }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="sum">
+                    <td>Suma wydatków</td>
+                    <td id="sumOfExpenses" class="pr-3" colspan='2'>
+                        {% if expensesSum %}
+                        {{ expensesSum }}
+                        {% else %}
+                        0.00
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            <div id="piechartExpenses" class="piechart mt-2" ></div>
+        </div>
+        {% endif %}
     </div>
+</div>
 
 {% endblock %}

@@ -2,44 +2,45 @@
 
 {% block title %}Budżet osobisty - Strona główna{% endblock %}
 
-{% block navigation %} 
+{% block navigation %}
 
-    <nav class="navbar navbar-dark navbar-expand-lg">
-        <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainmenu" >
-            <ol class="navbar-nav mx-auto">
-                <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/index">Strona główna</a></li>
-                <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
-                <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
-                <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
-                <li class="nav-item mx-auto"><a class="nav-link disabled" href="#">Ustawienia</a></li>
-                <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
-            </ol>
-        </div>
-    </nav>
+<nav class="navbar navbar-dark navbar-expand-lg">
+    <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
+        aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainmenu">
+        <ol class="navbar-nav mx-auto">
+            <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/index">Strona główna</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
+            <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+        </ol>
+    </div>
+</nav>
 
 {% endblock %}
 
 {% block body %}
 
-    <div id="content_expense">
-        <div class="container mt-3 mb-3">
-            <div id="title"> 
-                Witaj {{ current_user.name }} !
-            </div>
-            <hr class="line mt-3 mb-4" style="width: 20em">
-            <div class="sentence_expense mb-2 mt-2">
-                Znajdujesz się na stronie swojego budżetu osobistego! 
-            </div>
-            <div class="mb-4" >
-                <img class="img-fluid mt-3" src="/img/finanse.jpg" width="43%" alt="Finanse">
-            </div>
-            <div class="sentence_expense mb-2 mt-2 " >
-                Korzystaj z dostępnych opcji, aby móc jak najlepiej kontrolować swoje finanse!
-            </div>
+<div id="content_expense">
+    <div class="container mt-3 mb-3">
+        <div id="title">
+            Witaj {{ current_user.name }} !
+        </div>
+        <hr class="line mt-3 mb-4" style="width: 20em">
+        <div class="sentence_expense mb-2 mt-2">
+            Znajdujesz się na stronie swojego budżetu osobistego!
+        </div>
+        <div class="mb-4">
+            <img class="img-fluid mt-3" src="/img/finanse.jpg" width="43%" alt="Finanse">
+        </div>
+        <div class="sentence_expense mb-2 mt-2 ">
+            Korzystaj z dostępnych opcji, aby móc jak najlepiej kontrolować swoje finanse!
         </div>
     </div>
+</div>
 
 {% endblock %}

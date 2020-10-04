@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Budżet osobisty - Dodawanie wydatku{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="../css/fontello.css" type="text/css">
+
+<script>
+
+  $(document).ready(function () {
+    $("#option1").click(function () {
+      up = $("#up1");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
+      $("#up2, #up3, #up4").attr("class", "icon-down-open");
+    });
+    $("#option2").click(function () {
+      up = $("#up2");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
+      $("#up1, #up3, #up4").attr("class", "icon-down-open");
+    });
+
+    $("#option3").click(function () {
+      up = $("#up3");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
+      $("#up1, #up2, #up4").attr("class", "icon-down-open");
+    });
+
+    $("#option4").click(function () {
+      up = $("#up4");
+      up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
+      $("#up1, #up2, #up3").attr("class", "icon-down-open");
+    });
+  });
+
+</script>
+
+{% endblock %}
+
+{% block navigation %}
+
+<nav class="navbar navbar-dark navbar-expand-lg">
+  <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
+    aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="mainmenu">
+    <ol class="navbar-nav mx-auto">
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link active" href="/settings/settings">Ustawienia</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+    </ol>
+  </div>
+</nav>
+
+{% endblock %}
+
+{% block body %}
+
+<div id="content_balance" style="min-height: 70vh">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div id="title" class="col-12 text-center mt-3">
+        Panel użytkownika
+        <hr class="line mt-4 mb-5" style="width: 60vmin">
+      </div>
+      <div id="accordion">
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option1" data-toggle="collapse" href="#collapseOne">
+              Kategorie przychodów 
+              <i class="icon-down-open" aria-hidden="true" id="up1"></i>
+            </a>
+          </div>
+          <div id="collapseOne" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+              <div>Lorem ipsum.. </div>
+              <div>Lorem ipsum.. </div>
+              <div>Lorem ipsum.. </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option2" data-toggle="collapse" href="#collapseTwo">
+              Kategorie wydatków
+              <i class="icon-down-open" aria-hidden="true" id="up2"></i>
+            </a>
+          </div>
+          <div id="collapseTwo" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+              Lorem ipsum..
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option3" data-toggle="collapse" href="#collapseThree">
+              Sposoby płatności
+              <i class="icon-down-open" aria-hidden="true" id="up3"></i>
+            </a>
+          </div>
+          <div id="collapseThree" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+              Lorem ipsum..
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed card-link block_option" id="option4" data-toggle="collapse" href="#collapseFour">
+              Użytkownik
+              <i class="icon-down-open" aria-hidden="true" id="up4"></i>
+            </a>
+          </div>
+          <div id="collapseFour" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+              Lorem ipsum..
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
