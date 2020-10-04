@@ -35,6 +35,43 @@
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChartIncomes);
     google.charts.setOnLoadCallback(drawChartExpenses);
+    
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawBalanceChart);
+
+
+    function drawBalanceChart() {
+        var expenses = JSON.parse('{{ expensesGenerally | json_encode | raw }}');
+        var incomes = JSON.parse('{{ incomesGenerally | json_encode | raw }}');
+
+        var sumExpenses = 0;
+        expenses.forEach(element => {
+            sumExpenses += parseFloat(element['SUM(e.amount)']);
+        });
+
+        var sumIncomes = 0;
+        incomes.forEach(element => {
+            sumIncomes += parseFloat(element['SUM(i.amount)']);
+        });
+
+        
+        var data = google.visualization.arrayToDataTable([
+            ['Opcja', 'Suma', { role: 'style' } ],
+            ['Przychody', sumIncomes, 'color: gray'],
+            ['Wydatki', sumExpenses, 'color: #76A7FA'],
+        ]);
+
+        var options = {
+            width: 300,
+            height: 200,
+            legend: {position: "none"}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chartBalance'));
+
+        chart.draw(data, options);
+        
+    }
 
     function drawChartIncomes() {
         var incomes = JSON.parse('{{ incomesGenerally | json_encode | raw }}');
@@ -155,6 +192,9 @@
         <div class="row justify-content-center mt-3">
             <div id="balance">
                 <div id="balance1">BILANS</div>
+                <div class="row justify-content-center">
+                    <div id="chartBalance"></div>
+                </div>
                 {% if balanceScore %}
                 {{ balanceScore }}
                 {% else %}
