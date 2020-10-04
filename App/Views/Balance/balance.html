@@ -54,23 +54,24 @@
             sumIncomes += parseFloat(element['SUM(i.amount)']);
         });
 
-        
-        var data = google.visualization.arrayToDataTable([
-            ['Opcja', 'Suma', { role: 'style' } ],
-            ['Przychody', sumIncomes, 'color: gray'],
-            ['Wydatki', sumExpenses, 'color: #76A7FA'],
-        ]);
+        if(sumExpenses !== 0 && sumIncomes !== 0 ){
+            
+            var data = google.visualization.arrayToDataTable([
+                ['Opcja', 'Suma', { role: 'style' } ],
+                ['Przychody', sumIncomes, 'color: gray'],
+                ['Wydatki', sumExpenses, 'color: #76A7FA'],
+            ]);
 
-        var options = {
-            width: 300,
-            height: 200,
-            legend: {position: "none"}
-        };
+            var options = {
+                width: 300,
+                height: 200,
+                legend: {position: "none"}
+            };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chartBalance'));
+            var chart = new google.visualization.ColumnChart(document.getElementById('chartBalance'));
 
-        chart.draw(data, options);
-        
+            chart.draw(data, options);
+        }
     }
 
     function drawChartIncomes() {
