@@ -432,7 +432,6 @@ th, td {
 }
 
 table{
-		margin-bottom: 20px;
 		width: 90%;
 		background-color: #3793eefd;
 }
@@ -468,8 +467,14 @@ table{
 		margin-top: 10px;
 }
 
-#piechart{
+.piechart{
 		border: 1px solid #1A78D6;
+}
+
+.block_piechart{
+	display: flex;
+	justify-content: space-around !important;
+	align-items: center;
 }
 
 #main_page{

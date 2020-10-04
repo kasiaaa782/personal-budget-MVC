@@ -2,12 +2,6 @@
 
 {% block title %}Budżet osobisty - Bilans finansowy{% endblock %}
 
-{% block head %}
-
-<link rel="stylesheet" href="../css/money.css" type="text/css">
-
-{% endblock %}
-
 {% block navigation %}
 
 <nav class="navbar navbar-dark navbar-expand-lg">
@@ -26,6 +20,85 @@
         </ol>
     </div>
 </nav>
+
+{% endblock %}
+
+
+{% block head %}
+
+<link rel="stylesheet" href="../css/money.css" type="text/css">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+    
+    //chart
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChartIncomes);
+    google.charts.setOnLoadCallback(drawChartExpenses);
+
+    function drawChartIncomes() {
+        var incomes = JSON.parse('{{ incomesGenerally | json_encode | raw }}');
+
+        var sum = 0;
+        incomes.forEach(element => {
+            sum += parseFloat(element['SUM(i.amount)']);
+        });
+
+        var userIncomes = [];
+        for (var i = 0; i < incomes.length; i++) {
+            userIncomes.push([incomes[i]['name'], parseFloat(incomes[i]['SUM(i.amount)'])]);
+        }
+        userIncomes.unshift(['Kategoria', 'Kwota']);
+
+
+        if(sum !== 0){
+            var data = google.visualization.arrayToDataTable(userIncomes);
+
+            var options = {
+                title:'Wykres finansowy przychodów',
+                width: 400,
+                height: 300,
+                is3D : true
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechartIncomes'));
+
+            chart.draw(data, options);
+        }
+    }
+
+    function drawChartExpenses() {
+        var expenses = JSON.parse('{{ expensesGenerally | json_encode | raw }}');
+
+        var sum = 0;
+        expenses.forEach(element => {
+            sum += parseFloat(element['SUM(e.amount)']);
+        });
+
+        var userExpenses = [];
+        for (var i = 0; i < expenses.length; i++) {
+            userExpenses.push([expenses[i]['name'], parseFloat(expenses[i]['SUM(e.amount)'])]);
+        }
+        userExpenses.unshift(['Kategoria', 'Kwota']);
+
+
+        if(sum !== 0){
+            var data = google.visualization.arrayToDataTable(userExpenses);
+
+            var options = {
+                title:'Wykres finansowy wydatków',
+                width: 400,
+                height: 300,
+                is3D : true
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechartExpenses'));
+
+            chart.draw(data, options);
+        }
+    }
+
+</script>
 
 {% endblock %}
 
@@ -79,12 +152,28 @@
                 </div>
             </div>
         </div>
-        {% if incomesGenerally is empty %}
-        <div class="text-center mb-3">
-            Brak przychodów w wybranym okresie
+        <div class="row justify-content-center mt-3">
+            <div id="balance">
+                <div id="balance1">BILANS</div>
+                {% if balanceScore %}
+                {{ balanceScore }}
+                {% else %}
+                0.00
+                {% endif %}
+                <div id="score">
+                    <div>{{ balanceSentence }}</div>
+                </div>
+            </div>
         </div>
-        {% endif %}
-        <div class="row justify-content-center">
+        {% if incomesGenerally is empty %}
+        <div class="text-center m-4">
+            <h4><b><u>Brak przychodów w wybranym okresie</u></b></h4>
+        </div>
+        {% else %}
+        <div class="text-center m-4">
+            <h4><b><u>Przychody w wybranym okresie</u></b></h4>
+        </div>
+        <div class="row justify-content-center block_piechart m-4">
             <table>
                 <thead>
                     <tr>
@@ -100,12 +189,12 @@
                 <tr>
                     <td class="text-left pl-4">{{ income[0] }}</td>
                     <td class="text-right pr-3">{{ income[2] }}</td>
-                    <td class="text-right pr-3">{{ income[1] }}</td>
+                    <td class="text-left pl-4">{{ income[1] }}</td>
                 </tr>
                 {% endfor %}
                 <tr class="sum">
                     <td>Suma przychodów</td>
-                    <td id="sumOfIncomes" colspan='2'>
+                    <td id="sumOfIncomes" class="pr-3" colspan='2'>
                         {% if incomesSum %}
                         {{ incomesSum }}
                         {% else %}
@@ -114,13 +203,18 @@
                     </td>
                 </tr>
             </table>
-        </div>
-        {% if expensesGenerally is empty %}
-        <div class="text-center mb-3">
-            Brak wydatków w wybranym okresie
+            <div id="piechartIncomes" class="piechart mt-2" ></div>
         </div>
         {% endif %}
-        <div class="row justify-content-center">
+        {% if expensesGenerally is empty %}
+        <div class="text-center m-4">
+            <h4><b><u>Brak wydatków w wybranym okresie</u></b></h4>
+        </div>
+        {% else %}
+        <div class="text-center m-4">
+            <h4><b><u>Wydatki w wybranym okresie</u></b></h4>
+        </div>
+        <div class="row justify-content-center block_piechart">
             <table>
                 <thead>
                     <tr>
@@ -136,12 +230,12 @@
                 <tr>
                     <td class="text-left pl-4">{{ expense[0] }}</td>
                     <td class="text-right pr-3">{{ expense[2] }}</td>
-                    <td class="text-right pr-3">{{ expense[1] }}</td>
+                    <td class="text-left pl-4">{{ expense[1] }}</td>
                 </tr>
                 {% endfor %}
                 <tr class="sum">
                     <td>Suma wydatków</td>
-                    <td id="sumOfExpenses" colspan='2'>
+                    <td id="sumOfExpenses" class="pr-3" colspan='2'>
                         {% if expensesSum %}
                         {{ expensesSum }}
                         {% else %}
@@ -150,23 +244,9 @@
                     </td>
                 </tr>
             </table>
+            <div id="piechartExpenses" class="piechart mt-2" ></div>
         </div>
-        <div class="row justify-content-center">
-            <div class="row col-12 justify-content-center">
-                <div id="piechart"></div>
-            </div>
-            <div id="balance">
-                <div id="balance1">BILANS</div>
-                {% if balanceScore %}
-                {{ balanceScore }}
-                {% else %}
-                0.00
-                {% endif %}
-                <div id="score">
-                    <div>{{ balanceSentence }}</div>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 
