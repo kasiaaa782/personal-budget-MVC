@@ -594,7 +594,7 @@ table{
 }
 
 #accordion {
-	width: 70vmin !important;
+	width: 100vmin !important;
 }
 
 .block_option{
@@ -604,4 +604,24 @@ table{
 	justify-content: space-between;
 	padding: 10px 20px 10px 20px; 
 	border-radius: 3px 3px 3px 3px;
+}
+
+.subblock_option{
+	box-shadow: 2px 3px 20px 5px rgba(188, 206, 223,0.9); 
+	border: 1px solid rgb(188, 206, 223); 
+	border-radius: 5px; 
+	padding: 8px 15px 8px 15px; 
+	color: #2765a3;
+	font-size: 15px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.info_edition{
+	color: #2765a3; 
+	font-size: 14px;
+}
+
+.pointer{
+	cursor: pointer !important;
 }

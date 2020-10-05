@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Models\SettingsData;
 
 /**
  * Balance controller
@@ -17,7 +18,20 @@ class Settings extends Authenticated {
      * @return void
      */
     public function settingsAction() {
-        View::renderTemplate('Settings/settings.html');
+        $settings = new SettingsData();
+
+        $categoriesIncomes = $settings->getIncomesCategories();
+        $categoriesExpenses = $settings->getExpensesCategories();
+        $paymentMethods = $settings->getPaymentMethods();
+        /*var_dump($categoriesExpenses);
+        exit();*/
+
+
+        View::renderTemplate('Settings/settings.html', [
+            'categoriesIncomes' => $categoriesIncomes,
+            'categoriesExpenses' => $categoriesExpenses,
+            'paymentMethods' => $paymentMethods
+        ]);
     }
 }     
 

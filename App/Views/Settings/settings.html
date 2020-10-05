@@ -4,11 +4,12 @@
 
 {% block head %}
 
-<link rel="stylesheet" href="../css/fontello.css" type="text/css">
+<link rel="stylesheet" href="../css/fontello1.css" type="text/css">
 
 <script>
 
   $(document).ready(function () {
+    //changing of icons
     $("#option1").click(function () {
       up = $("#up1");
       up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
@@ -19,19 +20,37 @@
       up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up1, #up3, #up4").attr("class", "icon-down-open");
     });
-
     $("#option3").click(function () {
       up = $("#up3");
       up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up1, #up2, #up4").attr("class", "icon-down-open");
     });
-
     $("#option4").click(function () {
       up = $("#up4");
       up.attr('class') == 'icon-down-open' ? up.attr("class", "icon-up-open") : up.attr("class", "icon-down-open");
       $("#up1, #up2, #up3").attr("class", "icon-down-open");
     });
+
+    //hover radio input
+    var clicked = false;
+    var clickedId;
+    $("label").click(function () {
+        clicked = true;
+        clickedId = $(this).children().attr('id');
+    });
+    $("label").hover(function () {
+      $(this).children().children().prop('checked', true)
+    }, function () {
+        if (clicked === true) {
+            $('#' + clickedId).prop('checked', true);
+        } else {
+            $(this).prop('checked', false);
+        }
+    });
+
   });
+
+
 
 </script>
 
@@ -77,9 +96,20 @@
           </div>
           <div id="collapseOne" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              <div>Lorem ipsum.. </div>
-              <div>Lorem ipsum.. </div>
-              <div>Lorem ipsum.. </div>
+              <div class="info_edition mb-2" >Edytuj istniejące kategorie:</div>
+              {% for category in categoriesIncomes %}
+              <label class="subblock_option col-12" id={{category[1]}}>
+                <div>
+                  <input class="mr-2" type="radio" name="categoryIncome">
+                    {{ category[0] }}
+                  </input>
+                </div>
+                <div>
+                  <i class="icon-pencil pointer" aria-hidden="true"></i>
+                  <i class="icon-trash pointer" aria-hidden="true"></i>
+                </div>
+              </label>
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -92,7 +122,20 @@
           </div>
           <div id="collapseTwo" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              Lorem ipsum..
+              <div class="info_edition mb-2" >Istniejące kategorie:</div>
+              {% for category in categoriesExpenses %}
+              <label class="subblock_option col-12" id={{category[1]}}>
+                <div>
+                  <input class="mr-2" type="radio" name="categoryExpense">
+                    {{ category[0] }}
+                  </input>
+                </div>
+                <div>
+                  <i class="icon-pencil pointer" aria-hidden="true"></i>
+                  <i class="icon-trash pointer" aria-hidden="true"></i>
+                </div>
+              </label>
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -105,14 +148,25 @@
           </div>
           <div id="collapseThree" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              Lorem ipsum..
+              <div class="info_edition mb-2" >Istniejące sposoby płatności:</div>
+              {% for method in paymentMethods %}
+              <label class="subblock_option col-12" id="{{method[1]}}">
+                <div>
+                    {{ method[0]  }}
+                </div>
+                <div>
+                  <i class="icon-pencil pointer" aria-hidden="true"></i>
+                  <i class="icon-trash pointer" aria-hidden="true"></i>
+                </div>
+              </label>
+              {% endfor %}
             </div>
           </div>
         </div>
         <div class="card">
           <div class="card-header">
             <a class="collapsed card-link block_option" id="option4" data-toggle="collapse" href="#collapseFour">
-              Użytkownik
+              Konto
               <i class="icon-down-open" aria-hidden="true" id="up4"></i>
             </a>
           </div>
