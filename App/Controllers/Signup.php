@@ -41,7 +41,7 @@ class Signup extends \Core\Controller
             $e_rules = "Potwierdź akceptację regulaminu!"; 
             $everything_OK = false;
         }
-        /*
+        
         //checking reCAPTCHA
         $secret = '6LfD_7wZAAAAAPmDQvgE9QJjiwT__HkfmsE88in1';
         $check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
@@ -50,7 +50,7 @@ class Signup extends \Core\Controller
         if($answer->success==false){
             $everything_OK = false;
             $e_bot = "Potwierdź, że nie jesteś botem!"; 
-        }*/
+        }
 
         if (($everything_OK == true) && $user->save()) {
 
