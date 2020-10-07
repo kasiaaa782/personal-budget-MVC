@@ -632,10 +632,15 @@ table{
 	color: white;
 	padding: 10px 20px 10px 10px;
 	border: none;
+	outline: none;
 	border-radius: 5px;
 	cursor: pointer;
 }
 
 .btn_settings:hover{
 	background-color: #3989d8;
+}
+
+.btn_settings:focus{
+	outline: none;
 }

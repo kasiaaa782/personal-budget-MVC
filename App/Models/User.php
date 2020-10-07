@@ -55,7 +55,7 @@ class User extends \Core\Model
             $stmt->bindValue(':username', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':password', $password_hash, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            
+
             return $stmt->execute();
         }
 
@@ -198,4 +198,29 @@ class User extends \Core\Model
 
         return $stmt->execute();
     }
+
+    /**
+     * Add to database default categories for incomes, expenses and methods for payment for current user
+     * 
+     * @param int $user_id user id to search for
+     *
+     * @return boolean  True if everything went successfully, false otherwise
+     */
+    public function addDefaultCategoriesToDB($user_id){
+        $sql = 'INSERT INTO incomes_category_assigned_to_users (user_id, name)
+                SELECT :user_id AS user_id, name FROM incomes_category_default;
+                INSERT INTO expenses_category_assigned_to_users (user_id, name)
+                SELECT :user_id AS user_id, name FROM expenses_category_default;
+                INSERT INTO payment_methods_assigned_to_users (user_id, name)
+                SELECT :user_id AS user_id, name FROM payment_methods_default
+                ';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    
+        return $stmt->execute();
+    }
+
 }
