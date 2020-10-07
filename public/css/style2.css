@@ -625,3 +625,17 @@ table{
 .pointer{
 	cursor: pointer !important;
 }
+
+.btn_settings{
+	background-color: #2b7bca;
+	font-size:15px;
+	color: white;
+	padding: 10px 20px 10px 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.btn_settings:hover{
+	background-color: #3989d8;
+}

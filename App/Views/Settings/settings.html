@@ -4,7 +4,7 @@
 
 {% block head %}
 
-<link rel="stylesheet" href="../css/fontello1.css" type="text/css">
+<link rel="stylesheet" href="../css/fontello.css" type="text/css">
 
 <script>
 
@@ -105,11 +105,17 @@
                   </input>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" aria-hidden="true"></i>
-                  <i class="icon-trash pointer" aria-hidden="true"></i>
+                  <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-trash pointer" aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
               {% endfor %}
+              <div class="text-right">
+                <button class="btn_settings mt-3">
+                  <i class="icon-plus pointer" aria-hidden="true"></i>
+                  Dodaj nową kategorię
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -131,11 +137,17 @@
                   </input>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" aria-hidden="true"></i>
-                  <i class="icon-trash pointer" aria-hidden="true"></i>
+                  <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-trash pointer" aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
               {% endfor %}
+              <div class="text-right">
+                <button class="btn_settings mt-3">
+                  <i class="icon-plus" aria-hidden="true"></i>
+                  Dodaj nową kategorię
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -155,11 +167,17 @@
                     {{ method[0]  }}
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" aria-hidden="true"></i>
-                  <i class="icon-trash pointer" aria-hidden="true"></i>
+                  <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj metodę"></i>
+                  <i class="icon-trash pointer" aria-hidden="true" title="Usuń metodę"></i>
                 </div>
               </label>
               {% endfor %}
+              <div class="text-right">
+                <button class="btn_settings mt-3">
+                  <i class="icon-plus pointer" aria-hidden="true"></i>
+                  Dodaj metodę płatności
+                </button>
+              </div>
             </div>
           </div>
         </div>
