@@ -108,13 +108,12 @@ class BalanceData extends \Core\Model
         $userID = $this->setUserID();
 
         $sql = "SELECT i.date_of_income, icd.name, SUM(i.amount) 
-        FROM incomes AS i, 
-            incomes_category_default AS icd
-        WHERE i.user_id='$userID' 
-        AND icd.id=i.income_category_assigned_to_user_id 
-        AND i.date_of_income 
-        BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
-        GROUP BY income_category_assigned_to_user_id";
+                FROM incomes AS i,
+                    incomes_category_default AS icd
+                WHERE i.user_id='$userID' 
+                AND icd.id=i.income_category_assigned_to_user_id 
+                AND i.date_of_income BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
+                GROUP BY income_category_assigned_to_user_id";
 
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
