@@ -99,50 +99,14 @@
             {% if expense.errors is not empty %}
             <div class='error'>{{ expense.errors[1] }}</div>
             {% endif %}
-            <div class="row justify-content-center mt-2">
-                <div class="col-12 mb-2">Kategoria wydatku:</div>
-                <div class="row col-sm-6 col-md-9 col-lg-12 justify-content-center ml-5">
-                    <div class="categories">
-                        <div><label><input type="radio" id="c0" value="1" name="category" class="mr-2">Transport</label>
-                        </div>
-                        <div><label><input type="radio" id="c1" value="2" name="category" class="mr-2">Książki</label>
-                        </div>
-                        <div><label><input type="radio" id="c2" value="3" name="category" class="mr-2">Jedzenie</label>
-                        </div>
-                        <div><label><input type="radio" id="c3" value="4" name="category"
-                                    class="mr-2">Mieszkanie</label></div>
-                    </div>
-                    <div class="categories">
-                        <div><label><input type="radio" id="c4" value="5" name="category"
-                                    class="mr-2">Telekomunikacja</label></div>
-                        <div><label><input type="radio" id="c5" value="6" name="category" class="mr-2">Opieka
-                                zdrowotna</label></div>
-                        <div><label><input type="radio" id="c6" value="7" name="category" class="mr-2">Ubranie</label>
-                        </div>
-                        <div><label><input type="radio" id="c7" value="8" name="category" class="mr-2">Higiena</label>
-                        </div>
-                    </div>
-                    <div class="categories">
-                        <div><label><input type="radio" id="c8" value="9" name="category" class="mr-2">Dzieci</label>
-                        </div>
-                        <div><label><input type="radio" id="c9" value="10" name="category" class="mr-2">Rozrywka</label>
-                        </div>
-                        <div><label><input type="radio" id="c10" value="11" name="category"
-                                    class="mr-2">Wycieczka</label></div>
-                        <div><label><input type="radio" id="c11" value="12" name="category"
-                                    class="mr-2">Oszczędności</label></div>
-                    </div>
-                    <div class="categories">
-                        <div><label><input type="radio" id="c12" value="13" name="category"
-                                    class="mr-2">Emerytura</label></div>
-                        <div><label><input type="radio" id="c13" value="14" name="category" class="mr-2">Spłata
-                                długów</label></div>
-                        <div><label><input type="radio" id="c14" value="15" name="category"
-                                    class="mr-2">Darowizna</label></div>
-                        <div><label><input type="radio" id="c15" value="16" name="category" class="mr-2">Inne
-                                wydatki</label></div>
-                    </div>
-                </div>
+            <div class="col-12 mb-2">Kategoria wydatku:</div>
+            <div class="categoryBlock">
+            {% for category in categoriesExpenses %}
+                <label id='c{{category[1]}}' class="categoryInput">
+                    <input class="mr-2" type="radio" name="categoryExpense">
+                        {{ category[0] }} 
+                </label>
+            {% endfor %}
             </div>
             <p class="error" id="infoCategory"></p>
             {% if expense.errors is not empty %}

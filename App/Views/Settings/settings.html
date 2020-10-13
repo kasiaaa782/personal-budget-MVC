@@ -31,21 +31,9 @@
       $("#up1, #up2, #up3").attr("class", "icon-down-open");
     });
 
-    //hover radio input
-    var clicked = false;
-    var clickedId;
-    $("label").click(function () {
-        clicked = true;
-        clickedId = $(this).children().attr('id');
-    });
+    //hover radio input    
     $("label").hover(function () {
-      $(this).children().children().prop('checked', true)
-    }, function () {
-        if (clicked === true) {
-            $('#' + clickedId).prop('checked', true);
-        } else {
-            $(this).prop('checked', false);
-        }
+      $(this).children().children().prop('checked', true);
     });
 
   });
@@ -98,7 +86,7 @@
             <div class="card-body">
               <div class="info_edition mb-2" >Edytuj istniejące kategorie:</div>
               {% for category in categoriesIncomes %}
-              <label class="subblock_option col-12" id={{category[1]}}>
+              <label class="subblock_option col-12" id='i{{category[1]}}'>
                 <div>
                   <input class="mr-2" type="radio" name="categoryIncome">
                     {{ category[0] }}
@@ -130,7 +118,7 @@
             <div class="card-body">
               <div class="info_edition mb-2" >Istniejące kategorie:</div>
               {% for category in categoriesExpenses %}
-              <label class="subblock_option col-12" id={{category[1]}}>
+              <label class="subblock_option col-12" id='e{{category[1]}}'>
                 <div>
                   <input class="mr-2" type="radio" name="categoryExpense">
                     {{ category[0] }}
@@ -162,7 +150,7 @@
             <div class="card-body">
               <div class="info_edition mb-2" >Istniejące sposoby płatności:</div>
               {% for method in paymentMethods %}
-              <label class="subblock_option col-12" id="{{method[1]}}">
+              <label class="subblock_option col-12" id="m{{method[1]}}">
                 <div>
                     {{ method[0]  }}
                 </div>

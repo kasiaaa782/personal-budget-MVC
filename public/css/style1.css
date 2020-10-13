@@ -243,10 +243,14 @@ ol > li:hover{
 		margin-right:10px
 }
 
-.categories{
+.categoryBlock {
+		width: 100%;
+		margin: 20px 0 20px 30px;
+}
+
+.categoryInput {
+		width: 190px;
 		text-align: left;
-		display: block;
-		width: 200px;
 }
 
 #comment{

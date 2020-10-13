@@ -107,11 +107,12 @@ class BalanceData extends \Core\Model
 
         $userID = $this->setUserID();
 
-        $sql = "SELECT i.date_of_income, icd.name, SUM(i.amount) 
-                FROM incomes AS i,
-                    incomes_category_default AS icd
+        $sql =  "SELECT i.date_of_income, ic.name, SUM(i.amount) 
+                FROM incomes AS i, 
+                incomes_category_assigned_to_users AS ic 
                 WHERE i.user_id='$userID' 
-                AND icd.id=i.income_category_assigned_to_user_id 
+                AND ic.user_id='$userID' 
+                AND ic.id=i.income_category_assigned_to_user_id 
                 AND i.date_of_income BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
                 GROUP BY income_category_assigned_to_user_id";
 
@@ -133,11 +134,12 @@ class BalanceData extends \Core\Model
 
 		$userID = $this->setUserID();
 
-		$sql = "SELECT e.date_of_expense, ecd.name, SUM(e.amount) 
-                FROM expenses AS e,
-                    expenses_category_default AS ecd
+		$sql = "SELECT e.date_of_expense, ec.name, SUM(e.amount) 
+                FROM expenses AS e, 
+                    expenses_category_assigned_to_users AS ec 
                 WHERE e.user_id='$userID' 
-                AND ecd.id=e.expense_category_assigned_to_user_id 
+                AND ec.user_id='$userID' 
+                AND ec.id=e.expense_category_assigned_to_user_id 
                 AND e.date_of_expense BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
                 GROUP BY expense_category_assigned_to_user_id";
 

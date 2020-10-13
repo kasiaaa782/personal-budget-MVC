@@ -7,6 +7,7 @@ use \App\Models\Income;
 use \App\Models\Expense;
 use \App\Auth;
 use \App\Flash;
+use \App\Models\SettingsData;
 
 /**
  * Posts controller
@@ -32,7 +33,12 @@ class Posts extends Authenticated
      */
     public function incomeAction()
     {
-        View::renderTemplate('Posts/income.html');
+        $categories = new SettingsData();
+        $categoriesIncomes = $categories->getIncomesCategories();
+        
+        View::renderTemplate('Posts/income.html', [
+            'categoriesIncomes' => $categoriesIncomes
+        ]);
     }
 
     /**
@@ -42,7 +48,12 @@ class Posts extends Authenticated
      */
     public function expenseAction()
     {
-        View::renderTemplate('Posts/expense.html');
+        $categories = new SettingsData();
+        $categoriesExpenses = $categories->getExpensesCategories();
+        
+        View::renderTemplate('Posts/expense.html', [
+            'categoriesExpenses' => $categoriesExpenses
+        ]);
     }
 
     /**
@@ -77,7 +88,7 @@ class Posts extends Authenticated
     {
         $user = Auth::getUser();
         $expense = new Expense($_POST);
-        
+
         if ($expense->save($user->id)) {
 
             $this->redirect('/posts/success-expense');

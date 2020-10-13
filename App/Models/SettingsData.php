@@ -54,14 +54,9 @@ class SettingsData extends \Core\Model
 
         $userID = $this->setUserID();
 
-        /*$sql = "SELECT icd.name, SUM(i.amount) 
-        FROM incomes AS i, 
-            incomes_category_default AS icd
-        WHERE i.user_id='$userID' 
-        AND icd.id=i.income_category_assigned_to_user_id 
-        GROUP BY income_category_assigned_to_user_id";*/
-        $sql = "SELECT name, id 
-                FROM incomes_category_default"; 
+        $sql = "SELECT ic.name, ic.id
+                FROM incomes_category_assigned_to_users AS ic 
+                WHERE ic.user_id = $userID";
 
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
@@ -81,13 +76,9 @@ class SettingsData extends \Core\Model
 
 		$userID = $this->setUserID();
 
-		/*$sql = "SELECT ecd.name, SUM(e.amount) 
-                FROM expenses AS e,
-                    expenses_category_default AS ecd
-                WHERE e.user_id='$userID' 
-                AND ecd.id=e.expense_category_assigned_to_user_id 
-                GROUP BY expense_category_assigned_to_user_id";*/
-        $sql = "SELECT name FROM expenses_category_default";
+		$sql = "SELECT ec.name, ec.id
+                FROM expenses_category_assigned_to_users AS ec
+                WHERE ec.user_id = $userID";
 
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
@@ -105,15 +96,11 @@ class SettingsData extends \Core\Model
      */
     public function getPaymentMethods() {
 
-		$userID = $this->setUserID();
-
-		/*$sql = "SELECT ecd.name, SUM(e.amount) 
-                FROM expenses AS e,
-                    expenses_category_default AS ecd
-                WHERE e.user_id='$userID' 
-                AND ecd.id=e.expense_category_assigned_to_user_id 
-                GROUP BY expense_category_assigned_to_user_id";*/
-        $sql = "SELECT name FROM payment_methods_default";
+        $userID = $this->setUserID();
+        
+        $sql = "SELECT pm.name, pm.id
+                FROM payment_methods_assigned_to_users AS pm
+                WHERE pm.user_id = $userID";
 
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
