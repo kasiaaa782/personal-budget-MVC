@@ -23,10 +23,13 @@ class Settings extends Authenticated {
         $categoriesIncomes = $settings->getIncomesCategories();
         $categoriesExpenses = $settings->getExpensesCategories();
         $paymentMethods = $settings->getPaymentMethods();
-        /*var_dump($categoriesExpenses);
-        exit();*/
-
-
+   
+        if(isset($_POST['submit'])){
+            $data = $_POST['data'];
+            var_dump($data);
+            exit();
+        }
+        
         View::renderTemplate('Settings/settings.html', [
             'categoriesIncomes' => $categoriesIncomes,
             'categoriesExpenses' => $categoriesExpenses,

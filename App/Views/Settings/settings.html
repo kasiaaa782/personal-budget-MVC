@@ -38,7 +38,34 @@
 
   });
 
+  function showModalToRemoveIncomeCategory(id) {
+    $('#winIncomeModal'+id).modal("show");
+    $('.removeIncomeCategory').on('submit', function(){
+      event.preventDefault();
 
+      $.ajax({
+        url: "/settings/settings",
+        method: "post",
+        data: id,
+        succes: function(value){
+          alert("udało się");
+        },
+        error: alert("no nie!")
+
+      });
+
+      $('#winIncomeModal'+id).modal("hide");
+
+    });
+  }
+
+  function showModalToRemoveExpense(id) {
+    $('#winExpenseModal'+id).modal("show");
+  }
+
+  function removePaymentCategories(id) {
+    $('#winPaymentModal'+id).modal("show");
+  }
 
 </script>
 
@@ -86,17 +113,42 @@
             <div class="card-body">
               <div class="info_edition mb-2" >Edytuj istniejące kategorie:</div>
               {% for category in categoriesIncomes %}
-              <label class="subblock_option col-12" id='i{{category[1]}}'>
+              <label class="subblock_option col-12">
                 <div>
                   <input class="mr-2" type="radio" name="categoryIncome">
                     {{ category[0] }}
                   </input>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
-                  <i class="icon-trash pointer" aria-hidden="true" title="Usuń kategorię"></i>
+                  <i class="icon-pencil pointer" id='{{category[0]}}' aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-trash pointer" onclick="showModalToRemoveIncomeCategory('{{category[1]}}')" aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
+              <div class="modal" tabindex="-1" role="dialog" id="winIncomeModal{{category[1]}}">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Usuwanie kategorii przychodów</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <form method="post" class="removeIncomeCategory">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
+                        <p><b>{{category[0]}}</b></p>
+                        <input type="hidden" name="idCategory" value="{{category[1]}}">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                        <button type="submit" class="btn btn-primary">Tak</button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
               {% endfor %}
               <div class="text-right">
                 <button class="btn_settings mt-3">
@@ -126,9 +178,29 @@
                 </div>
                 <div>
                   <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
-                  <i class="icon-trash pointer" aria-hidden="true" title="Usuń kategorię"></i>
+                  <i class="icon-trash pointer" onclick="showModalToRemoveExpense('{{category[1]}}')" aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
+              <div class="modal" tabindex="-1" role="dialog" id="winExpenseModal{{category[1]}}">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Usuwanie kategorii wydatków</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body text-body h6 mt-3 mb-3">
+                      <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
+                      <strong>{{category[0]}}</strong>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      <button type="button" class="btn btn-primary">Tak</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {% endfor %}
               <div class="text-right">
                 <button class="btn_settings mt-3">
@@ -148,7 +220,7 @@
           </div>
           <div id="collapseThree" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              <div class="info_edition mb-2" >Istniejące sposoby płatności:</div>
+              <div class="info_edition mb-2" >Istniejące metody:</div>
               {% for method in paymentMethods %}
               <label class="subblock_option col-12" id="m{{method[1]}}">
                 <div>
@@ -156,9 +228,29 @@
                 </div>
                 <div>
                   <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj metodę"></i>
-                  <i class="icon-trash pointer" aria-hidden="true" title="Usuń metodę"></i>
+                  <i class="icon-trash pointer" onclick="removePaymentCategories('{{method[1]}}')" aria-hidden="true" title="Usuń metodę"></i>
                 </div>
               </label>
+              <div class="modal" tabindex="-1" role="dialog" id="winPaymentModal{{method[1]}}">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Usuwanie metod płatności</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body text-body h6 mt-3 mb-3">
+                      <p>Czy napewno chcesz usunąć poniższą metodę? </p>
+                      <strong>{{method[0]}}</strong>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      <button type="button" class="btn btn-primary">Tak</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {% endfor %}
               <div class="text-right">
                 <button  type="button" class="btn_settings mt-3">
