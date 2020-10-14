@@ -52,40 +52,44 @@
     });
   }
 
-  showModalToRemoveIncomeCategory = idCategory => {
-    $('#winIncomeModal' + idCategory).modal("show");
-    $('.removeIncomeCategory').on('submit', function () {
-      event.preventDefault();
+  showModalToRemoveCategory = (item, idCategory) => {
+    switch (item) {
+      case 'Income' : {
+        $('#winIncomeModal' + idCategory).modal("show");
+        $('.removeIncomeCategory').on('submit', function () {
+          event.preventDefault();
 
-      var label = $('#labelIncome' + idCategory);
-      ajaxRemoveCategory(idCategory, "/Settings/removeIncomeCategory", label);
+          var label = $('#labelIncome' + idCategory);
+          ajaxRemoveCategory(idCategory, "/Settings/removeIncomeCategory", label);
 
-      $('#winIncomeModal' + idCategory).modal("hide");
-    });
-  }
+          $('#winIncomeModal' + idCategory).modal("hide");
+        });
+        break;
+      }
+      case 'Expense' : {
+        $('#winExpenseModal' + idCategory).modal("show");
+        $('.removeExpenseCategory').on('submit', function () {
+          event.preventDefault();
 
-  showModalToRemoveExpenseCategory = idCategory => {
-    $('#winExpenseModal' + idCategory).modal("show");
-    $('.removeExpenseCategory').on('submit', function () {
-      event.preventDefault();
+          var label = $('#labelExpense' + idCategory);
+          ajaxRemoveCategory(idCategory, "/Settings/removeExpenseCategory", label);
 
-      var label = $('#labelExpense' + idCategory);
-      ajaxRemoveCategory(idCategory, "/Settings/removeExpenseCategory", label);
+          $('#winExpenseModal' + idCategory).modal("hide");
+        });
+        break;
+      }
+      case 'Payment' : {
+        $('#winPaymentModal' + idCategory).modal("show");
+        $('.removePaymentCategory').on('submit', function () {
+          event.preventDefault();
 
-      $('#winExpenseModal' + idCategory).modal("hide");
-    });
-  }
+          var label = $('#labelPayment' + idCategory);
+          ajaxRemoveCategory(idCategory, "/Settings/removePaymentCategory", label);
 
-  showModalToRemovePaymentCategory = idCategory => {
-    $('#winPaymentModal' + idCategory).modal("show");
-    $('.removePaymentCategory').on('submit', function () {
-      event.preventDefault();
-
-      var label = $('#labelPayment' + idCategory);
-      ajaxRemoveCategory(idCategory, "/Settings/removePaymentCategory", label);
-
-      $('#winPaymentModal' + idCategory).modal("hide");
-    });
+          $('#winPaymentModal' + idCategory).modal("hide");
+        });
+      }
+    }
   }
 
 </script>
@@ -142,7 +146,7 @@
                 </div>
                 <div>
                   <i class="icon-pencil pointer" id='{{category[0]}}' aria-hidden="true" title="Edytuj kategorię"></i>
-                  <i class="icon-trash pointer" onclick="showModalToRemoveIncomeCategory('{{category[1]}}')"
+                  <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Income', '{{category[1]}}')"
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
@@ -199,7 +203,7 @@
                 </div>
                 <div>
                   <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
-                  <i class="icon-trash pointer" onclick="showModalToRemoveExpenseCategory('{{category[1]}}')"
+                  <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Expense', '{{category[1]}}')"
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
@@ -254,7 +258,7 @@
                 </div>
                 <div>
                   <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj metodę"></i>
-                  <i class="icon-trash pointer" onclick="showModalToRemovePaymentCategory('{{method[1]}}')"
+                  <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Payment', '{{method[1]}}')"
                     aria-hidden="true" title="Usuń metodę"></i>
                 </div>
               </label>
