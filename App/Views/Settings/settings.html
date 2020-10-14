@@ -38,33 +38,54 @@
 
   });
 
-  function showModalToRemoveIncomeCategory(id) {
-    $('#winIncomeModal'+id).modal("show");
-    $('.removeIncomeCategory').on('submit', function(){
-      event.preventDefault();
-
-      $.ajax({
-        url: "/settings/settings",
-        method: "post",
-        data: id,
-        succes: function(value){
-          alert("udało się");
-        },
-        error: alert("no nie!")
-
-      });
-
-      $('#winIncomeModal'+id).modal("hide");
-
+  ajaxRemoveCategory = (idCategory, url, label) => {
+    $.ajax({
+      url: url,
+      method: "post",
+      data: { idCategory },
+      success: function () {
+        label.addClass("d-none");
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
     });
   }
 
-  function showModalToRemoveExpense(id) {
-    $('#winExpenseModal'+id).modal("show");
+  showModalToRemoveIncomeCategory = idCategory => {
+    $('#winIncomeModal' + idCategory).modal("show");
+    $('.removeIncomeCategory').on('submit', function () {
+      event.preventDefault();
+
+      var label = $('#labelIncome' + idCategory);
+      ajaxRemoveCategory(idCategory, "/Settings/removeIncomeCategory", label);
+
+      $('#winIncomeModal' + idCategory).modal("hide");
+    });
   }
 
-  function removePaymentCategories(id) {
-    $('#winPaymentModal'+id).modal("show");
+  showModalToRemoveExpenseCategory = idCategory => {
+    $('#winExpenseModal' + idCategory).modal("show");
+    $('.removeExpenseCategory').on('submit', function () {
+      event.preventDefault();
+
+      var label = $('#labelExpense' + idCategory);
+      ajaxRemoveCategory(idCategory, "/Settings/removeExpenseCategory", label);
+
+      $('#winExpenseModal' + idCategory).modal("hide");
+    });
+  }
+
+  showModalToRemovePaymentCategory = idCategory => {
+    $('#winPaymentModal' + idCategory).modal("show");
+    $('.removePaymentCategory').on('submit', function () {
+      event.preventDefault();
+
+      var label = $('#labelPayment' + idCategory);
+      ajaxRemoveCategory(idCategory, "/Settings/removePaymentCategory", label);
+
+      $('#winPaymentModal' + idCategory).modal("hide");
+    });
   }
 
 </script>
@@ -105,23 +126,24 @@
         <div class="card">
           <div class="card-header">
             <a class="collapsed card-link block_option" id="option1" data-toggle="collapse" href="#collapseOne">
-              Kategorie przychodów 
+              Kategorie przychodów
               <i class="icon-down-open" aria-hidden="true" id="up1"></i>
             </a>
           </div>
           <div id="collapseOne" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              <div class="info_edition mb-2" >Edytuj istniejące kategorie:</div>
+              <div class="info_edition mb-2">Edytuj istniejące kategorie:</div>
               {% for category in categoriesIncomes %}
-              <label class="subblock_option col-12">
+              <label class="subblock_option col-12" id="labelIncome{{category[1]}}">
                 <div>
                   <input class="mr-2" type="radio" name="categoryIncome">
-                    {{ category[0] }}
+                  {{ category[0] }}
                   </input>
                 </div>
                 <div>
                   <i class="icon-pencil pointer" id='{{category[0]}}' aria-hidden="true" title="Edytuj kategorię"></i>
-                  <i class="icon-trash pointer" onclick="showModalToRemoveIncomeCategory('{{category[1]}}')" aria-hidden="true" title="Usuń kategorię"></i>
+                  <i class="icon-trash pointer" onclick="showModalToRemoveIncomeCategory('{{category[1]}}')"
+                    aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
               <div class="modal" tabindex="-1" role="dialog" id="winIncomeModal{{category[1]}}">
@@ -138,7 +160,6 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
                         <p><b>{{category[0]}}</b></p>
-                        <input type="hidden" name="idCategory" value="{{category[1]}}">
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
@@ -168,17 +189,18 @@
           </div>
           <div id="collapseTwo" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              <div class="info_edition mb-2" >Istniejące kategorie:</div>
+              <div class="info_edition mb-2">Istniejące kategorie:</div>
               {% for category in categoriesExpenses %}
-              <label class="subblock_option col-12" id='e{{category[1]}}'>
+              <label class="subblock_option col-12" id="labelExpense{{category[1]}}">
                 <div>
                   <input class="mr-2" type="radio" name="categoryExpense">
-                    {{ category[0] }}
+                  {{ category[0] }}
                   </input>
                 </div>
                 <div>
                   <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
-                  <i class="icon-trash pointer" onclick="showModalToRemoveExpense('{{category[1]}}')" aria-hidden="true" title="Usuń kategorię"></i>
+                  <i class="icon-trash pointer" onclick="showModalToRemoveExpenseCategory('{{category[1]}}')"
+                    aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
               <div class="modal" tabindex="-1" role="dialog" id="winExpenseModal{{category[1]}}">
@@ -190,14 +212,18 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <div class="modal-body text-body h6 mt-3 mb-3">
-                      <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
-                      <strong>{{category[0]}}</strong>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
-                      <button type="button" class="btn btn-primary">Tak</button>
-                    </div>
+
+                    <form method="post" class="removeExpenseCategory">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
+                        <strong>{{category[0]}}</strong>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                        <button type="submit" class="btn btn-primary">Tak</button>
+                      </div>
+                    </form>
+
                   </div>
                 </div>
               </div>
@@ -220,15 +246,16 @@
           </div>
           <div id="collapseThree" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              <div class="info_edition mb-2" >Istniejące metody:</div>
+              <div class="info_edition mb-2">Istniejące metody:</div>
               {% for method in paymentMethods %}
-              <label class="subblock_option col-12" id="m{{method[1]}}">
+              <label class="subblock_option col-12" id="labelPayment{{method[1]}}">
                 <div>
-                    {{ method[0]  }}
+                  {{ method[0]  }}
                 </div>
                 <div>
                   <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj metodę"></i>
-                  <i class="icon-trash pointer" onclick="removePaymentCategories('{{method[1]}}')" aria-hidden="true" title="Usuń metodę"></i>
+                  <i class="icon-trash pointer" onclick="showModalToRemovePaymentCategory('{{method[1]}}')"
+                    aria-hidden="true" title="Usuń metodę"></i>
                 </div>
               </label>
               <div class="modal" tabindex="-1" role="dialog" id="winPaymentModal{{method[1]}}">
@@ -240,20 +267,24 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <div class="modal-body text-body h6 mt-3 mb-3">
-                      <p>Czy napewno chcesz usunąć poniższą metodę? </p>
-                      <strong>{{method[0]}}</strong>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
-                      <button type="button" class="btn btn-primary">Tak</button>
-                    </div>
+
+                    <form method="post" class="removePaymentCategory">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Czy napewno chcesz usunąć poniższą metodę? </p>
+                        <strong>{{method[0]}}</strong>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                        <button type="submit" class="btn btn-primary">Tak</button>
+                      </div>
+                    </form>
+
                   </div>
                 </div>
               </div>
               {% endfor %}
               <div class="text-right">
-                <button  type="button" class="btn_settings mt-3">
+                <button type="button" class="btn_settings mt-3">
                   <i class="icon-plus pointer" aria-hidden="true"></i>
                   Dodaj metodę płatności
                 </button>

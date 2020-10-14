@@ -23,12 +23,6 @@ class Settings extends Authenticated {
         $categoriesIncomes = $settings->getIncomesCategories();
         $categoriesExpenses = $settings->getExpensesCategories();
         $paymentMethods = $settings->getPaymentMethods();
-   
-        if(isset($_POST['submit'])){
-            $data = $_POST['data'];
-            var_dump($data);
-            exit();
-        }
         
         View::renderTemplate('Settings/settings.html', [
             'categoriesIncomes' => $categoriesIncomes,
@@ -36,6 +30,47 @@ class Settings extends Authenticated {
             'paymentMethods' => $paymentMethods
         ]);
     }
+
+    /**
+     * Remove income category from database
+     * 
+     * @return void
+     */
+    public function removeIncomeCategory() {
+       
+        $idCategoryToRemove = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+        
+        $settings = new SettingsData();
+        $settings->removeIncomeCategoryFromDB($idCategoryToRemove);
+    }
+
+    /**
+     * Remove expense category from database
+     * 
+     * @return void
+     */
+    public function removeExpenseCategory() {
+        
+        $idCategoryToRemove = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+        
+        $settings = new SettingsData();
+        $settings->removeExpenseCategoryFromDB($idCategoryToRemove);
+    }
+
+    /**
+     * Remove payment category from database
+     * 
+     * @return void
+     */
+    public function removePaymentCategory() {
+        
+        $idCategoryToRemove = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+        
+        $settings = new SettingsData();
+        $settings->removePaymentCategoryFromDB($idCategoryToRemove);
+    }
+
+    
 }     
 
    

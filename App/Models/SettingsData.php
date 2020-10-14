@@ -110,4 +110,50 @@ class SettingsData extends \Core\Model
 
 		return $paymentMethods;
     }
+
+    /**
+     * Remove income category from database
+     *
+     * @return void
+     */
+    public function removeIncomeCategoryFromDB($idCategory) {
+
+        $sql = "DELETE FROM incomes_category_assigned_to_users
+                WHERE id = $idCategory";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+    }
+
+    /**
+     * Remove expense category from database
+     *
+     * @return void
+     */
+    public function removeExpenseCategoryFromDB($idCategory) {
+
+        $sql = "DELETE FROM expenses_category_assigned_to_users
+                WHERE id = $idCategory";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+    }
+
+    /**
+     * Remove payment category from database
+     *
+     * @return void
+     */
+    public function removePaymentCategoryFromDB($idCategory) {
+
+        $sql = "DELETE FROM payment_methods_assigned_to_users
+                WHERE id = $idCategory";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+    }
+    
 }
