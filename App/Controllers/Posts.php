@@ -48,11 +48,13 @@ class Posts extends Authenticated
      */
     public function expenseAction()
     {
-        $categories = new SettingsData();
-        $categoriesExpenses = $categories->getExpensesCategories();
+        $settings = new SettingsData();
+        $categoriesExpenses = $settings->getExpensesCategories();
+        $paymentMethods = $settings->getPaymentMethods();
         
         View::renderTemplate('Posts/expense.html', [
-            'categoriesExpenses' => $categoriesExpenses
+            'categoriesExpenses' => $categoriesExpenses,
+            'paymentMethods' => $paymentMethods
         ]);
     }
 
@@ -72,9 +74,13 @@ class Posts extends Authenticated
 
         } else {
             Flash::addMessage('Nie udało się zarejestrować przychodu.', Flash::WARNING);
-
+            
+            $settings = new SettingsData();
+            $categoriesIncomes = $settings->getIncomesCategories();
+        
             View::renderTemplate('Posts/income.html', [
-                'income' => $income
+                'income' => $income,
+                'categoriesIncomes' => $categoriesIncomes
             ]);
         }
     }
@@ -95,9 +101,15 @@ class Posts extends Authenticated
 
         } else {
             Flash::addMessage('Nie udało się zarejestrować wydatku.', Flash::WARNING);
+            
+            $settings = new SettingsData();
+            $categoriesExpenses = $settings->getExpensesCategories();
+            $paymentMethods = $settings->getPaymentMethods();
 
             View::renderTemplate('Posts/expense.html', [
-                'expense' => $expense
+                'expense' => $expense,
+                'categoriesExpenses' => $categoriesExpenses,
+                'paymentMethods' => $paymentMethods
             ]);
         }
     }

@@ -73,12 +73,12 @@
             {% endif %}
             <div class="col-12 m-3">Kategoria przychodu:</div>
             <div class="categoryBlock">
-            {% for category in categoriesIncomes %}
+                {% for category in categoriesIncomes %}
                 <label id='c{{category[1]}}' class="categoryInput">
-                    <input class="mr-2" type="radio" name="categoryIncomes">
-                        {{ category[0] }} 
+                    <input class="mr-2" type="radio" name="category" value="{{category[1]}}">
+                    {{ category[0] }}
                 </label>
-            {% endfor %}
+                {% endfor %}
             </div>
             <p class="error" id="infoCategory"></p>
             {% if income.errors is not empty %}

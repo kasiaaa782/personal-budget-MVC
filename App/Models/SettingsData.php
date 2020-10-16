@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use PDO;
+
 /**
  * Balance data model
  *
@@ -153,6 +155,101 @@ class SettingsData extends \Core\Model
 
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
+		$stmt->execute();
+    }
+
+    /**
+     * Check category name
+     * 
+     * @return void
+     */
+    public function checkCategoryName($nameCategory, $existingCategories)
+    {
+        $error = false;
+
+        //Set first big letter and rest small
+        $nameCategoryToAdd = ucfirst(strtolower($nameCategory));
+
+        if (!empty($nameCategoryToAdd)) {
+            foreach ($existingCategories as $existingCategory) {
+                if ($existingCategory[0] == $nameCategoryToAdd) {
+                    echo 'Ta nazwa już istnieje!';
+                    $error = true;
+                }
+            }
+            if (!$error) {
+                //Lack of whitespaces on beginnig and ending of name and start is big letter
+                if (preg_match('/^[A-ZĄĘŁÓŻŹXQV]{1}+.*\S$/', $nameCategoryToAdd) == 0) {
+                    echo 'Niewłaściwa nazwa - min. 2 znaki, zacznij dużą literą, unikaj spacji na początku i końcu.';
+                    $error = true;
+                } 
+            }
+            if(!$error){
+                echo 'Nazwa poprawna!';
+            }
+        }
+    }
+
+    /**
+     * Add income category to database
+     *
+     * @return void
+     */
+    public function addIncomeCategoryToDB($nameCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql = 'INSERT INTO incomes_category_assigned_to_users (user_id, name)
+                    VALUES (:user_id, :name)';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+        $stmt->bindValue(':name', $nameCategory, PDO::PARAM_STR);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Add expense category to database
+     *
+     * @return void
+     */
+    public function addExpenseCategoryToDB($nameCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name)
+                    VALUES (:user_id, :name)';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+        $stmt->bindValue(':name', $nameCategory, PDO::PARAM_STR);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Add payment method to database
+     *
+     * @return void
+     */
+    public function addPaymentMethodToDB($nameCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql = 'INSERT INTO payment_methods_assigned_to_users (user_id, name)
+                    VALUES (:user_id, :name)';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+        $stmt->bindValue(':name', $nameCategory, PDO::PARAM_STR);
+
 		$stmt->execute();
     }
     

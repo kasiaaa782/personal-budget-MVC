@@ -87,12 +87,14 @@
             {% endif %}
             <div class="row justify-content-center">
                 <div class="col-sm-12 col-md-3 mb-2">Sposób płatności:</div>
+
                 <div>
-                    <label class="mr-4"><input type="radio" id="p0" name="payment" value="1"
-                            class="mr-2">Gotówka</label>
-                    <label class="mr-4"><input type="radio" id="p1" name="payment" value="2" class="mr-2">Karta
-                        debetowa</label>
-                    <label><input type="radio" name="payment" id="p2" value="3" class="mr-2">Karta kredytowa</label>
+                    {% for method in paymentMethods %}
+                    <label class="mr-4">
+                        <input type="radio" id="p{{method[1]}}" name="payment" class="mr-2" value="{{method[1]}}">
+                        {{ method[0] }}
+                    </label>
+                    {% endfor %}
                 </div>
             </div>
             <p class="error" id="infoPayment"></p>
@@ -101,12 +103,12 @@
             {% endif %}
             <div class="col-12 mb-2">Kategoria wydatku:</div>
             <div class="categoryBlock">
-            {% for category in categoriesExpenses %}
-                <label id='c{{category[1]}}' class="categoryInput">
-                    <input class="mr-2" type="radio" name="categoryExpense">
-                        {{ category[0] }} 
+                {% for category in categoriesExpenses %}
+                <label class="categoryInput">
+                    <input class="mr-2" type="radio" id='c{{category[1]}}' name="category" value="{{category[1]}}">
+                    {{ category[0] }}
                 </label>
-            {% endfor %}
+                {% endfor %}
             </div>
             <p class="error" id="infoCategory"></p>
             {% if expense.errors is not empty %}
