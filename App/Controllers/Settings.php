@@ -73,18 +73,33 @@ class Settings extends Authenticated
     }
 
     /**
-     * Check income category name
+     * Get existing categories
      * 
      * @return void
      */
-    public function checkIncomeCategoryAction()
+    public function getCategoriesAction()
     {
+        $item = isset($_POST['item']) ? $_POST['item'] : NULL;
+
         $settings = new SettingsData();
-        $existingCategories = $settings->getIncomesCategories();
-
-        $nameCategory = isset($_POST['categoryName']) ? $_POST['categoryName'] : NULL;
-
-        $settings->checkCategoryName($nameCategory, $existingCategories);
+        
+        switch ($item) {
+            case 'Income' : {
+                $incomeCategories = $settings->getIncomesCategories();
+                echo json_encode($incomeCategories);
+                exit;
+            }
+            case 'Expense' : {
+                $expenseCategories = $settings->getExpensesCategories();
+                echo json_encode($expenseCategories);
+                exit;
+            }
+            case 'Payment' : {
+                $paymentMethods = $settings->getPaymentMethods();
+                echo json_encode($paymentMethods);
+                exit;
+            }
+        }
     }
 
     /**
@@ -98,6 +113,9 @@ class Settings extends Authenticated
         
         $settings = new SettingsData();
         $settings->addIncomeCategoryToDB($nameCategory);
+        $lastId = $settings->getIdLastCategoryIncome();
+
+        echo $lastId; 
     }
 
     /**

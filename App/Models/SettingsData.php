@@ -70,6 +70,25 @@ class SettingsData extends \Core\Model
     }
     
     /**
+     * Get id of last categories of incomes
+     *
+     * @return int
+     */
+    public function getIdLastCategoryIncome() {
+        $userID = $this->setUserID();
+
+        $sql = "SELECT id FROM incomes_category_assigned_to_users 
+                WHERE user_id = $userID ORDER BY id DESC LIMIT 1";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn(0);
+    }
+
+    /**
      * Get categories of expenses as an associative array
      *
      * @return array
@@ -182,7 +201,7 @@ class SettingsData extends \Core\Model
                 if (preg_match('/^[A-ZĄĘŁÓŻŹXQV]{1}+.*\S$/', $nameCategoryToAdd) == 0) {
                     echo 'Niewłaściwa nazwa - min. 2 znaki, zacznij dużą literą, unikaj spacji na początku i końcu.';
                     $error = true;
-                } 
+                }
             }
             if(!$error){
                 echo 'Nazwa poprawna!';

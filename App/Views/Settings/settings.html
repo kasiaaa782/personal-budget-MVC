@@ -54,7 +54,7 @@
 
   showModalToRemoveCategory = (item, idCategory) => {
     switch (item) {
-      case 'Income' : {
+      case 'Income': {
         $('#winIncomeModal' + idCategory).modal("show");
         $('.removeIncomeCategory').on('submit', function () {
           event.preventDefault();
@@ -66,7 +66,7 @@
         });
         break;
       }
-      case 'Expense' : {
+      case 'Expense': {
         $('#winExpenseModal' + idCategory).modal("show");
         $('.removeExpenseCategory').on('submit', function () {
           event.preventDefault();
@@ -78,7 +78,7 @@
         });
         break;
       }
-      case 'Payment' : {
+      case 'Payment': {
         $('#winPaymentModal' + idCategory).modal("show");
         $('.removePaymentCategory').on('submit', function () {
           event.preventDefault();
@@ -92,113 +92,162 @@
     }
   }
 
+  addCategoryToLabel = (categoryName, item, idCategory) => {
+
+    console.log(categoryName);
+    console.log(item);
+    console.log(idCategory);
+
+    var newLabel = document.createElement('label');
+    newLabel.id = 'label' + item + idCategory;
+    newLabel.classList.add('subblock_option', 'col-12');
+    newLabel.innerHTML =
+      `<div>
+        <input class="mr-2" type="radio" name="category${item}">
+          ${categoryName}
+        </input>
+      </div>
+      <div>
+        <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+        <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idCategory}')" aria-hidden="true" title="Usuń kategorię"></i>
+      </div>`;
+
+
+    console.log(newLabel);
+
+    $('#idForNewLabelCategory' + item).before(newLabel.outerHTML);
+
+    var newModal = document.createElement('div');
+    newModal.id = 'win' + item + 'Modal' + idCategory;
+    newModal.className = 'modal';
+    newModal.setAttribute('tabindex', '-1');
+    newModal.setAttribute('role', 'dialog');
+    newModal.innerHTML =
+      `<div class="modal-dialog" role="document">
+        <div class="modal-content p-3">
+          <div class="modal-header">
+            <h5 class="modal-title text-body h5">Usuwanie kategorii</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <form method="post" class="remove${item}Category">
+            <div class="modal-body text-body h6 mt-3 mb-3">
+              <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
+              <strong>${categoryName}</strong>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+              <button type="submit" class="btn btn-primary"v>Tak</button>
+            </div>
+          </form>
+
+        </div>
+      </div>`
+
+    $('#idForNewLabelCategory' + item).before(newModal.outerHTML);
+
+    //hover radio input    
+    $("label").hover(function () {
+      $(this).children().children().prop('checked', true);
+    });
+
+  }
+
+  checkIfCategoryExist = (itemsCategories, categoryName) => {
+    if (itemsCategories) {
+      var exist = false;
+      itemsCategories.forEach(element => {
+        if (element[0] == categoryName) {
+          exist = true;
+        }
+      });
+      return exist ? false : true;
+    } else {
+      return true;
+    }
+  }
+
   capitalizeFirstLetter = str => {
     return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
-  } 
+  }
 
-  ajaxAddCategory = (categoryName, urlDB) => {
+  ajaxAddCategoryToDB = (categoryName, urlDB, item) => {
     $.ajax({
       url: urlDB,
       method: "post",
       data: { categoryName },
-      success: function () {
-        alert('zrobione!');
-      },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         alert("Błąd!");
       }
     });
   }
 
-  addCategoryToLabel = categoryName => {
-
-    console.log(categoryName);
-    /*$('#addIncomeCategoryForm').on('submit', function () {
-      event.preventDefault();
-      console.log(success);
-
-      if(success){
-        addCategoryToLabel(categoryName);
-        $('#winModalAddCategoryIncome').modal("hide");
-      } else {
-        inputAddCategory.addClass('is-invalid');
-      }
-    });*/
-  }
-
   showModalToAddCategory = item => {
-    var infoText = $('.categoryInfo');
-    var inputAddCategory = $('#inputAddCategory'+item);
-    var notSuccess = true;
-    var categoryName = "";
-    var url = "";
+    var inputAddCategory = $('#inputAddCategory' + item);
     var urlDB = "";
 
-    infoText.empty();
-    inputAddCategory.removeClass('is-invalid');
-    inputAddCategory.val("");
+    $('#winModalAddCategory' + item).modal("show");
 
-    $('#winModalAddCategory'+item).modal("show");
-    
-    $('#formAddCategory'+item).on('submit', function () {
-      event.preventDefault();
-      if(notSuccess){
-        inputAddCategory.addClass('is-invalid');
-      }
+    inputAddCategory.keyup(function () {
+      inputAddCategory.removeClass('is-invalid');
+      $('.categoryInfo').html("");
     });
 
     switch (item) {
-      case 'Income' : {
-        url = '/Settings/checkIncomeCategory';
+      case 'Income': {
         urlDB = '/Settings/addIncomeCategory';
         break;
       }
-      case 'Expense' : {
-        url = '/Settings/checkExpenseCategory';
+      case 'Expense': {
         urlDB = '/Settings/addExpenseCategory';
         break;
       }
-      case 'Payment' : {
-        url = '/Settings/checkPaymentMethod';
+      case 'Payment': {
         urlDB = '/Settings/addPaymentMethod';
         break;
       }
     }
 
-    inputAddCategory.keyup(function() {
-      categoryName = $(this).val();
-      $.ajax({
-        url: url,
-        method: "post",
-        data: { categoryName },
-        datatype: "text",
-        success: function (data) {
+    $.ajax({
+      url: '/Settings/getCategories',
+      method: 'post',
+      data: { item },
+      success: function (data) {
+        var itemsCategories = JSON.parse(data);
 
-          if (data !== "Nazwa poprawna!") {
-            infoText.removeClass('text-success').addClass('text-danger');
-            notSuccess = true;
-            inputAddCategory.addClass('is-invalid');
+        $('#formAddCategory' + item).on('submit', function () {
+          event.preventDefault();
+
+          var categoryName = inputAddCategory.val();
+          categoryName = categoryName.trim();
+          categoryName = capitalizeFirstLetter(categoryName);
+
+          if (typeof categoryName !== "undefined" && categoryName) {
+            if (checkIfCategoryExist(itemsCategories, categoryName)) {
+
+              var lastIdPosition = itemsCategories.length - 1;
+              var newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
+              itemsCategories.push({ 0: categoryName, 1: newID });
+
+              addCategoryToLabel(categoryName, item, newID);
+              ajaxAddCategoryToDB(categoryName, urlDB, item);
+              
+              $('#winModalAddCategory' + item).modal("hide");
+              document.getElementById("formAddCategory" + item).reset();
+            } else {
+              inputAddCategory.addClass('is-invalid');
+              $('.categoryInfo').html("Ta nazwa już istnieje!");
+            }
           } else {
-            infoText.removeClass('text-danger').addClass('text-success');
-            inputAddCategory.removeClass('is-invalid');
-            notSuccess = false;
+            inputAddCategory.addClass('is-invalid');
+            $('.categoryInfo').html("Musisz wpisać nazwę!");
           }
-          
-          infoText.html(data);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-          alert("Błąd!");
-        }
-      });
-    });
-
-    $('#formAddCategory'+item).on('submit', function () {
-      event.preventDefault();
-      if(notSuccess == false){
-        categoryName = capitalizeFirstLetter(categoryName);
-        ajaxAddCategory(categoryName, urlDB);
-        addCategoryToLabel(categoryName);
-        $('#winModalAddCategory'+item).modal("hide");
+        });
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
       }
     });
   }
@@ -246,7 +295,7 @@
             </a>
           </div>
           <div id="collapseOne" class="collapse" data-parent="#accordion">
-            <div class="card-body">
+            <div class="card-body" id="categoriesOfIcomes">
               <div class="info_edition mb-2">Edytuj istniejące kategorie:</div>
               {% for category in categoriesIncomes %}
               <label class="subblock_option col-12" id="labelIncome{{category[1]}}">
@@ -286,8 +335,8 @@
                 </div>
               </div>
               {% endfor %}
-              <div class="text-right">
-                <button class="btn_settings mt-3" onclick="showModalToAddCategory('Income')">
+              <div class="text-right" id="idForNewLabelCategoryIncome">
+                <button class='btn_settings mt-3' onclick="showModalToAddCategory('Income')">
                   <i class="icon-plus pointer" aria-hidden="true"></i>
                   Dodaj nową kategorię
                 </button>
@@ -306,7 +355,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Wpisz nazwę kategorii: </p>
                         <input id="inputAddCategoryIncome" class="form-control" class="mt-3 mb-3" type="text">
-                        <small><div class="categoryInfo mt-3 text-danger"></div></small>
+                        <small>
+                          <div class="categoryInfo mt-3 text-danger"></div>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
@@ -388,7 +439,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Wpisz nazwę kategorii: </p>
                         <input id="inputAddCategoryExpense" class="form-control" class="mt-3 mb-3" type="text">
-                        <small><div class="categoryInfo mt-3 text-danger"></div></small>
+                        <small>
+                          <div class="categoryInfo mt-3 text-danger"></div>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
@@ -468,7 +521,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Wpisz nazwę metody: </p>
                         <input id="inputAddCategoryPayment" class="form-control" class="mt-3 mb-3" type="text">
-                        <small><div class="categoryInfo mt-3 text-danger"></div></small>
+                        <small>
+                          <div class="categoryInfo mt-3 text-danger"></div>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
