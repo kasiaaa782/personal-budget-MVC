@@ -45,6 +45,8 @@
       data: { idCategory },
       success: function () {
         label.addClass("d-none");
+        var newId = 'removed' + idCategory
+        label.attr("id", newId);
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         alert("Błąd!");
@@ -53,53 +55,68 @@
   }
 
   showModalToRemoveCategory = (item, idCategory) => {
-    switch (item) {
-      case 'Income': {
-        $('#winIncomeModal' + idCategory).modal("show");
-        $('.removeIncomeCategory').on('submit', function () {
-          event.preventDefault();
 
-          var label = $('#labelIncome' + idCategory);
-          ajaxRemoveCategory(idCategory, "/Settings/removeIncomeCategory", label);
-
-          $('#winIncomeModal' + idCategory).modal("hide");
-        });
-        break;
-      }
-      case 'Expense': {
-        $('#winExpenseModal' + idCategory).modal("show");
-        $('.removeExpenseCategory').on('submit', function () {
-          event.preventDefault();
-
-          var label = $('#labelExpense' + idCategory);
-          ajaxRemoveCategory(idCategory, "/Settings/removeExpenseCategory", label);
-
-          $('#winExpenseModal' + idCategory).modal("hide");
-        });
-        break;
-      }
-      case 'Payment': {
-        $('#winPaymentModal' + idCategory).modal("show");
-        $('.removePaymentCategory').on('submit', function () {
-          event.preventDefault();
-
-          var label = $('#labelPayment' + idCategory);
-          ajaxRemoveCategory(idCategory, "/Settings/removePaymentCategory", label);
-
-          $('#winPaymentModal' + idCategory).modal("hide");
-        });
-      }
-    }
-  }
-
-  addCategoryToLabel = (categoryName, item, idCategory) => {
-
-    console.log(categoryName);
-    console.log(item);
     console.log(idCategory);
 
+    $.ajax({
+      url: '/Settings/getCategories',
+      method: 'post',
+      data: { item },
+      success: function (data) {
+        var itemsCategories = JSON.parse(data);
+        var url = "";
+        var label = $('#label' + item + idCategory);
+
+        $('#winModalRemove' + item + idCategory).modal("show");
+
+        //var lastIdPosition = itemsCategories.length - 1;
+        //var newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
+
+        switch (item) {
+          case 'Income': {
+            url = "/Settings/removeIncomeCategory";
+            break;
+          }
+          case 'Expense': {
+            url = "/Settings/removeExpenseCategory";
+            break;
+          }
+          case 'Payment': {
+            url = "/Settings/removePaymentCategory";
+            break;
+          }
+        }
+
+        ///jak usunąć wybrany element z załadowanej listy ajaxowej?????
+
+        console.log(itemsCategories);
+
+        $('.removeCategory' + item).on('submit', function () {
+          event.preventDefault();
+
+          /*console.log(itemsCategories[2][1]);
+
+          for(var i = 0; itemsCategories.length; i++){
+            itemsCategories[i].filter( function(item) {
+              return item !== idCategory;
+            });
+          }
+
+          console.log(itemsCategories);*/
+
+          ajaxRemoveCategory(idCategory, url, label);
+          $('#winModalRemove' + item + idCategory).modal("hide");
+        });
+      }
+    });
+  }
+
+  addCategoryToLabel = (categoryName, item, idToAdd) => {
+
+    console.log(categoryName, item, idToAdd)
+
     var newLabel = document.createElement('label');
-    newLabel.id = 'label' + item + idCategory;
+    newLabel.id = 'label' + item + idToAdd;
     newLabel.classList.add('subblock_option', 'col-12');
     newLabel.innerHTML =
       `<div>
@@ -109,7 +126,7 @@
       </div>
       <div>
         <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
-        <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idCategory}')" aria-hidden="true" title="Usuń kategorię"></i>
+        <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
       </div>`;
 
 
@@ -118,7 +135,7 @@
     $('#idForNewLabelCategory' + item).before(newLabel.outerHTML);
 
     var newModal = document.createElement('div');
-    newModal.id = 'win' + item + 'Modal' + idCategory;
+    newModal.id = 'winModalRemove' + item + idToAdd;
     newModal.className = 'modal';
     newModal.setAttribute('tabindex', '-1');
     newModal.setAttribute('role', 'dialog');
@@ -132,7 +149,7 @@
             </button>
           </div>
 
-          <form method="post" class="remove${item}Category">
+          <form method="post" class="removeCategory${item}">
             <div class="modal-body text-body h6 mt-3 mb-3">
               <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
               <strong>${categoryName}</strong>
@@ -187,6 +204,10 @@
   showModalToAddCategory = item => {
     var inputAddCategory = $('#inputAddCategory' + item);
     var urlDB = "";
+    inputAddCategory.removeClass('is-invalid');
+    $('.categoryInfo').html("");
+    document.getElementById("formAddCategory" + item).reset();
+
 
     $('#winModalAddCategory' + item).modal("show");
 
@@ -195,27 +216,13 @@
       $('.categoryInfo').html("");
     });
 
-    switch (item) {
-      case 'Income': {
-        urlDB = '/Settings/addIncomeCategory';
-        break;
-      }
-      case 'Expense': {
-        urlDB = '/Settings/addExpenseCategory';
-        break;
-      }
-      case 'Payment': {
-        urlDB = '/Settings/addPaymentMethod';
-        break;
-      }
-    }
-
     $.ajax({
       url: '/Settings/getCategories',
       method: 'post',
       data: { item },
       success: function (data) {
         var itemsCategories = JSON.parse(data);
+        console.log(itemsCategories);
 
         $('#formAddCategory' + item).on('submit', function () {
           event.preventDefault();
@@ -232,7 +239,25 @@
               itemsCategories.push({ 0: categoryName, 1: newID });
 
               addCategoryToLabel(categoryName, item, newID);
+
+              switch (item) {
+                case 'Income': {
+                  urlDB = '/Settings/addIncomeCategory';
+                  break;
+                }
+                case 'Expense': {
+                  urlDB = '/Settings/addExpenseCategory';
+                  break;
+                }
+                case 'Payment': {
+                  urlDB = '/Settings/addPaymentMethod';
+                  break;
+                }
+              }
+
               ajaxAddCategoryToDB(categoryName, urlDB, item);
+
+              console.log(itemsCategories);
               
               $('#winModalAddCategory' + item).modal("hide");
               document.getElementById("formAddCategory" + item).reset();
@@ -310,7 +335,7 @@
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
-              <div class="modal" tabindex="-1" role="dialog" id="winIncomeModal{{category[1]}}">
+              <div class="modal" tabindex="-1" role="dialog" id="winModalRemoveIncome{{category[1]}}">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content p-3">
                     <div class="modal-header">
@@ -320,7 +345,7 @@
                       </button>
                     </div>
 
-                    <form method="post" class="removeIncomeCategory">
+                    <form method="post" class="removeCategoryIncome">
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
                         <p><b>{{category[0]}}</b></p>
@@ -394,7 +419,7 @@
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
               </label>
-              <div class="modal" tabindex="-1" role="dialog" id="winExpenseModal{{category[1]}}">
+              <div class="modal" tabindex="-1" role="dialog" id="winModalRemoveExpense{{category[1]}}">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content p-3">
                     <div class="modal-header">
@@ -404,7 +429,7 @@
                       </button>
                     </div>
 
-                    <form method="post" class="removeExpenseCategory">
+                    <form method="post" class="removeCategoryExpense">
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
                         <strong>{{category[0]}}</strong>
@@ -476,7 +501,7 @@
                     aria-hidden="true" title="Usuń metodę"></i>
                 </div>
               </label>
-              <div class="modal" tabindex="-1" role="dialog" id="winPaymentModal{{method[1]}}">
+              <div class="modal" tabindex="-1" role="dialog" id="winModalRemovePayment{{method[1]}}">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content p-3">
                     <div class="modal-header">
@@ -486,7 +511,7 @@
                       </button>
                     </div>
 
-                    <form method="post" class="removePaymentCategory">
+                    <form method="post" class="removeCategoryPayment">
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Czy napewno chcesz usunąć poniższą metodę? </p>
                         <strong>{{method[0]}}</strong>
