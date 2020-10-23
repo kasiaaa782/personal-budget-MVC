@@ -69,9 +69,6 @@
 
         $('#winModalRemove' + item + idCategory).modal("show");
 
-        //var lastIdPosition = itemsCategories.length - 1;
-        //var newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
-
         switch (item) {
           case 'Income': {
             url = "/Settings/removeIncomeCategory";
@@ -87,22 +84,8 @@
           }
         }
 
-        ///jak usunąć wybrany element z załadowanej listy ajaxowej?????
-
-        console.log(itemsCategories);
-
         $('.removeCategory' + item).on('submit', function () {
           event.preventDefault();
-
-          /*console.log(itemsCategories[2][1]);
-
-          for(var i = 0; itemsCategories.length; i++){
-            itemsCategories[i].filter( function(item) {
-              return item !== idCategory;
-            });
-          }
-
-          console.log(itemsCategories);*/
 
           ajaxRemoveCategory(idCategory, url, label);
           $('#winModalRemove' + item + idCategory).modal("hide");
@@ -128,6 +111,17 @@
         <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
         <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
       </div>`;
+
+    if (item == "Payment") {
+      newLabel.innerHTML =
+        `<div>
+          ${categoryName}
+      </div>
+      <div>
+        <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+        <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
+      </div>`;
+    }
 
 
     console.log(newLabel);
@@ -216,17 +210,15 @@
       $('.categoryInfo').html("");
     });
 
-    $.ajax({
-      url: '/Settings/getCategories',
-      method: 'post',
-      data: { item },
-      success: function (data) {
-        var itemsCategories = JSON.parse(data);
-        console.log(itemsCategories);
+    $('#formAddCategory' + item).on('submit', function () {
+      event.preventDefault();
 
-        $('#formAddCategory' + item).on('submit', function () {
-          event.preventDefault();
-
+      $.ajax({
+        url: '/Settings/getCategories',
+        method: 'post',
+        data: { item },
+        success: function (data) {
+          var itemsCategories = JSON.parse(data);
           var categoryName = inputAddCategory.val();
           categoryName = categoryName.trim();
           categoryName = capitalizeFirstLetter(categoryName);
@@ -236,7 +228,6 @@
 
               var lastIdPosition = itemsCategories.length - 1;
               var newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
-              itemsCategories.push({ 0: categoryName, 1: newID });
 
               addCategoryToLabel(categoryName, item, newID);
 
@@ -257,8 +248,6 @@
 
               ajaxAddCategoryToDB(categoryName, urlDB, item);
 
-              console.log(itemsCategories);
-              
               $('#winModalAddCategory' + item).modal("hide");
               document.getElementById("formAddCategory" + item).reset();
             } else {
@@ -269,11 +258,11 @@
             inputAddCategory.addClass('is-invalid');
             $('.categoryInfo').html("Musisz wpisać nazwę!");
           }
-        });
-      },
-      error: function (XMLHttpRequest, textStatus, errorThrown) {
-        alert("Błąd!");
-      }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Błąd!");
+        }
+      });
     });
   }
 
@@ -444,7 +433,7 @@
                 </div>
               </div>
               {% endfor %}
-              <div class="text-right">
+              <div class="text-right" id="idForNewLabelCategoryExpense">
                 <button class="btn_settings mt-3" onclick="showModalToAddCategory('Expense')">
                   <i class="icon-plus" aria-hidden="true"></i>
                   Dodaj nową kategorię
@@ -526,7 +515,7 @@
                 </div>
               </div>
               {% endfor %}
-              <div class="text-right">
+              <div class="text-right" id="idForNewLabelCategoryPayment">
                 <button type="button" class="btn_settings mt-3" onclick="showModalToAddCategory('Payment')">
                   <i class="icon-plus pointer" aria-hidden="true"></i>
                   Dodaj metodę płatności

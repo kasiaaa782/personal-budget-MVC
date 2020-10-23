@@ -113,24 +113,6 @@ class Settings extends Authenticated
         
         $settings = new SettingsData();
         $settings->addIncomeCategoryToDB($nameCategory);
-        $lastId = $settings->getIdLastCategoryIncome();
-
-        echo $lastId; 
-    }
-
-    /**
-     * Check expense category name
-     * 
-     * @return void
-     */
-    public function checkExpenseCategoryAction()
-    {
-        $settings = new SettingsData();
-        $existingCategories = $settings->getExpensesCategories();
-
-        $nameCategory = isset($_POST['categoryName']) ? $_POST['categoryName'] : NULL;
-        
-        $settings->checkCategoryName($nameCategory, $existingCategories);
     }
 
     /**
@@ -144,22 +126,6 @@ class Settings extends Authenticated
         $settings = new SettingsData();
         $settings->addExpenseCategoryToDB($nameCategory);
     }
-
-    /**
-     * Check payment method name
-     * 
-     * @return void
-     */
-    public function checkPaymentMethodAction()
-    {
-        $settings = new SettingsData();
-        $existingCategories = $settings->getPaymentMethods();
-
-        $nameCategory = isset($_POST['categoryName']) ? $_POST['categoryName'] : NULL;
-
-        $settings->checkCategoryName($nameCategory, $existingCategories);
-    }
-
     /**
      * Add expense category to database
      * 
