@@ -5,20 +5,20 @@
 {% block navigation %}
 
 <nav class="navbar navbar-dark navbar-expand-lg">
-    <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
-        aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mainmenu">
-        <ol class="navbar-nav mx-auto">
-            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/income">Dodaj przychód</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
-        </ol>
-    </div>
+  <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
+    aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="mainmenu">
+    <ol class="navbar-nav mx-auto">
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/income">Dodaj przychód</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/expense">Dodaj wydatek</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+    </ol>
+  </div>
 </nav>
 
 {% endblock %}
@@ -28,21 +28,22 @@
 <link rel="stylesheet" href="../css/money.css" type="text/css">
 
 <script>
-    function checkData() {
-        var categories = [];
-        var category = 0;
-        for (i = 0; i < 4; i++) {
-            categories[i] = document.getElementById("c" + i);
-            if (categories[i].checked == true) {
-                category = categories[i].value;
-            }
-        }
-        if (category == 0) {
-            document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
-        } else {
-            document.getElementById("infoCategory").innerHTML = "";
-        }
+
+  checkData = () => {
+    var categories = [];
+    var category = 0;
+    for (i = 0; i < 4; i++) {
+      categories[i] = document.getElementById("c" + i);
+      if (categories[i].checked == true) {
+        category = categories[i].value;
+      }
     }
+    if (category == 0) {
+      document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
+    } else {
+      document.getElementById("infoCategory").innerHTML = "";
+    }
+  }
 
 </script>
 
@@ -51,49 +52,49 @@
 {% block body %}
 
 <div id="content_expense">
-    <div class="container mt-1 mb-1">
-        <div id="title">Dodawanie przychodu</div>
-        <hr class="line mt-3 mb-4" style="width: 20em">
-        <div class="sentence_expense mb-2 mt-2">
-            Uzupełnij poniższe dane dotyczące nowego przychodu
-        </div>
-        <form method="post" action="/posts/create-income">
-            <div class="row justify-content-center mt-3">
-                <div class="block">
-                    <label>Kwota : <input type="number" step="0.01" min="0.01" name="amount" id="amount"
-                            value="{{ income.amount }}" required></label>
-                </div>
-                <div class="block">
-                    <label>Data : <input type="date" name="date" id="date1" value="{{ income.date }}"></label>
-                </div>
-            </div>
-            <p class="error" id="infoAmount"></p>
-            {% if income.errors is not empty %}
-            <div class='error'>{{ income.errors[0] }}</div>
-            {% endif %}
-            <div class="col-12 m-3">Kategoria przychodu:</div>
-            <div class="categoryBlock">
-                {% for category in categoriesIncomes %}
-                <label id='c{{category[1]}}' class="categoryInput">
-                    <input class="mr-2" type="radio" name="category" value="{{category[1]}}">
-                    {{ category[0] }}
-                </label>
-                {% endfor %}
-            </div>
-            <p class="error" id="infoCategory"></p>
-            {% if income.errors is not empty %}
-            <div class='error'>{{ income.errors[1] }}</div>
-            {% endif %}
-            <div class="row justify-content-center">
-                <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)"
-                    onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
-            </div>
-            <div class="row justify-content-center mt-3">
-                <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj przychód" class="mr-5">
-                <input id="expense_button" type="reset" value="Anuluj">
-            </div>
-        </form>
+  <div class="container mt-1 mb-1">
+    <div id="title">Dodawanie przychodu</div>
+    <hr class="line mt-3 mb-4" style="width: 20em">
+    <div class="sentence_expense mb-2 mt-2">
+      Uzupełnij poniższe dane dotyczące nowego przychodu
     </div>
+    <form method="post" action="/posts/create-income">
+      <div class="row justify-content-center mt-3">
+        <div class="block">
+          <label>Kwota : <input type="number" step="0.01" min="0.01" name="amount" id="amount"
+              value="{{ income.amount }}" required></label>
+        </div>
+        <div class="block">
+          <label>Data : <input type="date" name="date" id="date1" value="{{ income.date }}"></label>
+        </div>
+      </div>
+      <p class="error" id="infoAmount"></p>
+      {% if income.errors is not empty %}
+      <div class='error'>{{ income.errors[0] }}</div>
+      {% endif %}
+      <div class="col-12 m-3">Kategoria przychodu:</div>
+      <div class="categoryBlock">
+        {% for category in categoriesIncomes %}
+        <label id='c{{category[1]}}' class="categoryInput">
+          <input class="mr-2" type="radio" name="category" value="{{category[1]}}">
+          {{ category[0] }}
+        </label>
+        {% endfor %}
+      </div>
+      <p class="error" id="infoCategory"></p>
+      {% if income.errors is not empty %}
+      <div class='error'>{{ income.errors[1] }}</div>
+      {% endif %}
+      <div class="row justify-content-center">
+        <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)"
+          onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
+      </div>
+      <div class="row justify-content-center mt-3">
+        <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj przychód" class="mr-5">
+        <input id="expense_button" type="reset" value="Anuluj">
+      </div>
+    </form>
+  </div>
 </div>
 
 {% endblock %}
