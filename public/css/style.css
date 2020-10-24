@@ -70,14 +70,6 @@ h2{
 		box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
 }
 
-@media all and (min-width: 700px){
-	#content{
-		width: 570px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-}
-
 #name,
 input[type=text],
 input[type=email],
@@ -202,6 +194,7 @@ ol > li:hover{
 }
 
 /* expense/income */
+
 .sentence_expense{
 		font-size: 20px;
 		text-shadow: 0.3px 0.3px #0072E3;
@@ -209,12 +202,13 @@ ol > li:hover{
 }
 
 #title{
+		color: white;
 		text-shadow: 0.7px 0.7px #0072E3;
 		font-size: 32px;
 		font-weight: 700;
 }
 
-#content_expense{
+#content_expense {
 		background-color: #8DBCEB;
 		padding: 20px 0px 20px 0px;
 		border: 1px solid #9EBDDB;
@@ -226,42 +220,95 @@ ol > li:hover{
 		text-align: center;
 }
 
-#amount, #date1{
-		background-color: #ffffff;
-		width: 100%;
-		height: 30px;
-		color: #003F7F;
-		border: 2px solid #BCCAE8;
-		border-radius: 5px;
-		outline:none;
-		font-size: 15px;
-		padding: 5px;
+.form_container {
+	background-color: #558ac7;
+	padding: 30px 50px;
+	border-radius: 5px;;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	-webkit-box-shadow: 3px 3px 30px 5px rgba(87, 87, 87, 0.3);
+	-moz-box-shadow: 3px 3px 30px 5px rgba(87, 87, 87, 0.3);
+	box-shadow: 3px 3px 30px 5px  rgba(87, 87, 87, 0.3);
 }
 
-.block{
-		margin-left:10px;
-		margin-right:10px
+.form_container .form-control {
+	height: 30px;
+	font-size: 14px;
+	padding: 0 10px;
 }
 
-.categoryBlock {
-		width: 100%;
-		margin: 20px 0 20px 30px;
+.block_inputs {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
 }
+
+.block_payments {
+	width: 100%;
+}
+
+.block_inputs .form-control {
+	width: 35vw;
+}
+
+@media ( min-width: 585px ){
+
+	.block_inputs .form-control {
+		width: 200px;
+	}
+}
+
+@media ( min-width: 768px ){
+
+	.block_inputs .form-control {
+		width: 250px;
+	}
+}
+
+@media ( min-width: 992px ){
+	.form_container {
+		width: 80%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.block_inputs .form-control {
+		width: 318px;
+	}
+}
+
+@media ( min-width: 1200px ){
+	.form_container {
+		width: 70%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.block_inputs .form-control {
+		width: 335px;
+	}
+}	
 
 .categoryInput {
-		width: 190px;
+		height: 30px;
+		font-size: 14px;
+		padding: 4px 10px 4px 20px;
+		border: 1px solid rgb(208, 220, 231); 
+		border-radius: 5px; 
+		color: #5a5959;
+		background-color: white;
 		text-align: left;
 }
 
-#comment{
+.comment{
 		resize: none;
-		padding: 5px;
-		margin: 5px;
-		color: #003F7F;
+		padding: 5px 10px;
+		color: #5a5959;
 		border: 2px solid #BCCAE8;
 		border-radius: 5px;
 		outline:none;
-		font-family: 'Roboto Slab', serif;
 		letter-spacing: 2px;
 		font-size: 12px;
 }
@@ -283,14 +330,13 @@ ol > li:hover{
 
 #expense_submit,
 #expense_button{
-		background-color: #2b7bca;
+		background-color: #629edb;
 		font-size:15px;
 		color: white;
 		padding: 5px 5px;
 		border: none;
 		border-radius: 5px;
 		cursor: pointer;
-		letter-spacing: 1px;
 		outline: none;
 		width:150px;
 		height:40px;
@@ -299,7 +345,7 @@ ol > li:hover{
 
 #expense_submit:hover,
 #expense_button:hover{
-		background-color: #2E8FF1;
+		background-color: #73aae0;
 }
 
 /*balance*/
