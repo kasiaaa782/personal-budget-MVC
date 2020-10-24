@@ -30,33 +30,44 @@
 <script>
   
   checkData = () => {
-    var payments = [];
-    var payment = 0;
-    for (i = 0; i < 3; i++) {
-      payments[i] = document.getElementById("p" + i);
-      if (payments[i].checked == true) {
-        payment = payments[i].value;
-      }
-    }
-    if (payment == 0) {
+
+    var selectPayment = document.getElementById("selectPayment");
+
+    if (!selectPayment.value) {
       document.getElementById("infoPayment").innerHTML = "Wybierz płatność.";
     } else {
       document.getElementById("infoPayment").innerHTML = "";
     }
+    
+    var item = "Expense";
 
-    var categories = [];
-    var category = 0;
-    for (i = 0; i < 16; i++) {
-      categories[i] = document.getElementById("c" + i);
-      if (categories[i].checked == true) {
-        category = categories[i].value;
-      }
-    }
-    if (category == 0) {
-      document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
-    } else {
-      document.getElementById("infoCategory").innerHTML = "";
-    }
+    $.ajax({
+        url: '/Settings/getCategories',
+        method: 'post',
+        data: {item},
+        success: function (data) {
+          var itemsCategories = JSON.parse(data);
+          var categories = [];
+          var categoryNotChecked = true;
+
+          for (i = 0; i < itemsCategories.length; i++) {
+            categories[i] = document.getElementById("c" + itemsCategories[i][1]);
+            if (categories[i].checked == true) {
+              categoryNotChecked = false;
+            }
+          }
+
+          if (categoryNotChecked) {
+            document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
+          } else {
+            document.getElementById("infoCategory").innerHTML = "";
+          }
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Błąd!");
+        }
+    });
   }
 </script>
 
@@ -67,56 +78,63 @@
 <div id="content_expense">
   <div class="container mt-1 mb-1">
     <div id="title">Dodawanie wydatku</div>
-    <hr class="line mt-3 mb-3" style="width: 20em">
-    <div class="sentence_expense">
-      Uzupełnij poniższe dane dotyczące nowego wydatku
-    </div>
-    <form method="post" action="/posts/create-expense">
-      <div class="row justify-content-center mt-3">
-        <div class="block">
-          <label>Kwota : <input type="number" step="0.01" min="0.01" name="amount" id="amount"
-              value="{{ expense.amount }}" required></label>
+    <hr class="line mt-3 mb-4" style="width: 25em">
+    <form method="post" action="/posts/create-expense" class="form_container">
+      <div class="block_inputs">
+        <div>
+          <label>
+            <div class="mb-1 ml-1 text-left">
+              <small>Kwota :</small> 
+            </div>
+            <input class="form-control" type="number" step="0.01" min="0.01" name="amount" id="amount"
+            value="{{ expense.amount }}" required>
+          </label>
         </div>
-        <div class="block">
-          <label>Data : <input type="date" name="date" id="date1" value="{{ expense.date }}"></label>
+        <div>
+          <label>
+            <div class="mb-1 ml-1 text-left">
+              <small>Data : </small>
+            </div>
+            <input class="form-control" type="date" name="date" id="date1" value="{{ expense.date }}">
+          </label>
         </div>
       </div>
       {% if expense.errors is not empty %}
-      <div class='error'>{{ expense.errors[0] }}</div>
+      <div class='error'>
+        {{ expense.errors[0] }}
+      </div>
       {% endif %}
-      <div class="row justify-content-center">
-        <div class="col-sm-12 col-md-3 mb-2">Sposób płatności:</div>
-
-        <div>
+      <div class="block_payments">
+        <select id="selectPayment" name="payment" class="form-control">
+          <option value="" disabled selected>Wybierz sposób płatności</option>
           {% for method in paymentMethods %}
-          <label class="mr-4">
-            <input type="radio" id="p{{method[1]}}" name="payment" class="mr-2" value="{{method[1]}}">
-            {{ method[0] }}
+          <option value="{{method[1]}}">{{ method[0] }}</option>
+          {% endfor %}
+        </select>
+        <p class="error mt-1" id="infoPayment"></p>
+        {% if expense.errors is not empty %}
+        <div class='error'>{{ expense.errors[1] }}</div>
+        {% endif %}
+      </div>
+      <div>
+        <div>
+          <div class="mb-1 ml-1 mt-1 text-left">
+            <small>Kategoria wydatku:</small>
+          </div>
+          {% for category in categoriesExpenses %}
+          <label class="categoryInput col-12">
+            <input class="mr-3" type="radio" id='c{{category[1]}}' name="category" value="{{category[1]}}">
+            {{ category[0] }}
           </label>
           {% endfor %}
         </div>
+        <p class="error mb-2" id="infoCategory"></p>
+        {% if expense.errors is not empty %}
+        <div class='error'>{{ expense.errors[2] }}</div>
+        {% endif %}
       </div>
-      <p class="error" id="infoPayment"></p>
-      {% if expense.errors is not empty %}
-      <div class='error'>{{ expense.errors[1] }}</div>
-      {% endif %}
-      <div class="col-12 mb-2">Kategoria wydatku:</div>
-      <div class="categoryBlock">
-        {% for category in categoriesExpenses %}
-        <label class="categoryInput">
-          <input class="mr-2" type="radio" id='c{{category[1]}}' name="category" value="{{category[1]}}">
-          {{ category[0] }}
-        </label>
-        {% endfor %}
-      </div>
-      <p class="error" id="infoCategory"></p>
-      {% if expense.errors is not empty %}
-      <div class='error'>{{ expense.errors[2] }}</div>
-      {% endif %}
-      <div class="row justify-content-center">
-        <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)"
-          onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
-      </div>
+      <textarea name="comment" class="comment col-12" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)"
+        onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
       <div class="row justify-content-center mt-3">
         <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj wydatek" class="mr-5">
         <input id="expense_button" type="reset" value="Anuluj">
