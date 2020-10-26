@@ -108,7 +108,7 @@
         </input>
       </div>
       <div>
-        <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+        <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}, '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
         <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
       </div>`;
 
@@ -118,7 +118,7 @@
           ${categoryName}
       </div>
       <div>
-        <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+        <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}, '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
         <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
       </div>`;
     }
@@ -149,8 +149,8 @@
               <strong>${categoryName}</strong>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
               <button type="submit" class="btn btn-primary"v>Tak</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
             </div>
           </form>
 
@@ -266,7 +266,39 @@
     });
   }
 
-</script>
+  
+
+  showModalToEditCategory = (item, idCategory) => {
+    
+    $('#winModalEditCategory' + item + idCategory).on('shown.bs.modal', function() {
+      $(this).find('#editName' + item + idCategory).focus();
+    });
+
+    $("label").hover(function () {
+      $(this).children().children().prop('checked', false);
+    });
+
+    console.log("hej!")
+
+    $('#winModalEditCategory' + item + idCategory).modal("show");
+    
+    $("#limitCheckbox"+idCategory).click(function() {
+      
+      if(document.getElementById("limitCheckbox"+idCategory).checked) {
+          console.log("zaznaczone");
+          $("#limitNumber"+idCategory).prop('readonly', false);
+          $("#limitNumber"+idCategory).prop('autofocus', true);
+
+      } else {
+        $("#limitNumber"+idCategory).prop('readonly', true);
+        $("#limitNumber"+idCategory).prop('autofocus', false);
+      }
+
+    });
+
+  }
+
+</script> 
 
 {% endblock %}
 
@@ -309,7 +341,7 @@
             </a>
           </div>
           <div id="collapseOne" class="collapse" data-parent="#accordion">
-            <div class="card-body" id="categoriesOfIcomes">
+            <div class="card-body">
               <div class="info_edition mb-2">Edytuj istniejące kategorie:</div>
               {% for category in categoriesIncomes %}
               <label class="subblock_option col-12" id="labelIncome{{category[1]}}">
@@ -319,7 +351,7 @@
                   </input>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" id='{{category[0]}}' aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Income', '{{category[1]}}')" aria-hidden="true" title="Edytuj kategorię"></i>
                   <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Income', '{{category[1]}}')"
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
@@ -340,8 +372,32 @@
                         <p><b>{{category[0]}}</b></p>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
                         <button type="submit" class="btn btn-primary">Tak</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+              <div class="modal" role="dialog" id="winModalEditCategoryIncome{{category[1]}}">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Edycja kategorii</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <form method="post" class="editCategoryIncome">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Nazwa kategorii</p>
+                        <input type="text" class="form-control" value="{{category[0]}}" id="editNameIncome{{category[1]}}">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Zmień</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                       </div>
                     </form>
 
@@ -374,8 +430,8 @@
                         </small>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                         <button type="submit" class="btn btn-primary">Dodaj</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                       </div>
                     </form>
 
@@ -403,7 +459,7 @@
                   </input>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Expense', '{{category[1]}}')" aria-hidden="true" title="Edytuj kategorię"></i>
                   <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Expense', '{{category[1]}}')"
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
@@ -424,8 +480,40 @@
                         <strong>{{category[0]}}</strong>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
                         <button type="submit" class="btn btn-primary">Tak</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+              <div class="modal" role="dialog" id="winModalEditCategoryExpense{{category[1]}}">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Edycja kategorii</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <form method="post" class="editCategoryExpense">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Nazwa kategorii</p>
+                        <input type="text" class="form-control" value="{{category[0]}}" id="editNameExpense{{category[1]}}">
+                        <label>
+                          <input type="checkbox" class="mr-1 mt-4 mb-2" id="limitCheckbox{{category[1]}}">
+                          <small>Włącz limit dla kategorii</small>
+                        </label>
+                        <div class="limit-category mb-2">
+                          Ustaw miesięczny limit wydatków dla danej kategorii:
+                        </div>
+                        <input type="number" class="form-control" id="limitNumber{{category[1]}}" readonly >
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Zmień</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                       </div>
                     </form>
 
@@ -458,8 +546,8 @@
                         </small>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                         <button type="submit" class="btn btn-primary">Dodaj</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                       </div>
                     </form>
 
@@ -485,7 +573,7 @@
                   {{ method[0]  }}
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" aria-hidden="true" title="Edytuj metodę"></i>
+                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Payment', '{{method[1]}}')" aria-hidden="true" title="Edytuj metodę"></i>
                   <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Payment', '{{method[1]}}')"
                     aria-hidden="true" title="Usuń metodę"></i>
                 </div>
@@ -506,8 +594,32 @@
                         <strong>{{method[0]}}</strong>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
                         <button type="submit" class="btn btn-primary">Tak</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+              <div class="modal" role="dialog" id="winModalEditCategoryPayment{{method[1]}}">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Edycja kategorii</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <form method="post" class="editCategoryPayment">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Nazwa kategorii</p>
+                        <input type="text" class="form-control" value="{{method[0]}}" id="editNamePayment{{method[1]}}">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Zmień</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                       </div>
                     </form>
 
@@ -516,7 +628,7 @@
               </div>
               {% endfor %}
               <div class="text-right" id="idForNewLabelCategoryPayment">
-                <button type="button" class="btn_settings mt-3" onclick="showModalToAddCategory('Payment')">
+                <button class="btn_settings mt-3" onclick="showModalToAddCategory('Payment')">
                   <i class="icon-plus pointer" aria-hidden="true"></i>
                   Dodaj metodę płatności
                 </button>
@@ -540,8 +652,8 @@
                         </small>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                         <button type="submit" class="btn btn-primary">Dodaj</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                       </div>
                     </form>
 
