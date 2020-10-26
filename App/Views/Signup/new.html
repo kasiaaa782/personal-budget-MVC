@@ -115,35 +115,44 @@
       <div class="sentence mt-2 mb-2">
         Zarejestruj się, aby móc utworzyć swój osobisty budżet!
       </div>
-      <form method="post" action="/signup/create" id="formSignup" style="width: 20em;">
-        <div>
-          <label><input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}"
-              minlength="3" title="Wpisz swoje imię!"></label>
-          {% if user.errors is not empty %}
-          <div class='error'>{{ user.errors[0] }}</div>
-          {% endif %}
+      <form method="post" action="/signup/create" id="formSignup">
+        <label>
+          <input id="name" type="text" name="name" placeholder="Imię" autofocus value="{{ user.name }}"
+            minlength="3" title="Wpisz swoje imię!">
+        </label>
+        {% if user.errors is not empty %}
+          <div class='error'>
+            {{ user.errors[0] }}
+          </div>
+        {% endif %}
+        <label>
+          <input type="email" name="email" placeholder="E-mail" value="{{ user.email }}">
+        </label>
+        {% if user.errors is not empty %}
+        <div class='error'>
+          {{ user.errors[1] }}
         </div>
-        <div>
-          <label><input type="email" name="email" placeholder="E-mail" value="{{ user.email }}"></label>
-          {% if user.errors is not empty %}
-          <div class='error'>{{ user.errors[1] }}</div>
-          {% endif %}
+        {% endif %}
+        <label>
+          <input type="password" id="inputPassword" name="password" placeholder="Hasło">
+        </label>
+        <i class="fa fa-eye-slash" aria-hidden="true" id="eye" onclick="toggle()"></i>
+        {% if user.errors is not empty %}
+        <div class='error' style="width: 100%;">
+          {{ user.errors[2] }}
         </div>
-        <div>
-          <label>
-            <input type="password" id="inputPassword" name="password" placeholder="Hasło">
-          </label>
-          <i class="fa fa-eye-slash" aria-hidden="true" id="eye" onclick="toggle()"></i>
-          {% if user.errors is not empty %}
-          <div class='error' style="width: 100%;">{{ user.errors[2] }}</div>
-          {% endif %}
-        </div>
+        {% endif %}
         <div class="text-center mr-2 mt-1">
-          <label><input type="checkbox" name="rules" id='rules' class="mr-2" {% if rules %} checked=checked
-              {% endif %}>Akceptuję regulamin</label>
+          <label>
+            <input type="checkbox" name="rules" id='rules' class="mr-2" {% if rules %} checked=checked
+              {% endif %}>
+            Akceptuję regulamin
+          </label>
           <p class="error" id="infoCheckbox"></p>
           {% if e_rules is not empty %}
-          <div class='error'>{{ e_rules }}</div>
+          <div class='error'>
+            {{ e_rules }}
+          </div>
           {% endif %}
         </div>
         <div class="g-recaptcha mt-2 mb-2" data-sitekey="6LfD_7wZAAAAAKByS5gdsmA1paGplrNJxLk_QO_W"></div>
@@ -151,8 +160,10 @@
         {% if e_bot is not empty %}
         <div class='error'>{{ e_bot }}</div>
         {% endif %}
-        <div class="mt-3 mb-2">
-          <button onclick="myCheckFunction()" id="submit_log" type="submit">Zarejestruj się</button>
+        <div class="mt-3 mb-3">
+          <button onclick="myCheckFunction()" class="button_submit" type="submit">
+            Zarejestruj się
+          </button>
         </div>
       </form>
       <div class="attention">

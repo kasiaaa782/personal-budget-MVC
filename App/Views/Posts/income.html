@@ -51,47 +51,62 @@
 
 {% block body %}
 
-<div id="content_expense">
-  <div class="container mt-1 mb-1">
+<div class="container">
+  <div id="main_content">
     <div id="title">Dodawanie przychodu</div>
-    <hr class="line mt-3 mb-4" style="width: 20em">
-    <div class="sentence_expense mb-2 mt-2">
-      Uzupełnij poniższe dane dotyczące nowego przychodu
-    </div>
-    <form method="post" action="/posts/create-income">
-      <div class="row justify-content-center mt-3">
-        <div class="block">
-          <label>Kwota : <input type="number" step="0.01" min="0.01" name="amount" id="amount"
-              value="{{ income.amount }}" required></label>
+    <hr class="mt-3 mb-3">
+    <form method="post" action="/posts/create-income" class="form_container">
+      <div class="fill_data">
+        <span>Uzupełnij dane</span>
+      </div>
+      <div class="block_inputs">
+        <div>
+          <label>
+            <div class="text-left">
+              <p>Kwota :</p> 
+            </div>
+            <input class="form-control" type="number" step="0.01" min="0.01" name="amount" id="amount"
+            value="{{ income.amount }}" required>
+          </label>
         </div>
-        <div class="block">
-          <label>Data : <input type="date" name="date" id="date1" value="{{ income.date }}"></label>
+        <p></p>
+        <div>
+          <label>
+            <div class="text-left">
+              <p>Data : </p>
+            </div>
+            <input class="form-control" type="date" name="date" id="date1" value="{{ income.date }}">
+          </label>
         </div>
       </div>
-      <p class="error" id="infoAmount"></p>
       {% if income.errors is not empty %}
-      <div class='error'>{{ income.errors[0] }}</div>
-      {% endif %}
-      <div class="col-12 m-3">Kategoria przychodu:</div>
-      <div class="categoryBlock">
-        {% for category in categoriesIncomes %}
-        <label id='c{{category[1]}}' class="categoryInput">
-          <input class="mr-2" type="radio" name="category" value="{{category[1]}}">
-          {{ category[0] }}
-        </label>
-        {% endfor %}
+      <div class='error'>
+        {{ income.errors[0] }}
       </div>
-      <p class="error" id="infoCategory"></p>
-      {% if income.errors is not empty %}
-      <div class='error'>{{ income.errors[1] }}</div>
       {% endif %}
-      <div class="row justify-content-center">
-        <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)"
-          onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
+      <div>
+        <div>
+          <div class="text-left">
+            <p>Kategoria przychodu:</p>
+          </div>
+          {% for category in categoriesIncomes %}
+          <label class="category_input col-12">
+            <input class="mr-3" type="radio" id='c{{category[1]}}' name="category" value="{{category[1]}}">
+            {{ category[0] }}
+          </label>
+          {% endfor %}
+        </div>
+        <p class="error" id="infoCategory"></p>
+        {% if income.errors is not empty %}
+        <div class='error'>{{ income.errors[1] }}</div>
+        {% endif %}
       </div>
-      <div class="row justify-content-center mt-3">
-        <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj przychód" class="mr-5">
-        <input id="expense_button" type="reset" value="Anuluj">
+      <p class="text-left">Komentarz :</p> 
+      <textarea name="comment" class="comment col-12" rows="1" cols="55" placeholder="(Opcjonalnie)"
+        onfocus="this.placeholder=''" onblur="this.placeholder='(Opcjonalnie)'"></textarea>
+      <div class="block_buttons mt-3">
+        <input onclick="checkData()" class="button_submit" type="submit" value="Dodaj wydatek">
+        <input class="button_add" type="reset" value="Anuluj">
       </div>
     </form>
   </div>
