@@ -264,7 +264,7 @@
     $.ajax({
       url: '/Settings/updateCategoryName',
       method: 'post',
-      data: { newName, item },
+      data: { newName, item, idCategory },
       success: function () {
         var labelId = "label" + item + idCategory;
         $(`#${labelId} div span`).html(newName);
@@ -297,10 +297,6 @@
 
       var newName = $('#editName' + item + idCategory).val();
 
-      console.log(oldName);
-      console.log(newName);
-
-
       if (newName !== oldName) {
         $.ajax({
           url: '/Settings/getCategories',
@@ -329,7 +325,9 @@
         $('.categoryInfo').html('Nie zmieniono nazwy.');
       }
 
-      $("#limitCheckbox" + idCategory).click(function () {
+    });
+
+    $("#limitCheckbox" + idCategory).click(function () {
         if (document.getElementById("limitCheckbox" + idCategory).checked) {
           $("#limitNumber" + idCategory).prop('readonly', false);
           $("#limitNumber" + idCategory).prop('autofocus', true);
@@ -338,8 +336,6 @@
           $("#limitNumber" + idCategory).prop('readonly', true);
           $("#limitNumber" + idCategory).prop('autofocus', false);
         }
-      });
-
     });
 
     if ($("button[type='button']")) {

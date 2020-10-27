@@ -146,6 +146,26 @@ class Settings extends Authenticated
      */
     public function updateCategoryNameAction()
     {
+        $newNameCategory = isset($_POST['newName']) ? $_POST['newName'] : NULL;
+        $item = isset($_POST['item']) ? $_POST['item'] : NULL;
+        $idCategory = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+
+        $settings = new SettingsData();
+        
+        switch ($item) {
+            case 'Income' : {
+                $settings->updateIncomeCategories($newNameCategory, $idCategory);
+                exit;
+            }
+            case 'Expense' : {
+                $settings->updateExpenseCategories($newNameCategory, $idCategory);
+                exit;
+            }
+            case 'Payment' : {
+                $settings->updatePaymentMethods($newNameCategory, $idCategory);
+                exit;
+            }
+        }
 
     }
 

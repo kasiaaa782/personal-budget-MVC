@@ -220,5 +220,65 @@ class SettingsData extends \Core\Model
 
 		$stmt->execute();
     }
+
+    /**
+     * Update income name category in database
+     *
+     * @return void
+     */
+    public function updateIncomeCategories($newNameCategory, $idCategory){
+        
+        $sql = 'UPDATE incomes_category_assigned_to_users 
+                SET name = :name
+                WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':name', $newNameCategory, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $idCategory, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Update expense name category in database
+     *
+     * @return void
+     */
+    public function updateExpenseCategories($newNameCategory, $idCategory){
+        
+        $sql = 'UPDATE expenses_category_assigned_to_users 
+                SET name = :name
+                WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':name', $newNameCategory, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $idCategory, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Update payment name methods in database
+     *
+     * @return void
+     */
+    public function updatePaymentMethods($newNameCategory, $idCategory){
+        
+        $sql = 'UPDATE payment_methods_assigned_to_users 
+                SET name = :name
+                WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':name', $newNameCategory, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $idCategory, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
     
 }
