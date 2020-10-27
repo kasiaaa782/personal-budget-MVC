@@ -45,8 +45,22 @@
       data: { idCategory },
       success: function () {
         label.addClass("d-none");
-        var newId = 'removed' + idCategory
+        var newId = 'removed' + idCategory;
         label.attr("id", newId);
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
+    });
+  }
+
+  ajaxAssignItemsToOtherCategory = (idCategory, item, urlForAssignItems) => {
+    $.ajax({
+      url: urlForAssignItems,
+      method: "post",
+      data: { idCategory, item },
+      success: function () {
+        alert("sukces!");
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         alert("Błąd!");
@@ -60,10 +74,13 @@
       method: 'post',
       data: { item, idCategory },
       success: function (data) {
+        /* items = incomes or expenses */
         var items = JSON.parse(data);
         var url = "";
         $('.info_exist_items').html('');
         var label = $('#label' + item + idCategory);
+        var itemsToAssign = false;
+        var urlForAssignItems = "/Settings/assignItemsToOtherCategory";
 
         $('#winModalRemove' + item + idCategory).modal("show");
 
@@ -84,13 +101,11 @@
           }
         }
 
-        console.log(items);
-
         if(items.length !== 0 ) {
             $('.info_exist_items').html(info);
-            console.log('istnieją');
+            itemsToAssign = true;
         } else {
-            console.log(' nie istnieją');
+            itemsToAssign = false;
         }
 
         $('.removeCategory' + item).on('submit', function () {
@@ -99,10 +114,13 @@
           console.log(idCategory);
           console.log(items);
 
-          
+          if(itemsToAssign) {
+            ajaxAssignItemsToOtherCategory(idCategory, item, urlForAssignItems);
+            console.log('przenosimy');
+          }
 
-          //ajaxRemoveCategory(idCategory, url, label);
-          //$('#winModalRemove' + item + idCategory).modal("hide");
+          ajaxRemoveCategory(idCategory, url, label);
+          $('#winModalRemove' + item + idCategory).modal("hide");
 
           $('.removeCategory' + item).unbind('submit');
 

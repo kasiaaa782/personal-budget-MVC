@@ -201,4 +201,51 @@ class Settings extends Authenticated
         }
     }
 
+    /**
+     * Update id of category of incomes and expenses of removed category
+     * 
+     * @return void
+     */
+    public function assignItemsToOtherCategory() {
+        $item = isset($_POST['item']) ? $_POST['item'] : NULL;
+        $idRemovedCategory = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+        $settings = new SettingsData();
+        $notFoundOtherCategory = true;
+
+        switch ($item) {
+            case 'Income' : {
+                $categories = $settings->getIncomesCategories();
+                foreach ( $categories as $category):
+                    if($category[0] == "Inne") {
+                        $notFoundOtherCategory = false;
+                        $idOtherCategory = $category[1];
+                        $settings->updateIdCategoryInIncomes($idRemovedCategory, $idOtherCategory);
+                    }
+                endforeach;
+
+                if($notFoundOtherCategory) {
+                    var_dump('utwórz kategorię!');
+                }
+
+                exit;
+            }
+            case 'Expense' : {
+                $categories = $settings->getExpensesCategories();
+                foreach ( $categories as $category):
+                    if($category[0] == "Inne wydatki") {
+                        $notFoundOtherCategory = false;
+                        $idOtherCategory = $category[1];
+                        $settings->updateIdCategoryInExpenses($idRemovedCategory, $idOtherCategory);
+                    }
+                endforeach;
+
+                if($notFoundOtherCategory) {
+                    var_dump('utwórz kategorię!');
+                }
+                exit;
+            }
+        }
+
+    }
+
 }

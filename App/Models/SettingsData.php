@@ -226,7 +226,7 @@ class SettingsData extends \Core\Model
      *
      * @return void
      */
-    public function updateIncomeCategories($newNameCategory, $idCategory){
+    public function updateIncomeCategories($newNameCategory, $idCategory) {
         
         $sql = 'UPDATE incomes_category_assigned_to_users 
                 SET name = :name
@@ -246,7 +246,7 @@ class SettingsData extends \Core\Model
      *
      * @return void
      */
-    public function updateExpenseCategories($newNameCategory, $idCategory){
+    public function updateExpenseCategories($newNameCategory, $idCategory) {
         
         $sql = 'UPDATE expenses_category_assigned_to_users 
                 SET name = :name
@@ -266,7 +266,7 @@ class SettingsData extends \Core\Model
      *
      * @return void
      */
-    public function updatePaymentMethods($newNameCategory, $idCategory){
+    public function updatePaymentMethods($newNameCategory, $idCategory) {
         
         $sql = 'UPDATE payment_methods_assigned_to_users 
                 SET name = :name
@@ -281,4 +281,51 @@ class SettingsData extends \Core\Model
 		$stmt->execute();
     }
     
+    /**
+     * Update id of incomes on 'Other' category in database
+     *
+     * @return void
+     */
+    public function updateIdCategoryInIncomes($idRemovedCategory, $idOtherCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql = 'UPDATE incomes 
+                SET income_category_assigned_to_user_id = :idOtherCategory
+                WHERE user_id = :user_id
+                AND income_category_assigned_to_user_id = :idRemovedCategory';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':idOtherCategory', $idOtherCategory, PDO::PARAM_STR);
+        $stmt->bindValue(':idRemovedCategory', $idRemovedCategory, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Update id of expenses on 'Other expenses' category in database
+     *
+     * @return void
+     */
+    public function updateIdCategoryInExpenses($idRemovedCategory, $idOtherCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql = 'UPDATE expenses 
+                SET expense_category_assigned_to_user_id = :idOtherCategory
+                WHERE user_id = :user_id
+                AND expense_category_assigned_to_user_id = :idRemovedCategory';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':idOtherCategory', $idOtherCategory, PDO::PARAM_STR);
+        $stmt->bindValue(':idRemovedCategory', $idRemovedCategory, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
 }
