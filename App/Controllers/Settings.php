@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BalanceData;
 use \Core\View;
 use \App\Models\SettingsData;
 
@@ -167,6 +168,37 @@ class Settings extends Authenticated
             }
         }
 
+    }
+
+    /**
+     * Get existing items - expenses or incomes
+     * 
+     * @return void
+     */
+    public function getItemsAction()
+    {
+        $item = isset($_POST['item']) ? $_POST['item'] : NULL;
+        $idCategory = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+
+        $balance = new BalanceData();
+        
+        switch ($item) {
+            case 'Income' : {
+                $incomes = $balance->getIncomes($idCategory);
+                echo json_encode($incomes);
+                exit;
+            }
+            case 'Expense' : {
+                $expenses = $balance->getExpenses($idCategory);
+                echo json_encode($expenses);
+                exit;
+            }
+            case 'Payment' : {
+                $methods = [];
+                echo json_encode($methods);
+                exit;
+            }
+        }
     }
 
 }

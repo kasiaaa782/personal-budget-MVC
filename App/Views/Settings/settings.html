@@ -55,16 +55,14 @@
   }
 
   showModalToRemoveCategory = (item, idCategory) => {
-
-    console.log(idCategory);
-
     $.ajax({
-      url: '/Settings/getCategories',
+      url: '/Settings/getItems',
       method: 'post',
-      data: { item },
+      data: { item, idCategory },
       success: function (data) {
-        var itemsCategories = JSON.parse(data);
+        var items = JSON.parse(data);
         var url = "";
+        $('.info_exist_items').html('');
         var label = $('#label' + item + idCategory);
 
         $('#winModalRemove' + item + idCategory).modal("show");
@@ -72,10 +70,12 @@
         switch (item) {
           case 'Income': {
             url = "/Settings/removeIncomeCategory";
+            info = "Uwaga! W razie usunięcia tej kategorii, przychody należące do niej zostaną przypisane do kategorii \"Inne\".";
             break;
           }
           case 'Expense': {
             url = "/Settings/removeExpenseCategory";
+            info = "Uwaga! W razie usunięcia tej kategorii, wydatki należące do niej zostaną przypisane do kategorii \"Inne wydatki\". ";
             break;
           }
           case 'Payment': {
@@ -84,11 +84,28 @@
           }
         }
 
+        console.log(items);
+
+        if(items.length !== 0 ) {
+            $('.info_exist_items').html(info);
+            console.log('istnieją');
+        } else {
+            console.log(' nie istnieją');
+        }
+
         $('.removeCategory' + item).on('submit', function () {
           event.preventDefault();
 
-          ajaxRemoveCategory(idCategory, url, label);
-          $('#winModalRemove' + item + idCategory).modal("hide");
+          console.log(idCategory);
+          console.log(items);
+
+          
+
+          //ajaxRemoveCategory(idCategory, url, label);
+          //$('#winModalRemove' + item + idCategory).modal("hide");
+
+          $('.removeCategory' + item).unbind('submit');
+
         });
       }
     });
@@ -141,6 +158,7 @@
             <div class="modal-body text-body h6 mt-3 mb-3">
               <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
               <strong>${categoryName}</strong>
+              <small><p class="info_exist_items pt-4"></p></small>
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary"v>Tak</button>
@@ -414,9 +432,10 @@
                     </div>
 
                     <form method="post" class="removeCategoryIncome">
-                      <div class="modal-body text-body h6 mt-3 mb-3">
+                      <div class="modal-body text-body h6 mt-3 mb-1">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
-                        <p><b>{{category[0]}}</b></p>
+                        <strong>{{category[0]}}</strong>
+                        <small><p class="info_exist_items pt-4"></p></small>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Tak</button>
@@ -528,6 +547,7 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
                         <strong>{{category[0]}}</strong>
+                        <small><p class="info_exist_items pt-4"></p></small>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Tak</button>

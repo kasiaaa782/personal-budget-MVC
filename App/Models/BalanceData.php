@@ -99,7 +99,7 @@ class BalanceData extends \Core\Model
 	}
 
     /**
-     * Get incomes as an associative array
+     * Get incomes from a given period time as an associative array
      *
      * @return array
      */
@@ -126,7 +126,7 @@ class BalanceData extends \Core\Model
     }
     
     /**
-     * Get expenses as an associative array
+     * Get expenses from a given period time as an associative array
      *
      * @return array
      */
@@ -150,5 +150,51 @@ class BalanceData extends \Core\Model
 		$expensesGenerally = $stmt->fetchAll();
 
 		return $expensesGenerally;
+    }
+
+    /**
+     * Get all id of incomes assigned to the category as an associative array
+     *
+     * @return array
+     */
+    public function getIncomes($idCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql =  "SELECT i.id
+                FROM incomes AS i
+                WHERE i.user_id='$userID' 
+                AND income_category_assigned_to_user_id='$idCategory'";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+        
+        $incomes = $stmt->fetchAll();
+
+		return $incomes;
+    }
+
+    /**
+     * Get all id of incomes assigned to the category as an associative array
+     *
+     * @return array
+     */
+    public function getExpenses($idCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql =  "SELECT e.id
+                FROM expenses AS e
+                WHERE e.user_id='$userID' 
+                AND expense_category_assigned_to_user_id='$idCategory'";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+        
+        $expenses = $stmt->fetchAll();
+
+		return $expenses;
     }
 }
