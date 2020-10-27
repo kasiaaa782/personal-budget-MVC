@@ -96,16 +96,13 @@
 
   addCategoryToLabel = (categoryName, item, idToAdd) => {
 
-    console.log(categoryName, item, idToAdd)
-
     var newLabel = document.createElement('label');
     newLabel.id = 'label' + item + idToAdd;
     newLabel.classList.add('subblock_option', 'col-12');
     newLabel.innerHTML =
       `<div>
         <input class="mr-2" type="radio" name="category${item}">
-          ${categoryName}
-        </input>
+        <span>${categoryName}</span>
       </div>
       <div>
         <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}, '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
@@ -115,16 +112,13 @@
     if (item == "Payment") {
       newLabel.innerHTML =
         `<div>
-          ${categoryName}
-      </div>
-      <div>
-        <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}, '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
-        <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
-      </div>`;
+          <span>${categoryName}</span>
+        </div>
+        <div>
+          <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}, '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
+          <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
+        </div>`;
     }
-
-
-    console.log(newLabel);
 
     $('#idForNewLabelCategory' + item).before(newLabel.outerHTML);
 
@@ -266,11 +260,24 @@
     });
   }
 
-  
+  ajaxEditCategory = (newName, item, idCategory) => {
+    $.ajax({
+      url: '/Settings/updateCategoryName',
+      method: 'post',
+      data: { newName, item },
+      success: function () {
+        var labelId = "label" + item + idCategory;
+        $(`#${labelId} div span`).html(newName);
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
+    });
+  }
 
   showModalToEditCategory = (item, idCategory) => {
-    
-    $('#winModalEditCategory' + item + idCategory).on('shown.bs.modal', function() {
+
+    $('#winModalEditCategory' + item + idCategory).on('shown.bs.modal', function () {
       $(this).find('#editName' + item + idCategory).focus();
     });
 
@@ -278,27 +285,71 @@
       $(this).children().children().prop('checked', false);
     });
 
-    console.log("hej!")
+    $('.categoryInfo').html('');
 
     $('#winModalEditCategory' + item + idCategory).modal("show");
-    
-    $("#limitCheckbox"+idCategory).click(function() {
-      
-      if(document.getElementById("limitCheckbox"+idCategory).checked) {
-          console.log("zaznaczone");
-          $("#limitNumber"+idCategory).prop('readonly', false);
-          $("#limitNumber"+idCategory).prop('autofocus', true);
 
+    $('.editCategory' + item).on('submit', function () {
+      event.preventDefault();
+
+      var labelId = "label" + item + idCategory;      
+      var oldName = $(`#${labelId} div span`).html();
+
+      var newName = $('#editName' + item + idCategory).val();
+
+      console.log(oldName);
+      console.log(newName);
+
+
+      if (newName !== oldName) {
+        $.ajax({
+          url: '/Settings/getCategories',
+          method: 'post',
+          data: { item },
+          success: function (data) {
+            var itemsCategories = JSON.parse(data);
+            newName = newName.trim();
+            newName = capitalizeFirstLetter(newName);
+
+            if (typeof newName !== "undefined" && newName) {
+              if (checkIfCategoryExist(itemsCategories, newName)) {
+                ajaxEditCategory(newName, item, idCategory);
+                $('#winModalEditCategory' + item + idCategory).modal("hide");
+                $('.editCategory' + item).unbind('submit');
+              } else {
+                $('.categoryInfo').html('Taka kategoria już istnieje.');
+              }
+            }
+          },
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Błąd!");
+          }
+        });
       } else {
-        $("#limitNumber"+idCategory).prop('readonly', true);
-        $("#limitNumber"+idCategory).prop('autofocus', false);
+        $('.categoryInfo').html('Nie zmieniono nazwy.');
       }
+
+      $("#limitCheckbox" + idCategory).click(function () {
+        if (document.getElementById("limitCheckbox" + idCategory).checked) {
+          $("#limitNumber" + idCategory).prop('readonly', false);
+          $("#limitNumber" + idCategory).prop('autofocus', true);
+
+        } else {
+          $("#limitNumber" + idCategory).prop('readonly', true);
+          $("#limitNumber" + idCategory).prop('autofocus', false);
+        }
+      });
 
     });
 
+    if ($("button[type='button']")) {
+      $("label").hover(function () {
+        $(this).children().children().prop('checked', true);
+      });
+    }
   }
 
-</script> 
+</script>
 
 {% endblock %}
 
@@ -330,7 +381,7 @@
     <div class="row justify-content-center">
       <div id="title" class="col-12 text-center mt-3">
         Panel użytkownika
-        <hr class="line mt-4 mb-5" style="width: 60vmin">
+        <hr class="mt-4 mb-5" style="width: 60vmin">
       </div>
       <div id="accordion">
         <div class="card">
@@ -346,12 +397,12 @@
               {% for category in categoriesIncomes %}
               <label class="subblock_option col-12" id="labelIncome{{category[1]}}">
                 <div>
-                  <input class="mr-2" type="radio" name="categoryIncome">
-                  {{ category[0] }}
-                  </input>
+                  <input class="mr-2" type="radio" value="{{category[0]}}" name="categoryIncome">
+                  <span>{{category[0]}}</span>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Income', '{{category[1]}}')" aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Income', '{{category[1]}}')"
+                    aria-hidden="true" title="Edytuj kategorię"></i>
                   <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Income', '{{category[1]}}')"
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
@@ -394,6 +445,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Nazwa kategorii</p>
                         <input type="text" class="form-control" value="{{category[0]}}" id="editNameIncome{{category[1]}}">
+                        <small>
+                          <div class="categoryInfo mt-3 text-danger"></div>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Zmień</button>
@@ -454,12 +508,12 @@
               {% for category in categoriesExpenses %}
               <label class="subblock_option col-12" id="labelExpense{{category[1]}}">
                 <div>
-                  <input class="mr-2" type="radio" name="categoryExpense">
-                  {{ category[0] }}
-                  </input>
+                  <input class="mr-2" type="radio" value="{{category[0]}}" name="categoryExpense">
+                  <span>{{ category[0] }}</span>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Expense', '{{category[1]}}')" aria-hidden="true" title="Edytuj kategorię"></i>
+                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Expense', '{{category[1]}}')"
+                    aria-hidden="true" title="Edytuj kategorię"></i>
                   <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Expense', '{{category[1]}}')"
                     aria-hidden="true" title="Usuń kategorię"></i>
                 </div>
@@ -502,6 +556,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Nazwa kategorii</p>
                         <input type="text" class="form-control" value="{{category[0]}}" id="editNameExpense{{category[1]}}">
+                        <small>
+                          <div class="categoryInfo mt-3 text-danger"></div>
+                        </small>
                         <label>
                           <input type="checkbox" class="mr-1 mt-4 mb-2" id="limitCheckbox{{category[1]}}">
                           <small>Włącz limit dla kategorii</small>
@@ -509,7 +566,7 @@
                         <div class="limit-category mb-2">
                           Ustaw miesięczny limit wydatków dla danej kategorii:
                         </div>
-                        <input type="number" class="form-control" id="limitNumber{{category[1]}}" readonly >
+                        <input type="number" class="form-control" id="limitNumber{{category[1]}}" readonly>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Zmień</button>
@@ -570,10 +627,11 @@
               {% for method in paymentMethods %}
               <label class="subblock_option col-12" id="labelPayment{{method[1]}}">
                 <div>
-                  {{ method[0]  }}
+                  <span>{{ method[0] }}</span>
                 </div>
                 <div>
-                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Payment', '{{method[1]}}')" aria-hidden="true" title="Edytuj metodę"></i>
+                  <i class="icon-pencil pointer" onclick="showModalToEditCategory('Payment', '{{method[1]}}')"
+                    aria-hidden="true" title="Edytuj metodę"></i>
                   <i class="icon-trash pointer" onclick="showModalToRemoveCategory('Payment', '{{method[1]}}')"
                     aria-hidden="true" title="Usuń metodę"></i>
                 </div>
@@ -616,6 +674,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Nazwa kategorii</p>
                         <input type="text" class="form-control" value="{{method[0]}}" id="editNamePayment{{method[1]}}">
+                        <small>
+                          <div class="categoryInfo mt-3 text-danger"></div>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Zmień</button>

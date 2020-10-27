@@ -126,6 +126,7 @@ class Settings extends Authenticated
         $settings = new SettingsData();
         $settings->addExpenseCategoryToDB($nameCategory);
     }
+
     /**
      * Add expense category to database
      * 
@@ -136,6 +137,16 @@ class Settings extends Authenticated
         $nameCategory = isset($_POST['categoryName']) ? $_POST['categoryName'] : NULL;
         $settings = new SettingsData();
         $settings->addPaymentMethodToDB($nameCategory);
+    }
+
+    /**
+     * Update category name in database
+     * 
+     * @return void
+     */
+    public function updateCategoryNameAction()
+    {
+
     }
 
 }
