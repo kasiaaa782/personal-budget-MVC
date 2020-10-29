@@ -59,9 +59,6 @@
       url: urlForAssignItems,
       method: "post",
       data: { idCategory, item },
-      success: function () {
-        alert("sukces!");
-      },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         alert("Błąd!");
       }
@@ -81,6 +78,7 @@
         var label = $('#label' + item + idCategory);
         var itemsToAssign = false;
         var urlForAssignItems = "/Settings/assignItemsToOtherCategory";
+        var categoryName = "Inne";
 
         $('#winModalRemove' + item + idCategory).modal("show");
 
@@ -93,6 +91,7 @@
           case 'Expense': {
             url = "/Settings/removeExpenseCategory";
             info = "Uwaga! W razie usunięcia tej kategorii, wydatki należące do niej zostaną przypisane do kategorii \"Inne wydatki\". ";
+            categoryName = "Inne wydatki";
             break;
           }
           case 'Payment': {
@@ -101,7 +100,7 @@
           }
         }
 
-        if(items.length !== 0 ) {
+        if(items.length !== 0) {
             $('.info_exist_items').html(info);
             itemsToAssign = true;
         } else {
@@ -114,16 +113,48 @@
           console.log(idCategory);
           console.log(items);
 
+          ajaxRemoveCategory(idCategory, url, label);
+
           if(itemsToAssign) {
-            ajaxAssignItemsToOtherCategory(idCategory, item, urlForAssignItems);
-            console.log('przenosimy');
+            $.ajax({
+              url: '/Settings/getCategories',
+              method: 'post',
+              data: { item },
+              success: function (data) {
+                var itemsCategories = JSON.parse(data);
+                
+                if (checkIfCategoryNotExist(itemsCategories, categoryName)) {
+                  var newID = 0;
+                  var lastIdPosition = itemsCategories.length - 1;
+                  if (lastIdPosition < 0) {
+                    newID = 1;
+                  } else {
+                    newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
+                  }
+                  addCategoryToLabel(categoryName, item, newID);
+                  switch (item) {
+                    case 'Income': {
+                      urlDB = '/Settings/addIncomeCategory';
+                      break;
+                    }
+                    case 'Expense': {
+                      urlDB = '/Settings/addExpenseCategory';
+                      break;
+                    }
+                  }
+                  console.log('tworzymy kategorie Inne');
+                  ajaxAddCategoryToDB(categoryName, urlDB, item);     
+                }
+                ajaxAssignItemsToOtherCategory(idCategory, item, urlForAssignItems);
+              },
+              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Błąd!");
+              }
+            });
           }
 
-          ajaxRemoveCategory(idCategory, url, label);
           $('#winModalRemove' + item + idCategory).modal("hide");
-
           $('.removeCategory' + item).unbind('submit');
-
         });
       }
     });
@@ -196,7 +227,7 @@
 
   }
 
-  checkIfCategoryExist = (itemsCategories, categoryName) => {
+  checkIfCategoryNotExist = (itemsCategories, categoryName) => {
     if (itemsCategories) {
       var exist = false;
       itemsCategories.forEach(element => {
@@ -232,7 +263,6 @@
     $('.categoryInfo').html("");
     document.getElementById("formAddCategory" + item).reset();
 
-
     $('#winModalAddCategory' + item).modal("show");
 
     inputAddCategory.keyup(function () {
@@ -254,11 +284,14 @@
           categoryName = capitalizeFirstLetter(categoryName);
 
           if (typeof categoryName !== "undefined" && categoryName) {
-            if (checkIfCategoryExist(itemsCategories, categoryName)) {
-
+            if (checkIfCategoryNotExist(itemsCategories, categoryName)) {
+              var newID = 0;
               var lastIdPosition = itemsCategories.length - 1;
-              var newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
-
+              if (lastIdPosition < 0) {
+                newID = 1;
+              } else {
+                newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
+              }
               addCategoryToLabel(categoryName, item, newID);
 
               switch (item) {
@@ -344,7 +377,7 @@
             newName = capitalizeFirstLetter(newName);
 
             if (typeof newName !== "undefined" && newName) {
-              if (checkIfCategoryExist(itemsCategories, newName)) {
+              if (checkIfCategoryNotExist(itemsCategories, newName)) {
                 ajaxEditCategory(newName, item, idCategory);
                 $('#winModalEditCategory' + item + idCategory).modal("hide");
                 $('.editCategory' + item).unbind('submit');

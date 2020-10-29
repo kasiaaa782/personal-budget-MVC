@@ -210,7 +210,6 @@ class Settings extends Authenticated
         $item = isset($_POST['item']) ? $_POST['item'] : NULL;
         $idRemovedCategory = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
         $settings = new SettingsData();
-        $notFoundOtherCategory = true;
 
         switch ($item) {
             case 'Income' : {
@@ -222,11 +221,6 @@ class Settings extends Authenticated
                         $settings->updateIdCategoryInIncomes($idRemovedCategory, $idOtherCategory);
                     }
                 endforeach;
-
-                if($notFoundOtherCategory) {
-                    var_dump('utwórz kategorię!');
-                }
-
                 exit;
             }
             case 'Expense' : {
@@ -238,10 +232,6 @@ class Settings extends Authenticated
                         $settings->updateIdCategoryInExpenses($idRemovedCategory, $idOtherCategory);
                     }
                 endforeach;
-
-                if($notFoundOtherCategory) {
-                    var_dump('utwórz kategorię!');
-                }
                 exit;
             }
         }
