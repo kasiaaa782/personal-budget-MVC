@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Budżet osobisty - Dodawanie wydatku{% endblock %}
+{% block title %}Budżet osobisty - Ustawienia{% endblock %}
 
 {% block head %}
 
@@ -34,6 +34,37 @@
     //hover radio input    
     $("label").hover(function () {
       $(this).children().children().prop('checked', true);
+    });
+
+    $.ajax({
+      url: '/Settings/getLimits',
+      method: "post",
+      data: 'Expense',
+      success: function (data) {
+        var limits = JSON.parse(data);
+
+        limits.forEach(limit => {
+          var idCategory = limit[0];
+          var valueLimit = limit[1];
+
+          $('#limitNumber' + idCategory).val(valueLimit);
+          $('#limitCheckbox' + idCategory).attr('checked', true);
+          $("#limitNumber" + idCategory).prop('readonly', false);
+
+          var infoLimit = document.createElement('p');
+          infoLimit.id = 'limit' + idCategory;
+          infoLimit.classList.add('limit');
+          infoLimit.innerHTML =
+            `Limit: ${valueLimit}`;
+          
+          var labelId = "labelExpense" + idCategory;
+          $(`#${labelId} div span`).after(infoLimit);
+
+        });
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
     });
 
   });
@@ -110,9 +141,6 @@
         $('.removeCategory' + item).on('submit', function () {
           event.preventDefault();
 
-          console.log(idCategory);
-          console.log(items);
-
           ajaxRemoveCategory(idCategory, url, label);
 
           if(itemsToAssign) {
@@ -142,7 +170,6 @@
                       break;
                     }
                   }
-                  console.log('tworzymy kategorie Inne');
                   ajaxAddCategoryToDB(categoryName, urlDB, item);     
                 }
                 ajaxAssignItemsToOtherCategory(idCategory, item, urlForAssignItems);
@@ -152,7 +179,6 @@
               }
             });
           }
-
           $('#winModalRemove' + item + idCategory).modal("hide");
           $('.removeCategory' + item).unbind('submit');
         });
@@ -171,7 +197,7 @@
         <span>${categoryName}</span>
       </div>
       <div>
-        <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}, '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
+        <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}', '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
         <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
       </div>`;
 
@@ -188,12 +214,12 @@
 
     $('#idForNewLabelCategory' + item).before(newLabel.outerHTML);
 
-    var newModal = document.createElement('div');
-    newModal.id = 'winModalRemove' + item + idToAdd;
-    newModal.className = 'modal';
-    newModal.setAttribute('tabindex', '-1');
-    newModal.setAttribute('role', 'dialog');
-    newModal.innerHTML =
+    var newModalToRemove = document.createElement('div');
+    newModalToRemove.id = 'winModalRemove' + item + idToAdd;
+    newModalToRemove.className = 'modal';
+    newModalToRemove.setAttribute('tabindex', '-1');
+    newModalToRemove.setAttribute('role', 'dialog');
+    newModalToRemove.innerHTML =
       `<div class="modal-dialog" role="document">
         <div class="modal-content p-3">
           <div class="modal-header">
@@ -216,9 +242,51 @@
           </form>
 
         </div>
-      </div>`
+      </div>`;
 
-    $('#idForNewLabelCategory' + item).before(newModal.outerHTML);
+    $('#idForNewLabelCategory' + item).before(newModalToRemove.outerHTML);
+
+    var newModalToEdit = document.createElement('div');
+    newModalToEdit.id = 'winModalEditCategory' + item + idToAdd;
+    newModalToEdit.className = 'modal';
+    newModalToEdit.setAttribute('role', 'dialog');
+    newModalToRemove.setAttribute('tabindex', '-1');
+    newModalToEdit.innerHTML =
+      `<div class="modal-dialog" role="document">
+        <div class="modal-content p-3">
+          <div class="modal-header">
+            <h5 class="modal-title text-body h5">Edycja kategorii</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <form method="post" class="editCategory${item}">
+            <div class="modal-body text-body h6 mt-3 mb-3">
+              <p>Nazwa kategorii</p>
+              <input type="text" class="form-control" value="${categoryName}" id="editName${item}${idToAdd}">
+              <small>
+                <div class="categoryInfo mt-3 text-danger"></div>
+              </small>
+              <label>
+                <input type="checkbox" class="mr-1 mt-4 mb-2" id="limitCheckbox${idToAdd}">
+                <small>Włącz limit dla kategorii</small>
+              </label>
+              <div class="limit-category mb-2">
+                Ustaw miesięczny limit wydatków dla danej kategorii:
+              </div>
+              <input type="number" class="form-control" step="0.01" min="0.01" id="limitNumber${idToAdd}" readonly>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Zmień</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+            </div>
+          </form>
+
+        </div>
+      </div>`;
+
+    $('#idForNewLabelCategory' + item).before(newModalToEdit.outerHTML);
 
     //hover radio input    
     $("label").hover(function () {
@@ -344,6 +412,45 @@
     });
   }
 
+  ajaxSetLimit = (idCategory, labelId) => {
+    var limit = $('#limitNumber' + idCategory).val();
+    
+    if($('#limit' + idCategory).val() == undefined) {
+      var infoLimit = document.createElement('p');
+      infoLimit.id = 'limit' + idCategory;
+      infoLimit.classList.add('limit');
+      infoLimit.innerHTML =
+        `Limit: ${limit}`;
+      $(`#${labelId} div span`).after(infoLimit);
+    } else {
+      $('#limit' + idCategory).show();
+      $('#limit' + idCategory).html(`Limit: ${limit}`);
+    }
+
+    $.ajax({
+      url: '/Settings/setLimitCategory',
+      method: 'post',
+      data: { limit, idCategory },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
+    });
+  }
+
+  ajaxResetLimit = (idCategory, labelId) => {
+    $('#limit' + idCategory).hide();
+    $("#limitNumber" + idCategory).val('');
+
+    $.ajax({
+      url: '/Settings/resetLimitCategory',
+      method: 'post',
+      data: { idCategory },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
+    });
+  }
+
   showModalToEditCategory = (item, idCategory) => {
 
     $('#winModalEditCategory' + item + idCategory).on('shown.bs.modal', function () {
@@ -363,7 +470,6 @@
 
       var labelId = "label" + item + idCategory;      
       var oldName = $(`#${labelId} div span`).html();
-
       var newName = $('#editName' + item + idCategory).val();
 
       if (newName !== oldName) {
@@ -390,24 +496,41 @@
             alert("Błąd!");
           }
         });
-      } else {
-        $('.categoryInfo').html('Nie zmieniono nazwy.');
       }
 
+      if ($('#limitCheckbox' + idCategory).is(':checked')) {
+        ajaxSetLimit(idCategory, labelId);
+        $('.editCategory' + item).unbind('submit');
+      } else {
+        ajaxResetLimit(idCategory, labelId);
+      }
+
+      $('#winModalEditCategory' + item + idCategory).modal("hide");
     });
 
     $("#limitCheckbox" + idCategory).click(function () {
-        if (document.getElementById("limitCheckbox" + idCategory).checked) {
+        if ($('#limitCheckbox' + idCategory).is(':checked')) {
           $("#limitNumber" + idCategory).prop('readonly', false);
+          $("#limitNumber" + idCategory).prop('required', true);
           $("#limitNumber" + idCategory).prop('autofocus', true);
-
+          $('.categoryInfo').html('');
         } else {
           $("#limitNumber" + idCategory).prop('readonly', true);
+          $("#limitNumber" + idCategory).prop('required', false);
           $("#limitNumber" + idCategory).prop('autofocus', false);
         }
     });
 
     if ($("button[type='button']")) {
+      if($('#limitNumber' + idCategory).val()){
+        $('#limitCheckbox' + idCategory).prop('checked', true);
+      } else {
+        $('#limitCheckbox' + idCategory).prop('checked', false);
+        $("#limitNumber" + idCategory).prop('readonly', true);
+      }
+      var labelId = "label" + item + idCategory;      
+      var oldName = $(`#${labelId} div span`).html();
+      $('#editName' + item + idCategory).val(oldName);
       $("label").hover(function () {
         $(this).children().children().prop('checked', true);
       });
@@ -633,7 +756,7 @@
                         <div class="limit-category mb-2">
                           Ustaw miesięczny limit wydatków dla danej kategorii:
                         </div>
-                        <input type="number" class="form-control" id="limitNumber{{category[1]}}" readonly>
+                        <input type="number" class="form-control" step="0.01" min="0.01" id="limitNumber{{category[1]}}" readonly>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Zmień</button>

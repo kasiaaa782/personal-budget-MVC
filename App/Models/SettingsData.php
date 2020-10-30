@@ -188,8 +188,8 @@ class SettingsData extends \Core\Model
 
         $userID = $this->setUserID();
 
-        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name)
-                    VALUES (:user_id, :name)';
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name, limit_category)
+                    VALUES (:user_id, :name, 0)';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -325,6 +325,69 @@ class SettingsData extends \Core\Model
         $stmt->bindValue(':idOtherCategory', $idOtherCategory, PDO::PARAM_STR);
         $stmt->bindValue(':idRemovedCategory', $idRemovedCategory, PDO::PARAM_INT);
         $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Insert limits to database 
+     *
+     * @return void
+     */
+
+    public function updateLimitInDB($idCategory, $limit) {
+
+        $sql = 'UPDATE expenses_category_assigned_to_users 
+                SET limit_category = :limit
+                WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $idCategory, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Get limits of expenses as an associative array
+     *
+     * @return array
+     */
+    public function getExpensesLimits() {
+
+		$userID = $this->setUserID();
+
+		$sql = "SELECT ec.id, ec.limit_category
+                FROM expenses_category_assigned_to_users AS ec
+                WHERE ec.user_id = $userID
+                AND ec.limit_category != 0";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+
+		$limitsOfExpenses = $stmt->fetchAll();
+
+		return $limitsOfExpenses;
+    }
+
+    /**
+     * Set limit of expenses category at 0
+     *
+     * @return void
+     */
+    public function resetLimit($idCategory) {
+
+        $sql = "UPDATE expenses_category_assigned_to_users 
+                SET limit_category = 0
+                WHERE id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        
+        $stmt->bindValue(':id', $idCategory, PDO::PARAM_INT);
 
 		$stmt->execute();
     }

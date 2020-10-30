@@ -688,3 +688,9 @@ table{
 	width: 300px;
 	font-size: 14px;
 }
+
+.limit {
+	margin: 5px 0 0 26px;
+	color: #6c757d;
+	font-size: 11px;
+}

@@ -26,11 +26,13 @@ class Settings extends Authenticated
         $categoriesIncomes = $settings->getIncomesCategories();
         $categoriesExpenses = $settings->getExpensesCategories();
         $paymentMethods = $settings->getPaymentMethods();
+        $limits = $settings->getExpensesLimits();
 
         View::renderTemplate('Settings/settings.html', [
             'categoriesIncomes' => $categoriesIncomes,
             'categoriesExpenses' => $categoriesExpenses,
-            'paymentMethods' => $paymentMethods
+            'paymentMethods' => $paymentMethods,
+            'limits' => $limits
         ]);
     }
 
@@ -216,7 +218,6 @@ class Settings extends Authenticated
                 $categories = $settings->getIncomesCategories();
                 foreach ( $categories as $category):
                     if($category[0] == "Inne") {
-                        $notFoundOtherCategory = false;
                         $idOtherCategory = $category[1];
                         $settings->updateIdCategoryInIncomes($idRemovedCategory, $idOtherCategory);
                     }
@@ -227,7 +228,6 @@ class Settings extends Authenticated
                 $categories = $settings->getExpensesCategories();
                 foreach ( $categories as $category):
                     if($category[0] == "Inne wydatki") {
-                        $notFoundOtherCategory = false;
                         $idOtherCategory = $category[1];
                         $settings->updateIdCategoryInExpenses($idRemovedCategory, $idOtherCategory);
                     }
@@ -238,4 +238,43 @@ class Settings extends Authenticated
 
     }
 
+    /**
+     * set limit for category in database
+     * 
+     * @return void
+     */
+    public function setLimitCategory() {
+        $limit = isset($_POST['limit']) ? $_POST['limit'] : NULL;
+        $idCategory = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+
+        $settings = new SettingsData();
+
+        $settings->updateLimitInDB($idCategory, $limit);
+    }
+
+    /**
+     * Get existing limits of expenses categories
+     * 
+     * @return void
+     */
+    public function getLimitsAction()
+    {
+        $settings = new SettingsData();
+        
+        $limits = $settings->getExpensesLimits();
+        echo json_encode($limits);
+    }
+
+    /**
+     * Reset limit of category, that means set at 0
+     * 
+     * @return void
+     */
+    public function resetLimitCategoryAction()
+    {
+        $idCategory = isset($_POST['idCategory']) ? $_POST['idCategory'] : NULL;
+
+        $settings = new SettingsData();
+        $settings->resetLimit($idCategory);
+    }
 }
