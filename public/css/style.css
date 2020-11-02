@@ -271,7 +271,6 @@ ol > li:hover{
 }
 
 .category_input {
-		height: 30px;
 		font-size: 14px;
 		padding: 4px 10px 4px 20px;
 		border: 1px solid rgb(208, 220, 231); 
@@ -279,6 +278,12 @@ ol > li:hover{
 		color: #5a5959;
 		background-color: white;
 		text-align: left;
+}
+
+.limit_expense {
+		margin: 5px 0 0 33px;
+		color: #6c757d;
+		font-size: 11px;
 }
 
 .comment {

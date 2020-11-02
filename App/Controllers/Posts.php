@@ -8,6 +8,7 @@ use \App\Models\Expense;
 use \App\Auth;
 use \App\Flash;
 use \App\Models\SettingsData;
+use App\Models\BalanceData;
 
 /**
  * Posts controller
@@ -35,7 +36,7 @@ class Posts extends Authenticated
     {
         $categories = new SettingsData();
         $categoriesIncomes = $categories->getIncomesCategories();
-        
+
         View::renderTemplate('Posts/income.html', [
             'categoriesIncomes' => $categoriesIncomes
         ]);
@@ -51,10 +52,20 @@ class Posts extends Authenticated
         $settings = new SettingsData();
         $categoriesExpenses = $settings->getExpensesCategories();
         $paymentMethods = $settings->getPaymentMethods();
+
+        $balance = new BalanceData($_POST);
+
+        $option = 1; //current month
+        $date = $balance->setPeriodTime($option);
+		$begin = $date[0];
+        $end = $date[1];
+
+        $expensesGenerally = $balance->getExpensesGenerally($begin, $end);
         
         View::renderTemplate('Posts/expense.html', [
             'categoriesExpenses' => $categoriesExpenses,
-            'paymentMethods' => $paymentMethods
+            'paymentMethods' => $paymentMethods,
+            'expensesGenerally' => $expensesGenerally
         ]);
     }
 

@@ -26,13 +26,11 @@ class Settings extends Authenticated
         $categoriesIncomes = $settings->getIncomesCategories();
         $categoriesExpenses = $settings->getExpensesCategories();
         $paymentMethods = $settings->getPaymentMethods();
-        $limits = $settings->getExpensesLimits();
 
         View::renderTemplate('Settings/settings.html', [
             'categoriesIncomes' => $categoriesIncomes,
             'categoriesExpenses' => $categoriesExpenses,
-            'paymentMethods' => $paymentMethods,
-            'limits' => $limits
+            'paymentMethods' => $paymentMethods
         ]);
     }
 
