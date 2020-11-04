@@ -78,7 +78,7 @@ class SettingsData extends \Core\Model
 
 		$userID = $this->setUserID();
 
-		$sql = "SELECT ec.name, ec.id
+		$sql = "SELECT ec.name, ec.id, ec.limit_category
                 FROM expenses_category_assigned_to_users AS ec
                 WHERE ec.user_id = $userID";
 
