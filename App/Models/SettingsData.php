@@ -391,4 +391,46 @@ class SettingsData extends \Core\Model
 
 		$stmt->execute();
     }
+
+    /**
+     * Get users to check if users not exist by edition
+     *
+     * @return array
+     */
+    public function getUsersMails($idUser) {
+
+		$sql = "SELECT email FROM users WHERE id != :id ";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        
+        $stmt->bindValue(':id', $idUser, PDO::PARAM_INT);
+
+		$stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Update data of user 
+     *
+     * @return void
+     */
+
+    public function updateUser($idUser, $newEmail, $newName){
+
+        $sql = 'UPDATE users 
+                SET username = :username,
+                    email = :email
+                WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':username', $newName, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $newEmail, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $idUser, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
 }

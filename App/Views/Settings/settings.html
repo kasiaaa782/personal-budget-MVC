@@ -42,7 +42,6 @@
       data: 'Expense',
       success: function (data) {
         var limits = JSON.parse(data);
-
         limits.forEach(limit => {
           var idCategory = limit[0];
           var valueLimit = limit[1];
@@ -56,10 +55,9 @@
           infoLimit.classList.add('limit');
           infoLimit.innerHTML =
             `Limit: ${valueLimit}`;
-          
+
           var labelId = "labelExpense" + idCategory;
           $(`#${labelId} div span`).after(infoLimit);
-
         });
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -131,26 +129,23 @@
           }
         }
 
-        if(items.length !== 0) {
-            $('.info_exist_items').html(info);
-            itemsToAssign = true;
+        if (items.length !== 0) {
+          $('.info_exist_items').html(info);
+          itemsToAssign = true;
         } else {
-            itemsToAssign = false;
+          itemsToAssign = false;
         }
 
         $('.removeCategory' + item).on('submit', function () {
           event.preventDefault();
-
           ajaxRemoveCategory(idCategory, url, label);
-
-          if(itemsToAssign) {
+          if (itemsToAssign) {
             $.ajax({
               url: '/Settings/getCategories',
               method: 'post',
               data: { item },
               success: function (data) {
                 var itemsCategories = JSON.parse(data);
-                
                 if (checkIfCategoryNotExist(itemsCategories, categoryName)) {
                   var newID = 0;
                   var lastIdPosition = itemsCategories.length - 1;
@@ -170,7 +165,7 @@
                       break;
                     }
                   }
-                  ajaxAddCategoryToDB(categoryName, urlDB, item);     
+                  ajaxAddCategoryToDB(categoryName, urlDB, item);
                 }
                 ajaxAssignItemsToOtherCategory(idCategory, item, urlForAssignItems);
               },
@@ -187,7 +182,6 @@
   }
 
   addCategoryToLabel = (categoryName, item, idToAdd) => {
-
     var newLabel = document.createElement('label');
     newLabel.id = 'label' + item + idToAdd;
     newLabel.classList.add('subblock_option', 'col-12');
@@ -200,7 +194,6 @@
         <i class="icon-pencil pointer" onclick="showModalToEditCategory('${item}', '${idToAdd}')" aria-hidden="true" title="Edytuj kategorię"></i>
         <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
       </div>`;
-
     if (item == "Payment") {
       newLabel.innerHTML =
         `<div>
@@ -211,7 +204,6 @@
           <i class="icon-trash pointer" onclick="showModalToRemoveCategory('${item}','${idToAdd}')" aria-hidden="true" title="Usuń kategorię"></i>
         </div>`;
     }
-
     $('#idForNewLabelCategory' + item).before(newLabel.outerHTML);
 
     var newModalToRemove = document.createElement('div');
@@ -228,7 +220,6 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-
           <form method="post" class="removeCategory${item}">
             <div class="modal-body text-body h6 mt-3 mb-3">
               <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
@@ -240,10 +231,8 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
             </div>
           </form>
-
         </div>
       </div>`;
-
     $('#idForNewLabelCategory' + item).before(newModalToRemove.outerHTML);
 
     var newModalToEdit = document.createElement('div');
@@ -260,7 +249,6 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-
           <form method="post" class="editCategory${item}">
             <div class="modal-body text-body h6 mt-3 mb-3">
               <p>Nazwa kategorii</p>
@@ -282,17 +270,14 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
             </div>
           </form>
-
         </div>
       </div>`;
-
     $('#idForNewLabelCategory' + item).before(newModalToEdit.outerHTML);
 
     //hover radio input    
     $("label").hover(function () {
       $(this).children().children().prop('checked', true);
     });
-
   }
 
   checkIfCategoryNotExist = (itemsCategories, categoryName) => {
@@ -340,7 +325,6 @@
 
     $('#formAddCategory' + item).on('submit', function () {
       event.preventDefault();
-
       $.ajax({
         url: '/Settings/getCategories',
         method: 'post',
@@ -361,7 +345,6 @@
                 newID = parseInt(itemsCategories[lastIdPosition][1]) + 1;
               }
               addCategoryToLabel(categoryName, item, newID);
-
               switch (item) {
                 case 'Income': {
                   urlDB = '/Settings/addIncomeCategory';
@@ -376,9 +359,7 @@
                   break;
                 }
               }
-
               ajaxAddCategoryToDB(categoryName, urlDB, item);
-
               $('#winModalAddCategory' + item).modal("hide");
               document.getElementById("formAddCategory" + item).reset();
             } else {
@@ -414,8 +395,7 @@
 
   ajaxSetLimit = (idCategory, labelId) => {
     var limit = $('#limitNumber' + idCategory).val();
-    
-    if($('#limit' + idCategory).val() == undefined) {
+    if ($('#limit' + idCategory).val() == undefined) {
       var infoLimit = document.createElement('p');
       infoLimit.id = 'limit' + idCategory;
       infoLimit.classList.add('limit');
@@ -426,7 +406,6 @@
       $('#limit' + idCategory).show();
       $('#limit' + idCategory).html(`Limit: ${limit}`);
     }
-
     $.ajax({
       url: '/Settings/setLimitCategory',
       method: 'post',
@@ -440,7 +419,6 @@
   ajaxResetLimit = (idCategory, labelId) => {
     $('#limit' + idCategory).hide();
     $("#limitNumber" + idCategory).val('');
-
     $.ajax({
       url: '/Settings/resetLimitCategory',
       method: 'post',
@@ -452,23 +430,18 @@
   }
 
   showModalToEditCategory = (item, idCategory) => {
-
     $('#winModalEditCategory' + item + idCategory).on('shown.bs.modal', function () {
       $(this).find('#editName' + item + idCategory).focus();
     });
-
     $("label").hover(function () {
       $(this).children().children().prop('checked', false);
     });
-
     $('.categoryInfo').html('');
-
     $('#winModalEditCategory' + item + idCategory).modal("show");
-
     $('.editCategory' + item).on('submit', function () {
       event.preventDefault();
 
-      var labelId = "label" + item + idCategory;      
+      var labelId = "label" + item + idCategory;
       var oldName = $(`#${labelId} div span`).html();
       var newName = $('#editName' + item + idCategory).val();
 
@@ -481,7 +454,6 @@
             var itemsCategories = JSON.parse(data);
             newName = newName.trim();
             newName = capitalizeFirstLetter(newName);
-
             if (typeof newName !== "undefined" && newName) {
               if (checkIfCategoryNotExist(itemsCategories, newName)) {
                 ajaxEditCategory(newName, item, idCategory);
@@ -497,38 +469,36 @@
           }
         });
       }
-
       if ($('#limitCheckbox' + idCategory).is(':checked')) {
         ajaxSetLimit(idCategory, labelId);
         $('.editCategory' + item).unbind('submit');
       } else {
         ajaxResetLimit(idCategory, labelId);
       }
-
       $('#winModalEditCategory' + item + idCategory).modal("hide");
     });
 
     $("#limitCheckbox" + idCategory).click(function () {
-        if ($('#limitCheckbox' + idCategory).is(':checked')) {
-          $("#limitNumber" + idCategory).prop('readonly', false);
-          $("#limitNumber" + idCategory).prop('required', true);
-          $("#limitNumber" + idCategory).prop('autofocus', true);
-          $('.categoryInfo').html('');
-        } else {
-          $("#limitNumber" + idCategory).prop('readonly', true);
-          $("#limitNumber" + idCategory).prop('required', false);
-          $("#limitNumber" + idCategory).prop('autofocus', false);
-        }
+      if ($('#limitCheckbox' + idCategory).is(':checked')) {
+        $("#limitNumber" + idCategory).prop('readonly', false);
+        $("#limitNumber" + idCategory).prop('required', true);
+        $("#limitNumber" + idCategory).prop('autofocus', true);
+        $('.categoryInfo').html('');
+      } else {
+        $("#limitNumber" + idCategory).prop('readonly', true);
+        $("#limitNumber" + idCategory).prop('required', false);
+        $("#limitNumber" + idCategory).prop('autofocus', false);
+      }
     });
 
     if ($("button[type='button']")) {
-      if($('#limitNumber' + idCategory).val()){
+      if ($('#limitNumber' + idCategory).val()) {
         $('#limitCheckbox' + idCategory).prop('checked', true);
       } else {
         $('#limitCheckbox' + idCategory).prop('checked', false);
         $("#limitNumber" + idCategory).prop('readonly', true);
       }
-      var labelId = "label" + item + idCategory;      
+      var labelId = "label" + item + idCategory;
       var oldName = $(`#${labelId} div span`).html();
       $('#editName' + item + idCategory).val(oldName);
       $("label").hover(function () {
@@ -609,7 +579,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-1">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
                         <strong>{{category[0]}}</strong>
-                        <small><p class="info_exist_items pt-4"></p></small>
+                        <small>
+                          <p class="info_exist_items pt-4"></p>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Tak</button>
@@ -633,7 +605,8 @@
                     <form method="post" class="editCategoryIncome">
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Nazwa kategorii</p>
-                        <input type="text" class="form-control" value="{{category[0]}}" id="editNameIncome{{category[1]}}">
+                        <input type="text" class="form-control" value="{{category[0]}}"
+                          id="editNameIncome{{category[1]}}">
                         <small>
                           <div class="categoryInfo mt-3 text-danger"></div>
                         </small>
@@ -721,7 +694,9 @@
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Czy napewno chcesz usunąć poniższą kategorię? </p>
                         <strong>{{category[0]}}</strong>
-                        <small><p class="info_exist_items pt-4"></p></small>
+                        <small>
+                          <p class="info_exist_items pt-4"></p>
+                        </small>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Tak</button>
@@ -745,7 +720,8 @@
                     <form method="post" class="editCategoryExpense">
                       <div class="modal-body text-body h6 mt-3 mb-3">
                         <p>Nazwa kategorii</p>
-                        <input type="text" class="form-control" value="{{category[0]}}" id="editNameExpense{{category[1]}}">
+                        <input type="text" class="form-control" value="{{category[0]}}"
+                          id="editNameExpense{{category[1]}}">
                         <small>
                           <div class="categoryInfo mt-3 text-danger"></div>
                         </small>
@@ -756,7 +732,8 @@
                         <div class="limit-category mb-2">
                           Ustaw miesięczny limit wydatków dla danej kategorii:
                         </div>
-                        <input type="number" class="form-control" step="0.01" min="0.01" id="limitNumber{{category[1]}}" readonly>
+                        <input type="number" class="form-control" step="0.01" min="0.01" id="limitNumber{{category[1]}}"
+                          readonly>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Zmień</button>
@@ -914,6 +891,64 @@
             </div>
           </div>
         </div>
+        <script>
+          showModalToEditData = (id) => {
+            var name = $('#userName').html();
+            var email = $('#userMail').html();
+            $('#editName').val( name );
+            $('#editEmail').val( email );
+            $('.editInfo').html('');
+            $('#winModalEditData').modal('show');
+            $('#editUserData').on('submit', function () {
+              event.preventDefault();
+              var insertedName = $('#editName').val();
+              var insertedEmail = $('#editEmail').val();
+              var errorNotExist = true;
+
+              $.ajax({
+                url: '/Settings/getUsers',
+                method: 'post',
+                data: { id },
+                success: function (data) {
+                  var users = JSON.parse(data);
+                  console.log(users);
+                  users.forEach(user => {
+                    if(insertedEmail == user[0]) {
+                      $('.editInfo').html('Taki mail już istnieje.');
+                      errorNotExist = false;
+                    }
+                  });
+                  if(insertedName == '') {
+                    $('.editInfo').html('Nie wprowadzono imienia.');
+                      errorNotExist = false;
+                  }
+                  if(errorNotExist) {
+                    $.ajax({
+                      url: '/Settings/updateUser',
+                      method: 'post',
+                      data: { id, insertedName, insertedEmail },
+                      success: function () {
+                        $('#userName').html(insertedName);
+                        $('#userMail').html(insertedEmail);
+                        $('#winModalEditData').modal('hide');
+                        $('#editName').val(insertedName);
+                        $('#editEmail').val(insertedEmail);
+                      },
+                      error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("Błąd!");
+                      }
+                    });
+                  }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                  alert("Błąd!");
+                }
+              });
+
+              console.log();
+            });
+          }
+        </script>
         <div class="card">
           <div class="card-header">
             <a class="collapsed card-link block_option" id="option4" data-toggle="collapse" href="#collapseFour">
@@ -923,7 +958,70 @@
           </div>
           <div id="collapseFour" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              Lorem ipsum..
+              <div class="info_edition mb-4">
+                <p>Dane użytkownika:</p>
+                <p><strong class="mr-3">Imię: </strong><span id="userName">{{ current_user.username }}</span></p>
+                <p><strong class="mr-2">Email: </strong><span id="userMail">{{ current_user.email }}</span></p>
+              </div>
+              <div class="row justify-content-center">
+                <label class="btn_account col-5" onclick="showModalToEditData('{{ current_user.id }}')">
+                  <div class="row justify-content-center">
+                    <i class="icon-pencil pointer col-2" aria-hidden="true" title="Usuń dane"></i>
+                    <div class="col-10 pr-1">Edytuj swoje dane</div>
+                  </div>
+                </label>
+                <div class="mr-2"></div>
+                <label class="btn_account2 col-5" >
+                  <div class="row justify-content-center">
+                    <i class="icon-trash pointer col-2" onclick="" aria-hidden="true" title="Usuń dane"></i>
+                    <div class="col-10 pr-1">Usuń wszystkie przychody i wydatki</div>
+                  </div>
+                </label>
+              </div>
+              <div class="modal" role="dialog" id="winModalEditData">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Edycja danych użytkownika</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post" id="editUserData">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Imię</p>
+                        <input type="text" class="form-control mb-4" value="{{ current_user.username }}"
+                          id="editName">
+                        <p>Email</p>
+                        <input type="email" class="form-control" value="{{ current_user.email }}"
+                          id="editEmail">
+                        <small>
+                          <div class="editInfo mt-3 ml-1 text-danger"></div>
+                        </small>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Edytuj</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <label class="btn_account col-5" >
+                  <div class="row justify-content-center">
+                    <i class="icon-pencil pointer col-2" onclick="" aria-hidden="true" title="Usuń dane"></i>
+                    <div class="col-10 pr-1">Zmień hasło</div>
+                  </div>
+                </label>
+                <div class="mr-2"></div>
+                <label class="btn_account2 col-5" >
+                  <div class="row justify-content-center">
+                    <i class="icon-trash pointer col-2" onclick="" aria-hidden="true" title="Usuń dane"></i>
+                    <div class="col-10 pr-1">Usuń konto</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>

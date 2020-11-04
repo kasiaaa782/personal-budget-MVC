@@ -275,4 +275,33 @@ class Settings extends Authenticated
         $settings = new SettingsData();
         $settings->resetLimit($idCategory);
     }
+
+    /**
+     * Get users
+     * 
+     * @return void
+     */
+    public function getUsersAction()
+    {
+        $idUser = isset($_POST['id']) ? $_POST['id'] : NULL;
+        $settings = new SettingsData();
+        
+        $users = $settings->getUsersMails($idUser);
+        echo json_encode($users);
+    }
+
+    /**
+     * Update user in database
+     * 
+     * @return void
+     */
+    public function updateUserAction()
+    {
+        $newEmail = isset($_POST['insertedEmail']) ? $_POST['insertedEmail'] : NULL;
+        $newName = isset($_POST['insertedName']) ? $_POST['insertedName'] : NULL;
+        $idUser = isset($_POST['id']) ? $_POST['id'] : NULL;
+
+        $settings = new SettingsData();
+        $settings->updateUser($idUser, $newEmail, $newName);
+    }
 }
