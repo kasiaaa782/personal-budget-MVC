@@ -58,6 +58,10 @@
     $('label').click(function() {
       showInfoLimit();
     });
+
+    $('#amount').keyup(function() {
+      showInfoLimit();
+    });
       
   });
 
@@ -67,14 +71,14 @@
       url: '/Settings/getCategories',
       method: 'post',
       data: {item},
+      async: false,
       success: function (data) {
         var itemsCategories = JSON.parse(data);
         var categories = [];
         var categoryNotChecked = true;
         var categoryName = "";
-        var amountToSpend = 0;
         var limit = 0;
-        var amountOfNewExpense = $("#amount").val();
+        $( "#allert" ).hide();
 
         for (i = 0; i < itemsCategories.length; i++) {
           categories[i] = document.getElementById("c" + itemsCategories[i][1]);
@@ -86,26 +90,76 @@
         }
 
         var expenses = JSON.parse('{{ expensesGenerally | json_encode | raw }}');
-        
-        var sumExpenses = 0;
+        var sumExpensesOfSelectedCategory = 0;
         expenses.forEach(element => {
-            sumExpenses += parseFloat(element['SUM(e.amount)']);
+          if(element[1] == categoryName) {
+            sumExpensesOfSelectedCategory += parseFloat(element[2]);
+          }
         });
-        console.log(expenses);
-        console.log(sumExpenses);
 
-        console.log(itemsCategories);
+        var amountOfNewExpense = $("#amount").val();
+        var amountToSpend = 0;
+        amountToSpend = limit - sumExpensesOfSelectedCategory;
+        var score = sumExpensesOfSelectedCategory + parseFloat(amountOfNewExpense);
+        score = score.toFixed(2);
 
-        amountToSpend = limit - sumExpenses;
+        var allert = $('#allert');
+        allert.removeClass();
+        allert.addClass('alert');
+        allert.addClass('mt-3');
 
         if (amountOfNewExpense && !categoryNotChecked ) {
-          if(amountToSpend > 0) {
+          if(score < amountToSpend) {
             $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
+            allert.addClass('alert-success');
+            allert.html(
+              `<div class="allert_block">
+                <div>
+                  <p><strong>Limit:</strong><p> 
+                  <p>${limit}</p>
+                </div>
+                <div>
+                  <p><strong>Dotychczas wydano:</strong><p> 
+                  <p>${sumExpensesOfSelectedCategory}</p>
+                </div>
+                <div>
+                  <p><strong>Różnica:</strong><p> 
+                  <p>${amountToSpend}</p>
+                </div>
+                <div>
+                  <p><strong>Wydatki + wpisana kwota:</strong><p> 
+                  <p>${score}</p>
+                </div>
+               <div>`            
+            );
+            $( "#allert" ).show();
           } else {
             if(limit == 0){
               $('#limit_info').html(`Brak ustalonego limitu dla kategorii <ins>${categoryName}</ins>`);
             } else {
-              $('#limit_info').html(`Możesz jeszcze wydać <ins>0</ins> w kategorii <ins>${categoryName}</ins>`);
+              $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
+              allert.addClass('alert-danger');
+              allert.html(
+                `<div class="allert_block">
+                  <div>
+                    <p><strong>Limit:</strong><p> 
+                    <p>${limit}</p>
+                  </div>
+                  <div>
+                    <p><strong>Dotychczas wydano:</strong><p> 
+                    <p>${sumExpensesOfSelectedCategory}</p>
+                  </div>
+                  <div>
+                    <p><strong>Różnica:</strong><p> 
+                    <p>${amountToSpend}</p>
+                  </div>
+                  <div>
+                    <p><strong>Wydatki + wpisana kwota:</strong><p> 
+                    <p>${score}</p>
+                  </div>
+                <div>`            
+              );
+              $( "#allert" ).show();
             }
           }
         } else {
@@ -167,6 +221,7 @@
       <div class="text-left mb-1">
         <p>Informacje o limicie: <strong><span id="limit_info">Wpisz kwotę i wybierz kategorię</span></strong></p>
       </div>
+      <div id="allert"></div>
       <div class="block_inputs">
         <div>
           <label>
@@ -193,7 +248,7 @@
       </div>
       {% endif %}
       <div class="block_payments">
-        <select id="selectPayment" name="payment" class="form-control">
+        <select id="selectPayment" name="payment" class="form-control" required>
           <option value="" disabled selected>Wybierz sposób płatności</option>
           {% for method in paymentMethods %}
           <option value="{{method[1]}}">{{ method[0] }}</option>

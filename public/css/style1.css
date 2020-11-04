@@ -337,6 +337,12 @@ ol > li:hover{
 	background-color: #f57b17;
 }
 
+.allert_block {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 /*balance*/
 #content_balance{
 		background-color: #8DBCEB;
