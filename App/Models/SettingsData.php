@@ -391,4 +391,156 @@ class SettingsData extends \Core\Model
 
 		$stmt->execute();
     }
+
+    /**
+     * Get users to check if users not exist by edition
+     *
+     * @return array
+     */
+    public function getUsersMails() {
+
+        $userID = $this->setUserID();
+
+		$sql = "SELECT email FROM users WHERE id != :id ";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Update data of user 
+     *
+     * @return void
+     */
+
+    public function updateUser($newEmail, $newName){
+        $userID = $this->setUserID();
+
+        $sql = 'UPDATE users 
+                SET username = :username,
+                    email = :email
+                WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':username', $newName, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $newEmail, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Get password from user 
+     *
+     * @return void
+     */
+
+    public function getPassword(){
+
+        $userID = $this->setUserID();
+
+        $sql = "SELECT password FROM users WHERE id = :id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $password = $stmt->fetchAll();
+
+        return $password;
+    }
+
+    /**
+     * Update password of user 
+     *
+     * @return void
+     */
+
+    public function updatePassword($passNew){
+        $userID = $this->setUserID();
+
+        $passNew_hash = password_hash($passNew, PASSWORD_DEFAULT);
+
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+        $stmt->bindValue(':password', $passNew_hash, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    /**
+     * Remove all items from database
+     *
+     * @return void
+     */
+    public function removeAllExpensesAndIncomes() {
+        $userID = $this->setUserID();
+
+        $sql = "DELETE expenses, incomes 
+                FROM expenses, incomes 
+                WHERE expenses.user_id = :id 
+                AND incomes.user_id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Remove all categories from database
+     *
+     * @return void
+     */
+    public function removeAllCategories() {
+        $userID = $this->setUserID();
+
+        $sql = "DELETE e, i, p
+                FROM expenses_category_assigned_to_users AS e, 
+                    incomes_category_assigned_to_users AS i,
+                    payment_methods_assigned_to_users AS p
+                WHERE e.user_id = :id 
+                AND i.user_id = :id
+                AND p.user_id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Remove account from database
+     *
+     * @return void
+     */
+    public function removeAccount() {
+        $userID = $this->setUserID();
+
+        $sql = "DELETE users
+                FROM users
+                WHERE id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
 }

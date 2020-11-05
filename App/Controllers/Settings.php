@@ -275,4 +275,92 @@ class Settings extends Authenticated
         $settings = new SettingsData();
         $settings->resetLimit($idCategory);
     }
+
+    /**
+     * Get users
+     * 
+     * @return void
+     */
+    public function getUsersAction()
+    {
+        $settings = new SettingsData();
+        
+        $users = $settings->getUsersMails();
+        echo json_encode($users);
+    }
+
+    /**
+     * Update user in database
+     * 
+     * @return void
+     */
+    public function updateUserAction()
+    {
+        $newEmail = isset($_POST['insertedEmail']) ? $_POST['insertedEmail'] : NULL;
+        $newName = isset($_POST['insertedName']) ? $_POST['insertedName'] : NULL;
+
+        $settings = new SettingsData();
+        $settings->updateUser($newEmail, $newName);
+    }
+
+    /**
+     * Get old password from database
+     * 
+     * @return void
+     */
+    public function checkPassAction()
+    {
+        $passOld = isset($_POST['passOld']) ? $_POST['passOld'] : NULL;
+
+        $settings = new SettingsData();
+        $passOldFromDB = $settings->getPassword();
+
+        if (password_verify($passOld, $passOldFromDB[0][0])) {
+            echo 'poprawne';
+        } else {
+            echo 'niepoprawne';
+        }
+    }
+
+    /**
+     * Update password in database
+     * 
+     * @return void
+     */
+    public function updatePassAction()
+    {
+        $passNew = isset($_POST['passNew']) ? $_POST['passNew'] : NULL;
+
+        $settings = new SettingsData();
+        $settings->updatePassword($passNew);
+    }
+
+    /**
+     * Remove all expenses and incomes from database
+     * 
+     * @return void
+     */
+    public function removeAllItemsAction()
+    {
+        $settings = new SettingsData();
+        $settings->removeAllExpensesAndIncomes();
+    }
+
+    /**
+     * Remove all user from database
+     * 
+     * @return void
+     */
+    public function removeAllUserAction()
+    {
+        $settings = new SettingsData();
+        $settings->removeAllExpensesAndIncomes();
+        $settings->removeAllCategories();
+        $settings->removeAccount();
+
+        View::renderTemplate('Home/index.html');
+    }
+
+
+    
 }
