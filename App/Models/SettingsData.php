@@ -481,5 +481,24 @@ class SettingsData extends \Core\Model
         $stmt->bindValue(':password', $passNew_hash, PDO::PARAM_STR);
         $stmt->execute();
     }
-    
+
+    /**
+     * Remove all items from database
+     *
+     * @return void
+     */
+    public function removeAll() {
+        $userID = $this->setUserID();
+
+        $sql = "DELETE expenses, incomes 
+                FROM expenses, incomes 
+                WHERE expenses.user_id = :id 
+                AND incomes.user_id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
 }

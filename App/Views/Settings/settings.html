@@ -507,7 +507,7 @@
     }
   }
 
-  showModalToEditData = (id) => {
+  showModalToEditData = () => {
     var name = $('#userName').html();
     var email = $('#userMail').html();
     $('#editName').val( name );
@@ -552,6 +552,57 @@
                 alert("Błąd!");
               }
             });
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Błąd!");
+        }
+      });
+    });
+  }
+
+  showModalToChangePassword = () => {
+    $('#pass1').val('');
+    $('#pass2').val('');
+    $('.editInfo').html('');
+    $('#winModalChangePassword').modal('show');
+    $('#editPassword').on('submit', function () {
+      event.preventDefault();
+      var passOld = $('#pass1').val();
+      var passNew = $('#pass2').val();
+
+      $.ajax({
+        url: '/Settings/checkPass',
+        method: 'post',
+        data: { passOld },
+        success: function (data) {
+          console.log(data);
+          if(data == 'poprawne') {
+            var validated = true;
+            if (passNew.match(/.*[a-z]+.*/i) == null) {
+              validated = false;
+            }
+            if (passNew.match(/.*\d+.*/) == null) {
+              validated = false;
+            }                    
+            if(validated) {
+              $('.editInfo').html('');
+              $.ajax({
+                url: '/Settings/updatePass',
+                method: 'post',
+                data: { passNew },
+                success: function () {
+                  $('#winModalChangePassword').modal('hide');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                  alert("Błąd!");
+                }
+              });  
+            } else {
+              $('.editInfo').html('Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.');
+            }
+          } else {
+            $('.editInfo').html('Niepoprawne stare hasło.');
           }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -946,50 +997,16 @@
           </div>
         </div>
         <script>
-          
-          showModalToChangePassword = (id) => {
-            $('#pass1').val('');
-            $('#pass2').val('');
-            $('.editInfo').html('');
-            $('#winModalChangePassword').modal('show');
-            $('#editPassword').on('submit', function () {
+          showModalToRemoveAllItems = () => {
+            $('#winModalRemoveAllItems').modal('show');
+            $('#removeAllItems').on('submit', function () {
               event.preventDefault();
-              var passOld = $('#pass1').val();
-              var passNew = $('#pass2').val();
-
               $.ajax({
-                url: '/Settings/checkPass',
+                url: '/Settings/removeAllItems',
                 method: 'post',
-                data: { passOld },
-                success: function (data) {
-                  console.log(data);
-                  if(data == 'poprawne') {
-                    var validated = true;
-                    if (passNew.match(/.*[a-z]+.*/i) == null) {
-                      validated = false;
-                    }
-                    if (passNew.match(/.*\d+.*/) == null) {
-                      validated = false;
-                    }                    
-                    if(validated) {
-                      $('.editInfo').html('');
-                      $.ajax({
-                        url: '/Settings/updatePass',
-                        method: 'post',
-                        data: { passNew },
-                        success: function () {
-                          $('#winModalChangePassword').modal('hide');
-                        },
-                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                          alert("Błąd!");
-                        }
-                      });  
-                    } else {
-                      $('.editInfo').html('Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.');
-                    }
-                  } else {
-                    $('.editInfo').html('Niepoprawne stare hasło.');
-                  }
+                success: function() {
+                  console.log('usunięto');
+                  $('#winModalRemoveAllItems').modal('hide');
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                   alert("Błąd!");
@@ -997,6 +1014,7 @@
               });
             });
           }
+          
         </script>
         <div class="card">
           <div class="card-header">
@@ -1013,19 +1031,40 @@
                 <p><strong class="mr-2">Email: </strong><span id="userMail">{{ current_user.email }}</span></p>
               </div>
               <div class="row justify-content-center">
-                <label class="btn_account col-5" onclick="showModalToEditData('{{ current_user.id }}')">
+                <label class="btn_account col-5" onclick="showModalToEditData()">
                   <div class="row justify-content-center">
-                    <i class="icon-pencil pointer col-2" aria-hidden="true" title="Usuń dane"></i>
+                    <i class="icon-pencil pointer col-2" aria-hidden="true" title="Edytu dane"></i>
                     <div class="col-10 pr-1">Edytuj swoje dane</div>
                   </div>
                 </label>
                 <div class="mr-2"></div>
-                <label class="btn_account2 col-5">
+                <label class="btn_account2 col-5" onclick="showModalToRemoveAllItems()">
                   <div class="row justify-content-center">
                     <i class="icon-trash pointer col-2" aria-hidden="true" title="Usuń dane"></i>
                     <div class="col-10 pr-1">Usuń wszystkie przychody i wydatki</div>
                   </div>
                 </label>
+              </div>
+              <div class="modal" role="dialog" id="winModalRemoveAllItems">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Czyszczenie konta</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post" id="removeAllItems">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Czy napewno chcesz usunąć wszystkie przychody i wydatki?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tak</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
               <div class="modal" role="dialog" id="winModalEditData">
                 <div class="modal-dialog" role="document">
@@ -1057,7 +1096,7 @@
                 </div>
               </div>
               <div class="row justify-content-center">
-                <label class="btn_account col-5" onclick="showModalToChangePassword('{{ current_user.id }}')">
+                <label class="btn_account col-5" onclick="showModalToChangePassword()">
                   <div class="row justify-content-center">
                     <i class="icon-pencil pointer col-2" aria-hidden="true" title="Usuń dane"></i>
                     <div class="col-10 pr-1">Zmień hasło</div>

@@ -335,4 +335,14 @@ class Settings extends Authenticated
         $settings->updatePassword($passNew);
     }
 
+    /**
+     * Remove all expenses and incomes from database
+     * 
+     * @return void
+     */
+    public function removeAllItemsAction()
+    {
+        $settings = new SettingsData();
+        $settings->removeAll();
+    }
 }
