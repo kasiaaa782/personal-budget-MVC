@@ -42,8 +42,9 @@ class Balance extends Authenticated {
         $sentence = 'Za okres od '.$beginDateFormated.' do '.$endDateFormated;
            
 		$incomesGenerally = $balance->getIncomesGenerally($begin, $end);
-		$expensesGenerally = $balance->getExpensesGenerally($begin, $end);
-
+        $expensesGenerally = $balance->getExpensesGenerally($begin, $end);
+        
+        
         $incomesSum = 0;
         foreach($incomesGenerally as $amountIncome){
             $incomesSum += $amountIncome['SUM(i.amount)'];

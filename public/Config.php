@@ -20,19 +20,19 @@ class Config
      * Database name
      * @var string
      */
-    const DB_NAME = 'personal_budget';
+    const DB_NAME = 'katarz15_personalbudgetmvc';
 
     /**
      * Database user
      * @var string
      */
-    const DB_USER = 'root';
+    const DB_USER = 'katarz15_PersonalBudgetAdmin';
 
     /**
      * Database password
      * @var string
      */
-    const DB_PASSWORD = '';
+    const DB_PASSWORD = 'PersonalBudget!';
 
     /**
      * Show or hide error messages on screen

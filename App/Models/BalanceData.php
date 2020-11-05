@@ -99,7 +99,7 @@ class BalanceData extends \Core\Model
 	}
 
     /**
-     * Get incomes as an associative array
+     * Get incomes from a given period time as an associative array
      *
      * @return array
      */
@@ -107,14 +107,14 @@ class BalanceData extends \Core\Model
 
         $userID = $this->setUserID();
 
-        $sql = "SELECT i.date_of_income, icd.name, SUM(i.amount) 
-        FROM incomes AS i, 
-            incomes_category_default AS icd
-        WHERE i.user_id='$userID' 
-        AND icd.id=i.income_category_assigned_to_user_id 
-        AND i.date_of_income 
-        BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
-        GROUP BY income_category_assigned_to_user_id";
+        $sql =  "SELECT i.date_of_income, ic.name, SUM(i.amount) 
+                FROM incomes AS i, 
+                incomes_category_assigned_to_users AS ic 
+                WHERE i.user_id='$userID' 
+                AND ic.user_id='$userID' 
+                AND ic.id=i.income_category_assigned_to_user_id 
+                AND i.date_of_income BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
+                GROUP BY income_category_assigned_to_user_id";
 
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
@@ -126,7 +126,7 @@ class BalanceData extends \Core\Model
     }
     
     /**
-     * Get expenses as an associative array
+     * Get expenses from a given period time as an associative array
      *
      * @return array
      */
@@ -134,11 +134,12 @@ class BalanceData extends \Core\Model
 
 		$userID = $this->setUserID();
 
-		$sql = "SELECT e.date_of_expense, ecd.name, SUM(e.amount) 
-                FROM expenses AS e,
-                    expenses_category_default AS ecd
+		$sql = "SELECT e.date_of_expense, ec.name, SUM(e.amount) 
+                FROM expenses AS e, 
+                    expenses_category_assigned_to_users AS ec 
                 WHERE e.user_id='$userID' 
-                AND ecd.id=e.expense_category_assigned_to_user_id 
+                AND ec.user_id='$userID' 
+                AND ec.id=e.expense_category_assigned_to_user_id 
                 AND e.date_of_expense BETWEEN '$beginOfPeriod' AND '$endOfPeriod' 
                 GROUP BY expense_category_assigned_to_user_id";
 
@@ -149,5 +150,51 @@ class BalanceData extends \Core\Model
 		$expensesGenerally = $stmt->fetchAll();
 
 		return $expensesGenerally;
+    }
+
+    /**
+     * Get all id of incomes assigned to the category as an associative array
+     *
+     * @return array
+     */
+    public function getIncomes($idCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql =  "SELECT i.id
+                FROM incomes AS i
+                WHERE i.user_id='$userID' 
+                AND income_category_assigned_to_user_id='$idCategory'";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+        
+        $incomes = $stmt->fetchAll();
+
+		return $incomes;
+    }
+
+    /**
+     * Get all id of incomes assigned to the category as an associative array
+     *
+     * @return array
+     */
+    public function getExpenses($idCategory) {
+
+        $userID = $this->setUserID();
+
+        $sql =  "SELECT e.id
+                FROM expenses AS e
+                WHERE e.user_id='$userID' 
+                AND expense_category_assigned_to_user_id='$idCategory'";
+
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+        
+        $expenses = $stmt->fetchAll();
+
+		return $expenses;
     }
 }

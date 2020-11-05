@@ -30,13 +30,12 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script>
-    
-    //chart
-    google.charts.load('current', {'packages':['corechart']});
+
+    google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChartIncomes);
     google.charts.setOnLoadCallback(drawChartExpenses);
-    
-    google.charts.load('current', {packages: ['corechart', 'bar']});
+
+    google.charts.load('current', { packages: ['corechart', 'bar'] });
     google.charts.setOnLoadCallback(drawBalanceChart);
 
 
@@ -54,18 +53,18 @@
             sumIncomes += parseFloat(element['SUM(i.amount)']);
         });
 
-        if(sumExpenses !== 0 && sumIncomes !== 0 ){
-            
+        if (sumExpenses !== 0 && sumIncomes !== 0) {
+
             var data = google.visualization.arrayToDataTable([
-                ['Opcja', 'Suma', { role: 'style' } ],
-                ['Przychody', sumIncomes, 'color: gray'],
-                ['Wydatki', sumExpenses, 'color: #76A7FA'],
+                ['Opcja', 'Suma', { role: 'style' }],
+                ['Przychody', sumIncomes, 'color: #FFA01E'],
+                ['Wydatki', sumExpenses, 'color: #b4b4b4'],
             ]);
 
             var options = {
                 width: 300,
                 height: 200,
-                legend: {position: "none"}
+                legend: { position: "none" }
             };
 
             var chart = new google.visualization.ColumnChart(document.getElementById('chartBalance'));
@@ -89,14 +88,14 @@
         userIncomes.unshift(['Kategoria', 'Kwota']);
 
 
-        if(sum !== 0){
+        if (sum !== 0) {
             var data = google.visualization.arrayToDataTable(userIncomes);
 
             var options = {
-                title:'Wykres finansowy przychodów',
+                title: 'Wykres finansowy przychodów',
                 width: 400,
                 height: 300,
-                is3D : true
+                is3D: true
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('piechartIncomes'));
@@ -120,14 +119,14 @@
         userExpenses.unshift(['Kategoria', 'Kwota']);
 
 
-        if(sum !== 0){
+        if (sum !== 0) {
             var data = google.visualization.arrayToDataTable(userExpenses);
 
             var options = {
-                title:'Wykres finansowy wydatków',
+                title: 'Wykres finansowy wydatków',
                 width: 400,
                 height: 300,
-                is3D : true
+                is3D: true
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('piechartExpenses'));
@@ -143,12 +142,10 @@
 {% block body %}
 
 <div id="content_balance">
-    <div class="container">
+    <div class="container mb-3">
         <div class="justify-content-center mt-2">
             <div class="text-center" id="title">Bilans finansowy</div>
-            <div>
-                <hr class="line mt-4 mb-3" style="width: 20em">
-            </div>
+            <hr class="mt-4 mb-3">
             <div class="row justify-content-center">
                 <div class="text-center" id="period">
                     {{ sentencePeriod }}
@@ -244,7 +241,7 @@
                     </td>
                 </tr>
             </table>
-            <div id="piechartIncomes" class="piechart mt-2" ></div>
+            <div id="piechartIncomes" class="piechart mt-2"></div>
         </div>
         {% endif %}
         {% if expensesGenerally is empty %}
@@ -285,7 +282,7 @@
                     </td>
                 </tr>
             </table>
-            <div id="piechartExpenses" class="piechart mt-2" ></div>
+            <div id="piechartExpenses" class="piechart mt-2"></div>
         </div>
         {% endif %}
     </div>

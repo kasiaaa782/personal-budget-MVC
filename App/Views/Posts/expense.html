@@ -5,20 +5,20 @@
 {% block navigation %}
 
 <nav class="navbar navbar-dark navbar-expand-lg">
-    <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
-        aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mainmenu">
-        <ol class="navbar-nav mx-auto">
-            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/expense">Dodaj wydatek</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
-            <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
-        </ol>
-    </div>
+  <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#mainmenu"
+    aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="mainmenu">
+    <ol class="navbar-nav mx-auto">
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/index">Strona główna</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/posts/income">Dodaj przychód</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link active" href="/posts/expense">Dodaj wydatek</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/balance/balance">Przeglądaj bilans</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/settings/settings">Ustawienia</a></li>
+      <li class="nav-item mx-auto"><a class="nav-link" href="/logout">Wyloguj się</a></li>
+    </ol>
+  </div>
 </nav>
 
 {% endblock %}
@@ -28,136 +28,263 @@
 <link rel="stylesheet" href="../css/money.css" type="text/css">
 
 <script>
-    function checkData() {
-        //payment
-        var payments = [];
-        var payment = 0;
-        for (i = 0; i < 3; i++) {
-            payments[i] = document.getElementById("p" + i);
-            if (payments[i].checked == true) {
-                payment = payments[i].value;
-            }
-        }
-        if (payment == 0) {
-            document.getElementById("infoPayment").innerHTML = "Wybierz płatność.";
-        } else {
-            document.getElementById("infoPayment").innerHTML = "";
+  $(document).ready(function () {
+    
+    $.ajax({
+      url: '/Settings/getLimits',
+      method: "post",
+      data: 'Expense',
+      success: function (data) {
+        var limits = JSON.parse(data);
+        var idCategory = 0;
+        var valueLimit = 0;
+        limits.forEach(limit => {
+          idCategory = limit[0];
+          valueLimit = limit[1];
+          var infoLimit = document.createElement('div');
+          infoLimit.id = 'limit' + idCategory;
+          infoLimit.classList.add('limit_expense');
+          infoLimit.innerHTML =
+            `Limit: ${valueLimit}`;
+          var labelId = "labelExpense" + idCategory;
+          $(`#${labelId}`).append(infoLimit);
+        });
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
+    });
+
+    $('label').click(function() {
+      showInfoLimit();
+    });
+
+    $('#amount').keyup(function() {
+      showInfoLimit();
+    });
+      
+  });
+
+  showInfoLimit = () => {
+    var item = "Expense";
+    $.ajax({
+      url: '/Settings/getCategories',
+      method: 'post',
+      data: {item},
+      async: false,
+      success: function (data) {
+        var itemsCategories = JSON.parse(data);
+        var categories = [];
+        var categoryNotChecked = true;
+        var categoryName = "";
+        var limit = 0;
+        $( "#allert" ).hide();
+
+        for (i = 0; i < itemsCategories.length; i++) {
+          categories[i] = document.getElementById("c" + itemsCategories[i][1]);
+          if (categories[i].checked == true) {
+            categoryName = itemsCategories[i][0];
+            limit = itemsCategories[i][2];
+            categoryNotChecked = false;
+          }
         }
 
-        //category
-        var categories = [];
-        var category = 0;
-        for (i = 0; i < 16; i++) {
-            categories[i] = document.getElementById("c" + i);
-            if (categories[i].checked == true) {
-                category = categories[i].value;
+        var expenses = JSON.parse('{{ expensesGenerally | json_encode | raw }}');
+        var sumExpensesOfSelectedCategory = 0;
+        expenses.forEach(element => {
+          if(element[1] == categoryName) {
+            sumExpensesOfSelectedCategory += parseFloat(element[2]);
+          }
+        });
+
+        var amountOfNewExpense = $("#amount").val();
+        var amountToSpend = 0;
+        amountToSpend = limit - sumExpensesOfSelectedCategory;
+        var score = sumExpensesOfSelectedCategory + parseFloat(amountOfNewExpense);
+        score = score.toFixed(2);
+
+        var allert = $('#allert');
+        allert.removeClass();
+        allert.addClass('alert');
+        allert.addClass('mt-3');
+
+        if (amountOfNewExpense && !categoryNotChecked ) {
+          if(score < amountToSpend) {
+            $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
+            allert.addClass('alert-success');
+            allert.html(
+              `<div class="allert_block">
+                <div>
+                  <p><strong>Limit:</strong><p> 
+                  <p>${limit}</p>
+                </div>
+                <div>
+                  <p><strong>Dotychczas wydano:</strong><p> 
+                  <p>${sumExpensesOfSelectedCategory}</p>
+                </div>
+                <div>
+                  <p><strong>Różnica:</strong><p> 
+                  <p>${amountToSpend}</p>
+                </div>
+                <div>
+                  <p><strong>Wydatki + wpisana kwota:</strong><p> 
+                  <p>${score}</p>
+                </div>
+               <div>`            
+            );
+            $( "#allert" ).show();
+          } else {
+            if(limit == 0){
+              $('#limit_info').html(`Brak ustalonego limitu dla kategorii <ins>${categoryName}</ins>`);
+            } else {
+              $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
+              allert.addClass('alert-danger');
+              allert.html(
+                `<div class="allert_block">
+                  <div>
+                    <p><strong>Limit:</strong><p> 
+                    <p>${limit}</p>
+                  </div>
+                  <div>
+                    <p><strong>Dotychczas wydano:</strong><p> 
+                    <p>${sumExpensesOfSelectedCategory}</p>
+                  </div>
+                  <div>
+                    <p><strong>Różnica:</strong><p> 
+                    <p>${amountToSpend}</p>
+                  </div>
+                  <div>
+                    <p><strong>Wydatki + wpisana kwota:</strong><p> 
+                    <p>${score}</p>
+                  </div>
+                <div>`            
+              );
+              $( "#allert" ).show();
             }
-        }
-        if (category == 0) {
-            document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
+          }
         } else {
-            document.getElementById("infoCategory").innerHTML = "";
+          $('#limit_info').html('Wpisz kwotę i wybierz kategorię');
         }
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Błąd!");
+      }
+    });
+  };
+
+  checkData = () => {
+    var selectPayment = document.getElementById("selectPayment");
+    if (!selectPayment.value) {
+      document.getElementById("infoPayment").innerHTML = "Wybierz płatność.";
+    } else {
+      document.getElementById("infoPayment").innerHTML = "";
     }
+  
+    var item = "Expense";
+    $.ajax({
+        url: '/Settings/getCategories',
+        method: 'post',
+        data: {item},
+        success: function (data) {
+          var itemsCategories = JSON.parse(data);
+          var categories = [];
+          var categoryNotChecked = true;
+          for (i = 0; i < itemsCategories.length; i++) {
+            categories[i] = document.getElementById("c" + itemsCategories[i][1]);
+            if (categories[i].checked == true) {
+              categoryNotChecked = false;
+            }
+          }
+          if (categoryNotChecked) {
+            document.getElementById("infoCategory").innerHTML = "Wybierz kategorię.";
+          } else {
+            document.getElementById("infoCategory").innerHTML = "";
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Błąd!");
+        }
+    });
+  }
+
 </script>
 
 {% endblock %}
 
 {% block body %}
 
-<div id="content_expense">
-    <div class="container mt-1 mb-1">
-        <div id="title">Dodawanie wydatku</div>
-        <hr class="line mt-3 mb-3" style="width: 20em">
-        <div class="sentence_expense">
-            Uzupełnij poniższe dane dotyczące nowego wydatku
+<div class="container">
+  <div id="main_content">
+    <div id="title">Dodawanie wydatku</div>
+    <hr class="mt-3 mb-3">
+    <form method="post" action="/posts/create-expense" class="form_container">
+      <div class="text-left mb-1">
+        <p>Informacje o limicie: <strong><span id="limit_info">Wpisz kwotę i wybierz kategorię</span></strong></p>
+      </div>
+      <div id="allert"></div>
+      <div class="block_inputs">
+        <div>
+          <label>
+            <div class="text-left">
+              <p>Kwota :</p> 
+            </div>
+            <input class="form-control" type="number" step="0.01" min="0.01" name="amount" id="amount"
+            value="{{ expense.amount }}" required>
+          </label>
         </div>
-        <form method="post" action="/posts/create-expense">
-            <div class="row justify-content-center mt-3">
-                <div class="block">
-                    <label>Kwota : <input type="number" step="0.01" min="0.01" name="amount" id="amount"
-                            value="{{ expense.amount }}" required></label>
-                </div>
-                <div class="block">
-                    <label>Data : <input type="date" name="date" id="date1" value="{{ expense.date }}"></label>
-                </div>
+        <p></p>
+        <div>
+          <label>
+            <div class="text-left">
+              <p>Data : </p>
             </div>
-            {% if expense.errors is not empty %}
-            <div class='error'>{{ expense.errors[0] }}</div>
-            {% endif %}
-            <div class="row justify-content-center">
-                <div class="col-sm-12 col-md-3 mb-2">Sposób płatności:</div>
-                <div>
-                    <label class="mr-4"><input type="radio" id="p0" name="payment" value="1"
-                            class="mr-2">Gotówka</label>
-                    <label class="mr-4"><input type="radio" id="p1" name="payment" value="2" class="mr-2">Karta
-                        debetowa</label>
-                    <label><input type="radio" name="payment" id="p2" value="3" class="mr-2">Karta kredytowa</label>
-                </div>
-            </div>
-            <p class="error" id="infoPayment"></p>
-            {% if expense.errors is not empty %}
-            <div class='error'>{{ expense.errors[1] }}</div>
-            {% endif %}
-            <div class="row justify-content-center mt-2">
-                <div class="col-12 mb-2">Kategoria wydatku:</div>
-                <div class="row col-sm-6 col-md-9 col-lg-12 justify-content-center ml-5">
-                    <div class="categories">
-                        <div><label><input type="radio" id="c0" value="1" name="category" class="mr-2">Transport</label>
-                        </div>
-                        <div><label><input type="radio" id="c1" value="2" name="category" class="mr-2">Książki</label>
-                        </div>
-                        <div><label><input type="radio" id="c2" value="3" name="category" class="mr-2">Jedzenie</label>
-                        </div>
-                        <div><label><input type="radio" id="c3" value="4" name="category"
-                                    class="mr-2">Mieszkanie</label></div>
-                    </div>
-                    <div class="categories">
-                        <div><label><input type="radio" id="c4" value="5" name="category"
-                                    class="mr-2">Telekomunikacja</label></div>
-                        <div><label><input type="radio" id="c5" value="6" name="category" class="mr-2">Opieka
-                                zdrowotna</label></div>
-                        <div><label><input type="radio" id="c6" value="7" name="category" class="mr-2">Ubranie</label>
-                        </div>
-                        <div><label><input type="radio" id="c7" value="8" name="category" class="mr-2">Higiena</label>
-                        </div>
-                    </div>
-                    <div class="categories">
-                        <div><label><input type="radio" id="c8" value="9" name="category" class="mr-2">Dzieci</label>
-                        </div>
-                        <div><label><input type="radio" id="c9" value="10" name="category" class="mr-2">Rozrywka</label>
-                        </div>
-                        <div><label><input type="radio" id="c10" value="11" name="category"
-                                    class="mr-2">Wycieczka</label></div>
-                        <div><label><input type="radio" id="c11" value="12" name="category"
-                                    class="mr-2">Oszczędności</label></div>
-                    </div>
-                    <div class="categories">
-                        <div><label><input type="radio" id="c12" value="13" name="category"
-                                    class="mr-2">Emerytura</label></div>
-                        <div><label><input type="radio" id="c13" value="14" name="category" class="mr-2">Spłata
-                                długów</label></div>
-                        <div><label><input type="radio" id="c14" value="15" name="category"
-                                    class="mr-2">Darowizna</label></div>
-                        <div><label><input type="radio" id="c15" value="16" name="category" class="mr-2">Inne
-                                wydatki</label></div>
-                    </div>
-                </div>
-            </div>
-            <p class="error" id="infoCategory"></p>
-            {% if expense.errors is not empty %}
-            <div class='error'>{{ expense.errors[2] }}</div>
-            {% endif %}
-            <div class="row justify-content-center">
-                <textarea name="comment" id="comment" rows="1" cols="55" placeholder="Krótki komentarz (opcjonalnie)"
-                    onfocus="this.placeholder=''" onblur="this.placeholder='Krótki komentarz (opcjonalnie)'"></textarea>
-            </div>
-            <div class="row justify-content-center mt-3">
-                <input onclick="checkData()" id="expense_submit" type="submit" value="Dodaj wydatek" class="mr-5">
-                <input id="expense_button" type="reset" value="Anuluj">
-            </div>
-        </form>
-    </div>
+            <input class="form-control" type="date" name="date" id="date1" value="{{ expense.date }}">
+          </label>
+        </div>
+      </div>
+      {% if expense.errors is not empty %}
+      <div class='error'>
+        {{ expense.errors[0] }}
+      </div>
+      {% endif %}
+      <div class="block_payments">
+        <select id="selectPayment" name="payment" class="form-control" required>
+          <option value="" disabled selected>Wybierz sposób płatności</option>
+          {% for method in paymentMethods %}
+          <option value="{{method[1]}}">{{ method[0] }}</option>
+          {% endfor %}
+        </select>
+        <p class="error mt-1" id="infoPayment"></p>
+        {% if expense.errors is not empty %}
+        <div class='error'>{{ expense.errors[1] }}</div>
+        {% endif %}
+      </div>
+      <div>
+        <div>
+          <div class="text-left">
+            <p>Kategoria wydatku:</p>
+          </div>
+          {% for category in categoriesExpenses %}
+          <label class="category_input col-12" id="labelExpense{{category[1]}}">
+            <input class="mr-3" type="radio" id='c{{category[1]}}' name="category" value="{{category[1]}}">
+            <span>{{ category[0] }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        <p class="error" id="infoCategory"></p>
+        {% if expense.errors is not empty %}
+        <div class='error'>{{ expense.errors[2] }}</div>
+        {% endif %}
+      </div>
+      <p class="text-left">Komentarz :</p> 
+      <textarea name="comment" class="comment col-12" rows="1" cols="55" placeholder="(Opcjonalnie)"
+        onfocus="this.placeholder=''" onblur="this.placeholder='(Opcjonalnie)'"></textarea>
+      <div class="block_buttons mt-3">
+        <input onclick="checkData()" class="button_submit" type="submit" value="Dodaj wydatek">
+        <input class="button_add" type="reset" value="Anuluj">
+      </div>
+    </form>
+  </div>
 </div>
 
 {% endblock %}

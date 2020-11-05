@@ -54,6 +54,9 @@ class Signup extends \Core\Controller
 
         if (($everything_OK == true) && $user->save()) {
 
+            $user_temporary = $user->authenticate($user->email, $user->password);
+            $user->addDefaultCategoriesToDB($user_temporary->id);
+            
             $this->redirect('/signup/success');
 
         } else {
