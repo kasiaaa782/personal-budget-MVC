@@ -397,14 +397,16 @@ class SettingsData extends \Core\Model
      *
      * @return array
      */
-    public function getUsersMails($idUser) {
+    public function getUsersMails() {
+
+        $userID = $this->setUserID();
 
 		$sql = "SELECT email FROM users WHERE id != :id ";
 
 		$db = static::getDB();
         $stmt = $db->prepare($sql);
         
-        $stmt->bindValue(':id', $idUser, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
 
 		$stmt->execute();
 
@@ -417,7 +419,8 @@ class SettingsData extends \Core\Model
      * @return void
      */
 
-    public function updateUser($idUser, $newEmail, $newName){
+    public function updateUser($newEmail, $newName){
+        $userID = $this->setUserID();
 
         $sql = 'UPDATE users 
                 SET username = :username,
@@ -429,8 +432,54 @@ class SettingsData extends \Core\Model
 
         $stmt->bindValue(':username', $newName, PDO::PARAM_STR);
         $stmt->bindValue(':email', $newEmail, PDO::PARAM_STR);
-        $stmt->bindValue(':id', $idUser, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
 
 		$stmt->execute();
     }
+
+    /**
+     * Get password from user 
+     *
+     * @return void
+     */
+
+    public function getPassword(){
+
+        $userID = $this->setUserID();
+
+        $sql = "SELECT password FROM users WHERE id = :id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $password = $stmt->fetchAll();
+
+        return $password;
+    }
+
+    /**
+     * Update password of user 
+     *
+     * @return void
+     */
+
+    public function updatePassword($passNew){
+        $userID = $this->setUserID();
+
+        $passNew_hash = password_hash($passNew, PASSWORD_DEFAULT);
+
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+        $stmt->bindValue(':password', $passNew_hash, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+    
 }

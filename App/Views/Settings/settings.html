@@ -507,6 +507,60 @@
     }
   }
 
+  showModalToEditData = (id) => {
+    var name = $('#userName').html();
+    var email = $('#userMail').html();
+    $('#editName').val( name );
+    $('#editEmail').val( email );
+    $('.editInfo').html('');
+    $('#winModalEditData').modal('show');
+    $('#editUserData').on('submit', function () {
+      event.preventDefault();
+      var insertedName = $('#editName').val();
+      var insertedEmail = $('#editEmail').val();
+      var errorNotExist = true;
+
+      $.ajax({
+        url: '/Settings/getUsers',
+        method: 'post',
+        success: function (data) {
+          var users = JSON.parse(data);
+          console.log(users);
+          users.forEach(user => {
+            if(insertedEmail == user[0]) {
+              $('.editInfo').html('Taki mail już istnieje.');
+              errorNotExist = false;
+            }
+          });
+          if(insertedName == '') {
+            $('.editInfo').html('Nie wprowadzono imienia.');
+              errorNotExist = false;
+          }
+          if(errorNotExist) {
+            $.ajax({
+              url: '/Settings/updateUser',
+              method: 'post',
+              data: { insertedName, insertedEmail },
+              success: function () {
+                $('#userName').html(insertedName);
+                $('#userMail').html(insertedEmail);
+                $('#winModalEditData').modal('hide');
+                $('#editName').val(insertedName);
+                $('#editEmail').val(insertedEmail);
+              },
+              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Błąd!");
+              }
+            });
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Błąd!");
+        }
+      });
+    });
+  }
+
 </script>
 
 {% endblock %}
@@ -892,60 +946,55 @@
           </div>
         </div>
         <script>
-          showModalToEditData = (id) => {
-            var name = $('#userName').html();
-            var email = $('#userMail').html();
-            $('#editName').val( name );
-            $('#editEmail').val( email );
+          
+          showModalToChangePassword = (id) => {
+            $('#pass1').val('');
+            $('#pass2').val('');
             $('.editInfo').html('');
-            $('#winModalEditData').modal('show');
-            $('#editUserData').on('submit', function () {
+            $('#winModalChangePassword').modal('show');
+            $('#editPassword').on('submit', function () {
               event.preventDefault();
-              var insertedName = $('#editName').val();
-              var insertedEmail = $('#editEmail').val();
-              var errorNotExist = true;
+              var passOld = $('#pass1').val();
+              var passNew = $('#pass2').val();
 
               $.ajax({
-                url: '/Settings/getUsers',
+                url: '/Settings/checkPass',
                 method: 'post',
-                data: { id },
+                data: { passOld },
                 success: function (data) {
-                  var users = JSON.parse(data);
-                  console.log(users);
-                  users.forEach(user => {
-                    if(insertedEmail == user[0]) {
-                      $('.editInfo').html('Taki mail już istnieje.');
-                      errorNotExist = false;
+                  console.log(data);
+                  if(data == 'poprawne') {
+                    var validated = true;
+                    if (passNew.match(/.*[a-z]+.*/i) == null) {
+                      validated = false;
                     }
-                  });
-                  if(insertedName == '') {
-                    $('.editInfo').html('Nie wprowadzono imienia.');
-                      errorNotExist = false;
-                  }
-                  if(errorNotExist) {
-                    $.ajax({
-                      url: '/Settings/updateUser',
-                      method: 'post',
-                      data: { id, insertedName, insertedEmail },
-                      success: function () {
-                        $('#userName').html(insertedName);
-                        $('#userMail').html(insertedEmail);
-                        $('#winModalEditData').modal('hide');
-                        $('#editName').val(insertedName);
-                        $('#editEmail').val(insertedEmail);
-                      },
-                      error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        alert("Błąd!");
-                      }
-                    });
+                    if (passNew.match(/.*\d+.*/) == null) {
+                      validated = false;
+                    }                    
+                    if(validated) {
+                      $('.editInfo').html('');
+                      $.ajax({
+                        url: '/Settings/updatePass',
+                        method: 'post',
+                        data: { passNew },
+                        success: function () {
+                          $('#winModalChangePassword').modal('hide');
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                          alert("Błąd!");
+                        }
+                      });  
+                    } else {
+                      $('.editInfo').html('Wymagane co najmniej 6 znaków, jedna litera i jedna cyfra.');
+                    }
+                  } else {
+                    $('.editInfo').html('Niepoprawne stare hasło.');
                   }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                   alert("Błąd!");
                 }
               });
-
-              console.log();
             });
           }
         </script>
@@ -971,9 +1020,9 @@
                   </div>
                 </label>
                 <div class="mr-2"></div>
-                <label class="btn_account2 col-5" >
+                <label class="btn_account2 col-5">
                   <div class="row justify-content-center">
-                    <i class="icon-trash pointer col-2" onclick="" aria-hidden="true" title="Usuń dane"></i>
+                    <i class="icon-trash pointer col-2" aria-hidden="true" title="Usuń dane"></i>
                     <div class="col-10 pr-1">Usuń wszystkie przychody i wydatki</div>
                   </div>
                 </label>
@@ -1008,9 +1057,9 @@
                 </div>
               </div>
               <div class="row justify-content-center">
-                <label class="btn_account col-5" >
+                <label class="btn_account col-5" onclick="showModalToChangePassword('{{ current_user.id }}')">
                   <div class="row justify-content-center">
-                    <i class="icon-pencil pointer col-2" onclick="" aria-hidden="true" title="Usuń dane"></i>
+                    <i class="icon-pencil pointer col-2" aria-hidden="true" title="Usuń dane"></i>
                     <div class="col-10 pr-1">Zmień hasło</div>
                   </div>
                 </label>
@@ -1021,6 +1070,33 @@
                     <div class="col-10 pr-1">Usuń konto</div>
                   </div>
                 </label>
+              </div>
+              <div class="modal" role="dialog" id="winModalChangePassword">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Zmiana hasła</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post" id="editPassword">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Stare hasło</p>
+                        <input type="password" class="form-control mb-4" id="pass1" minlength='6'>
+                        <p>Nowe hasło</p>
+                        <input type="password" class="form-control" id="pass2" minlength='6'>
+                        <small>
+                          <div class="editInfo mt-3 ml-1 text-danger"></div>
+                        </small>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Zmień</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

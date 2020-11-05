@@ -283,10 +283,9 @@ class Settings extends Authenticated
      */
     public function getUsersAction()
     {
-        $idUser = isset($_POST['id']) ? $_POST['id'] : NULL;
         $settings = new SettingsData();
         
-        $users = $settings->getUsersMails($idUser);
+        $users = $settings->getUsersMails();
         echo json_encode($users);
     }
 
@@ -299,9 +298,41 @@ class Settings extends Authenticated
     {
         $newEmail = isset($_POST['insertedEmail']) ? $_POST['insertedEmail'] : NULL;
         $newName = isset($_POST['insertedName']) ? $_POST['insertedName'] : NULL;
-        $idUser = isset($_POST['id']) ? $_POST['id'] : NULL;
 
         $settings = new SettingsData();
-        $settings->updateUser($idUser, $newEmail, $newName);
+        $settings->updateUser($newEmail, $newName);
     }
+
+    /**
+     * Get old password from database
+     * 
+     * @return void
+     */
+    public function checkPassAction()
+    {
+        $passOld = isset($_POST['passOld']) ? $_POST['passOld'] : NULL;
+
+        $settings = new SettingsData();
+        $passOldFromDB = $settings->getPassword();
+
+        if (password_verify($passOld, $passOldFromDB[0][0])) {
+            echo 'poprawne';
+        } else {
+            echo 'niepoprawne';
+        }
+    }
+
+    /**
+     * Update password in database
+     * 
+     * @return void
+     */
+    public function updatePassAction()
+    {
+        $passNew = isset($_POST['passNew']) ? $_POST['passNew'] : NULL;
+
+        $settings = new SettingsData();
+        $settings->updatePassword($passNew);
+    }
+
 }
