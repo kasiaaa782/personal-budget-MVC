@@ -612,6 +612,23 @@
     });
   }
 
+  showModalToRemoveAllItems = () => {
+    $('#winModalRemoveAllItems').modal('show');
+    $('#removeAllItems').on('submit', function () {
+      event.preventDefault();
+      $.ajax({
+        url: '/Settings/removeAllItems',
+        method: 'post',
+        success: function() {
+          $('#winModalRemoveAllItems').modal('hide');
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          alert("Błąd!");
+        }
+      });
+    });
+  }
+
 </script>
 
 {% endblock %}
@@ -996,26 +1013,6 @@
             </div>
           </div>
         </div>
-        <script>
-          showModalToRemoveAllItems = () => {
-            $('#winModalRemoveAllItems').modal('show');
-            $('#removeAllItems').on('submit', function () {
-              event.preventDefault();
-              $.ajax({
-                url: '/Settings/removeAllItems',
-                method: 'post',
-                success: function() {
-                  console.log('usunięto');
-                  $('#winModalRemoveAllItems').modal('hide');
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                  alert("Błąd!");
-                }
-              });
-            });
-          }
-          
-        </script>
         <div class="card">
           <div class="card-header">
             <a class="collapsed card-link block_option" id="option4" data-toggle="collapse" href="#collapseFour">
@@ -1095,20 +1092,48 @@
                   </div>
                 </div>
               </div>
+              <script>
+                
+                showModalToRemoveAccount = () => {
+                  $('#winModalRemoveAccount').modal('show');
+                }
+              
+              </script>
               <div class="row justify-content-center">
                 <label class="btn_account col-5" onclick="showModalToChangePassword()">
                   <div class="row justify-content-center">
-                    <i class="icon-pencil pointer col-2" aria-hidden="true" title="Usuń dane"></i>
+                    <i class="icon-pencil pointer col-2" aria-hidden="true" title="Edytuj dane"></i>
                     <div class="col-10 pr-1">Zmień hasło</div>
                   </div>
                 </label>
                 <div class="mr-2"></div>
-                <label class="btn_account2 col-5" >
+                <label class="btn_account2 col-5" onclick="showModalToRemoveAccount()">
                   <div class="row justify-content-center">
-                    <i class="icon-trash pointer col-2" onclick="" aria-hidden="true" title="Usuń dane"></i>
+                    <i class="icon-trash pointer col-2" aria-hidden="true" title="Usuń dane"></i>
                     <div class="col-10 pr-1">Usuń konto</div>
                   </div>
                 </label>
+              </div>
+              <div class="modal" role="dialog" id="winModalRemoveAccount">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content p-3">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-body h5">Usuwanie konta</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="post" action="/Settings/removeAllUser">
+                      <div class="modal-body text-body h6 mt-3 mb-3">
+                        <p>Czy napewno chcesz usunąć konto?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tak</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
               <div class="modal" role="dialog" id="winModalChangePassword">
                 <div class="modal-dialog" role="document">

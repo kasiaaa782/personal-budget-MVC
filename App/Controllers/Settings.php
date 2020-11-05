@@ -343,6 +343,24 @@ class Settings extends Authenticated
     public function removeAllItemsAction()
     {
         $settings = new SettingsData();
-        $settings->removeAll();
+        $settings->removeAllExpensesAndIncomes();
     }
+
+    /**
+     * Remove all user from database
+     * 
+     * @return void
+     */
+    public function removeAllUserAction()
+    {
+        $settings = new SettingsData();
+        $settings->removeAllExpensesAndIncomes();
+        $settings->removeAllCategories();
+        $settings->removeAccount();
+
+        View::renderTemplate('Home/index.html');
+    }
+
+
+    
 }

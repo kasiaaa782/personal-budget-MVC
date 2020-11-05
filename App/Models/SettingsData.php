@@ -487,13 +487,55 @@ class SettingsData extends \Core\Model
      *
      * @return void
      */
-    public function removeAll() {
+    public function removeAllExpensesAndIncomes() {
         $userID = $this->setUserID();
 
         $sql = "DELETE expenses, incomes 
                 FROM expenses, incomes 
                 WHERE expenses.user_id = :id 
                 AND incomes.user_id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Remove all categories from database
+     *
+     * @return void
+     */
+    public function removeAllCategories() {
+        $userID = $this->setUserID();
+
+        $sql = "DELETE e, i, p
+                FROM expenses_category_assigned_to_users AS e, 
+                    incomes_category_assigned_to_users AS i,
+                    payment_methods_assigned_to_users AS p
+                WHERE e.user_id = :id 
+                AND i.user_id = :id
+                AND p.user_id = :id";
+
+		$db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userID, PDO::PARAM_INT);
+
+		$stmt->execute();
+    }
+
+    /**
+     * Remove account from database
+     *
+     * @return void
+     */
+    public function removeAccount() {
+        $userID = $this->setUserID();
+
+        $sql = "DELETE users
+                FROM users
+                WHERE id = :id";
 
 		$db = static::getDB();
         $stmt = $db->prepare($sql);
