@@ -48,7 +48,7 @@ class Signup extends \Core\Controller
         $answer = json_decode($check);
 
         if($answer->success==false){
-            $everything_OK = false;
+            //$everything_OK = false;
             $e_bot = "Potwierdź, że nie jesteś botem!"; 
         }
 

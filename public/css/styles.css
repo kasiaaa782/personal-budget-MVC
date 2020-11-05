@@ -344,7 +344,7 @@ ol > li:hover{
 }
 
 /*balance*/
-#content_balance{
+#content_balance {
 		background-color: #8DBCEB;
 		padding: 15px 0px 15px 0px;
 		border: 1px solid #9EBDDB;
@@ -355,8 +355,8 @@ ol > li:hover{
 		box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
 }
 
-#dropbutton{
-		min-width: 180px;
+#dropbutton {
+		width: 180px;
 		padding: 10px 16px 10px 16px ;
 		font-size: 16px;
 		border: none;
@@ -367,25 +367,26 @@ ol > li:hover{
 		font-family: 'Roboto Slab', serif;
 }
 
-#dropdown-content{
+#dropdown-content {
 		display: none;
 		position: absolute;
 		background-color: #f9f9f9;
-		min-width: 170px;
+		width: 180px;
 		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 		z-index: 1;
 }
 
 
-#dropdown-content a{
+#dropdown-content a {
 		color: #003F7F;
 		padding: 10px 16px;
+		font-size: 16px;
 		text-decoration: none;
 		display: block;
 		border-top: 1px dashed rgb(97, 176, 240);
 }
 
-#dropdown-content a:first-child{
+#dropdown-content a:first-child {
 		border-top: none;
 }
 
@@ -393,29 +394,29 @@ ol > li:hover{
 		background-color: #e5eaf1;
 }
 
-#select_period_dropdown {
-		width: 170px;
-		margin-left: auto;
+.select_period_dropdown {
+		width: 180px;
 		margin-right: auto;
+		margin-left: auto;
 }
 
-#select_period_dropdown:hover
+.select_period_dropdown:hover
 #dropdown-content{
 		display: block;
 }	
 
-#period{
+#period {
 		margin-top: 8px;
 		margin-bottom: 15px;
 		font-size: 18px;
 		text-shadow: 0.3px 0.3px #0072E3;
 }
 
-#myModalLabel{
+#myModalLabel {
 		font-style: normal;
 }
 
-#show{
+#show {
 		background-color: #1A78D6;
 		font-family: 'Roboto Slab', serif;
 		font-size:15px;
@@ -429,15 +430,15 @@ ol > li:hover{
 		width:100px;
 }
 
-#show:hover{
+#show:hover {
 		background-color: #2E8FF1;
 }
 
-#selectPeriod{
+#selectPeriod {
 		display: block;
 }
 
-#dateBegin, #dateEnd{
+#dateBegin, #dateEnd {
 		width:160px;
 		height: 30px;
 		padding: 5px;
@@ -450,11 +451,11 @@ ol > li:hover{
 }
 
 #dateBegin:hover, #dateBegin:focus,
-#dateEnd:hover, #dateEnd:focus{
+#dateEnd:hover, #dateEnd:focus {
 		border-color: #9EBDDB;
 }
 
-.sum{
+.sum {
 		font-weight: bold;
 }
 
@@ -472,55 +473,58 @@ th, td {
 #eat,#accommodation,#transport,#telecommunication,#healthcare,
 #clothes,#hygiene,#kids,#entertainment,#trip,#training,
 #books,#savings,#pension,#debts,#donation,#otherExpenses,
-#sumOfExpenses{
+#sumOfExpenses {
 		text-align: right;
 }
 
-table{
-		width: 90%;
+table {
+		width: 100%;
 		background-color: #3793eefd;
 }
 
-#balance{
-		width: 90%;
+.balance {
 		background-color: #ffffff;
 		color: rgb(18, 98, 179);
-		margin-top:20px;
-		margin-bottom:10px;
 		border: 1px solid #1A78D6;
 		padding: 10px;
 		text-align: center;
+		font-size: 16px;
+		letter-spacing: 1px;
 }
 
-@media all and (min-width: 900px){
-	table,#balance {
-		width:50%;
+.block_piechart {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.block_tables {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 20px 0;
+	align-items: center;
+}
+
+@media (min-width: 1200px) {
+	.block_piechart {
+		width: 100%;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.block_tables {
+		display: flex;
+		flex-direction: row;
+		padding: 20px 0;
+		justify-content: center;
+		align-items: baseline;
+
 	}
 }
 
-#balance1{
-		font-size: 18px;
-		font-weight: bold;
-		letter-spacing: 1px;
-		margin-bottom: 10px;
-}
-
-#score{
-		color: rgb(15, 110, 206);
-		font-size: 16px;
-		font-weight: bold;
-		margin-top: 10px;
-}
-
-.piechart{
-		border: 1px solid #1A78D6;
-}
-
-.block_piechart{
-	display: flex;
-	justify-content: space-around !important;
-	align-items: center;
-}
+/*  main page  */
 
 #main_page{
 		color: #1A78D6;

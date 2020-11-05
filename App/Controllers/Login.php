@@ -39,8 +39,6 @@ class Login extends \Core\Controller
 
             Auth::login($user, $remember_me);
 
-            Flash::addMessage('Udało się zalogować!');
-
             $this->redirect(Auth::getReturnToPage());
 
         } else {
@@ -75,8 +73,6 @@ class Login extends \Core\Controller
      */
      public function showLogoutMessageAction()
     {
-        Flash::addMessage('Wylogowałeś się!');
-
         $this->redirect('/');
     }
 }

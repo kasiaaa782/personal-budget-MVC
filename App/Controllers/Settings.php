@@ -360,7 +360,4 @@ class Settings extends Authenticated
 
         View::renderTemplate('Home/index.html');
     }
-
-
-    
 }

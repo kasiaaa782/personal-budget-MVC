@@ -219,8 +219,8 @@ class User extends \Core\Model
 
         $sql = 'INSERT INTO incomes_category_assigned_to_users (user_id, name)
                 SELECT :user_id AS user_id, name FROM incomes_category_default;
-                INSERT INTO expenses_category_assigned_to_users (user_id, name)
-                SELECT :user_id AS user_id, name FROM expenses_category_default;
+                INSERT INTO expenses_category_assigned_to_users (user_id, name, limit_category)
+                SELECT :user_id AS user_id, name, limit_category FROM expenses_category_default;
                 INSERT INTO payment_methods_assigned_to_users (user_id, name)
                 SELECT :user_id AS user_id, name FROM payment_methods_default
                 ';
