@@ -100,9 +100,10 @@
         var amountOfNewExpense = $("#amount").val();
         var amountToSpend = 0;
         amountToSpend = limit - sumExpensesOfSelectedCategory;
-        var expensesAndNewExpense = sumExpensesOfSelectedCategory + parseFloat(amountOfNewExpense);
-        expensesAndNewExpense = expensesAndNewExpense.toFixed(2);
-        amountToSpend = amountToSpend.toFixed(2);
+        var expensesAndNewExpense = 0;
+        expensesAndNewExpense = sumExpensesOfSelectedCategory + parseFloat(amountOfNewExpense);
+        expensesAndNewExpense = parseFloat(expensesAndNewExpense.toFixed(2));
+        amountToSpend = parseFloat(amountToSpend.toFixed(2));
 
         var allert = $('#allert');
         allert.removeClass();
@@ -110,7 +111,9 @@
         allert.addClass('mt-3');
 
         if (amountOfNewExpense && !categoryNotChecked ) {
-          if(limit >= expensesAndNewExpense) {
+          if (limit == 0) {
+            $('#limit_info').html(`Brak ustalonego limitu dla kategorii <ins>${categoryName}</ins>`);
+          } else if (limit >= expensesAndNewExpense) {
             $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
             allert.addClass('alert-success');
             allert.html(
@@ -131,11 +134,9 @@
                   <p><strong>Wydatki + wpisana kwota:</strong><p> 
                   <p>${expensesAndNewExpense}</p>
                 </div>
-               <div>`            
+              <div>`            
             );
             $( "#allert" ).show();
-          } else if (limit == 0) {
-            $('#limit_info').html(`Brak ustalonego limitu dla kategorii <ins>${categoryName}</ins>`);
           } else {
             $('#limit_info').html(`Uwaga! Przekraczasz limit. Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
             allert.addClass('alert-danger');
