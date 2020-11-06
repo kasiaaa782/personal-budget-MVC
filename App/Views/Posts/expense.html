@@ -100,8 +100,9 @@
         var amountOfNewExpense = $("#amount").val();
         var amountToSpend = 0;
         amountToSpend = limit - sumExpensesOfSelectedCategory;
-        var score = sumExpensesOfSelectedCategory + parseFloat(amountOfNewExpense);
-        score = score.toFixed(2);
+        var expensesAndNewExpense = sumExpensesOfSelectedCategory + parseFloat(amountOfNewExpense);
+        expensesAndNewExpense = expensesAndNewExpense.toFixed(2);
+        amountToSpend = amountToSpend.toFixed(2);
 
         var allert = $('#allert');
         allert.removeClass();
@@ -109,7 +110,7 @@
         allert.addClass('mt-3');
 
         if (amountOfNewExpense && !categoryNotChecked ) {
-          if(score < amountToSpend) {
+          if(amountOfNewExpense <= amountToSpend) {
             $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
             allert.addClass('alert-success');
             allert.html(
@@ -128,7 +129,7 @@
                 </div>
                 <div>
                   <p><strong>Wydatki + wpisana kwota:</strong><p> 
-                  <p>${score}</p>
+                  <p>${expensesAndNewExpense}</p>
                 </div>
                <div>`            
             );
@@ -155,7 +156,7 @@
                   </div>
                   <div>
                     <p><strong>Wydatki + wpisana kwota:</strong><p> 
-                    <p>${score}</p>
+                    <p>${expensesAndNewExpense}</p>
                   </div>
                 <div>`            
               );
@@ -216,7 +217,7 @@
 <div class="container">
   <div id="main_content">
     <div id="title">Dodawanie wydatku</div>
-    <hr class="mt-3 mb-3">
+    <hr class="col-8 mt-3 mb-3">
     <form method="post" action="/posts/create-expense" class="form_container">
       <div class="text-left mb-1">
         <p>Informacje o limicie: <strong><span id="limit_info">Wpisz kwotę i wybierz kategorię</span></strong></p>
