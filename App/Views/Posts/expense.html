@@ -110,7 +110,7 @@
         allert.addClass('mt-3');
 
         if (amountOfNewExpense && !categoryNotChecked ) {
-          if(amountOfNewExpense <= amountToSpend) {
+          if(limit >= expensesAndNewExpense) {
             $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
             allert.addClass('alert-success');
             allert.html(
@@ -134,34 +134,32 @@
                <div>`            
             );
             $( "#allert" ).show();
+          } else if (limit == 0) {
+            $('#limit_info').html(`Brak ustalonego limitu dla kategorii <ins>${categoryName}</ins>`);
           } else {
-            if(limit == 0){
-              $('#limit_info').html(`Brak ustalonego limitu dla kategorii <ins>${categoryName}</ins>`);
-            } else {
-              $('#limit_info').html(`Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
-              allert.addClass('alert-danger');
-              allert.html(
-                `<div class="allert_block">
-                  <div>
-                    <p><strong>Limit:</strong><p> 
-                    <p>${limit}</p>
-                  </div>
-                  <div>
-                    <p><strong>Dotychczas wydano:</strong><p> 
-                    <p>${sumExpensesOfSelectedCategory}</p>
-                  </div>
-                  <div>
-                    <p><strong>Różnica:</strong><p> 
-                    <p>${amountToSpend}</p>
-                  </div>
-                  <div>
-                    <p><strong>Wydatki + wpisana kwota:</strong><p> 
-                    <p>${expensesAndNewExpense}</p>
-                  </div>
-                <div>`            
-              );
-              $( "#allert" ).show();
-            }
+            $('#limit_info').html(`Uwaga! Przekraczasz limit. Możesz jeszcze wydać <ins>${amountToSpend}</ins> w kategorii <ins>${categoryName}</ins>`);
+            allert.addClass('alert-danger');
+            allert.html(
+              `<div class="allert_block">
+                <div>
+                  <p><strong>Limit:</strong><p> 
+                  <p>${limit}</p>
+                </div>
+                <div>
+                  <p><strong>Dotychczas wydano:</strong><p> 
+                  <p>${sumExpensesOfSelectedCategory}</p>
+                </div>
+                <div>
+                  <p><strong>Różnica:</strong><p> 
+                  <p>${amountToSpend}</p>
+                </div>
+                <div>
+                  <p><strong>Wydatki + wpisana kwota:</strong><p> 
+                  <p>${expensesAndNewExpense}</p>
+                </div>
+              <div>`            
+            );
+            $( "#allert" ).show();
           }
         } else {
           $('#limit_info').html('Wpisz kwotę i wybierz kategorię');
